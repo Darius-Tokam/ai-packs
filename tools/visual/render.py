@@ -2,7 +2,7 @@
 
     python render.py spec.json out.png
 
-The spec fills tools/visual/grid.html. See claude/pr-squad/visual/spec.json
+The spec fills tools/visual/<template>.html ("template": grid by default, or orgchart). See claude/pr-squad/visual/spec.json
 for a complete example. Uses Playwright with the system Chrome when
 present, else Playwright's own Chromium. For the animated version, see
 render_gif.py.
@@ -22,7 +22,7 @@ spec = json.loads(spec_path.read_text())
 with sync_playwright() as p:
     browser = launch(p)
     page = open_page(browser, spec)
-    warnings = layout_warnings(page)
+    warnings = layout_warnings(page, spec)
     page.locator("#canvas").screenshot(path=str(out_path))
     browser.close()
 

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<style>
+  /*FONTS*/
+  :root {
+    --bg: #07080a; --panel: #0e1116; --panel-2: #121720; --line: #1d2530; --line-2: #2b3543;
+    --text: #f3f5f7; --muted: #9aa7b4; --dim: #5f6d7b;
+    --red: #ff7676; --amber: #fbc04e; --green: #5be39a;
+    --accent: linear-gradient(100deg, #f2b8b4 0%, #d6aef0 55%, #b9a6f5 100%);
+    --sans: 'Inter', system-ui, sans-serif; --display: 'Inter Display', 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1350px; background: var(--bg); }
+  #canvas { position: relative; width: 1080px; height: 1350px; overflow: hidden; color: var(--text);
+    font-family: var(--sans);
+    background:
+      radial-gradient(520px 380px at 900px 120px, rgba(214,174,240,.16), transparent 70%),
+      radial-gradient(600px 420px at 120px 1220px, rgba(242,184,180,.08), transparent 70%),
+      linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px) 0 0 / 36px 36px,
+      linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px) 0 0 / 36px 36px,
+      var(--bg); }
+
+  /* header */
+  .head { position: absolute; left: 56px; top: 54px; right: 300px; }
+  .kicker { font-family: var(--mono); font-size: 15px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  h1 { font-family: var(--display); font-weight: 800; font-size: 96px; line-height: .98; letter-spacing: -.035em; margin-top: 16px; }
+  h1 .a { background: var(--accent); -webkit-background-clip: text; background-clip: text; color: transparent; display: block; }
+  h1 .b { display: block; }
+  .sub { margin-top: 18px; font-size: 22px; color: var(--muted); font-weight: 500; }
+  .sub b { color: var(--text); font-weight: 600; }
+
+  /* ring of agents, top right */
+  .ring { position: absolute; right: 64px; top: 64px; width: 210px; height: 210px; }
+  .ring .c { position: absolute; inset: 0; border: 2px dashed var(--line-2); border-radius: 50%; }
+  .ring .n { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring .n b { font-family: var(--display); font-size: 74px; font-weight: 800; line-height: 1; }
+  .ring .n span { font-family: var(--mono); font-size: 13px; color: var(--muted); letter-spacing: .12em; margin-top: 4px; }
+  .ring .d { position: absolute; width: 22px; height: 22px; border-radius: 6px; margin: -11px 0 0 -11px; box-shadow: 0 0 18px currentColor; }
+
+  /* root node */
+  .root { position: absolute; left: 50%; top: 382px; transform: translateX(-50%); width: 470px;
+    background: var(--panel-2); border: 1.5px solid var(--line-2); border-radius: 18px; padding: 16px 20px;
+    display: flex; gap: 16px; align-items: center; box-shadow: 0 0 0 6px rgba(214,174,240,.06); }
+  .root.on { box-shadow: 0 0 0 6px rgba(214,174,240,.18), 0 0 48px rgba(214,174,240,.25); border-color: #b9a6f5; }
+  .root .ic { width: 58px; height: 58px; border-radius: 14px; background: var(--accent); display: flex; align-items: center; justify-content: center; flex: none; }
+  .root .cmd { font-family: var(--mono); font-weight: 700; font-size: 22px; }
+  .root .lbl { font-size: 15px; color: var(--muted); margin-top: 3px; line-height: 1.35; }
+
+  /* connectors */
+  svg.wires { position: absolute; left: 0; top: 0; width: 1080px; height: 1350px; pointer-events: none; }
+  svg.wires path { fill: none; stroke: var(--line-2); stroke-width: 2; }
+  svg.wires path.on { stroke: url(#wg); stroke-width: 2.5; }
+
+  /* columns */
+  .cols { position: absolute; left: 41px; right: 41px; top: 560px; display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; }
+  .col { display: flex; flex-direction: column; gap: 8px; transition: none; }
+  .col.hidden { opacity: .14; }
+  .hd { border-radius: 12px; padding: 12px 6px 8px; color: #111318; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 8px; height: 104px; }
+  .hd .t { font-weight: 700; font-size: 15.5px; text-align: center; line-height: 1.15; letter-spacing: -.02em; }
+  .sk { font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: center; height: 28px; line-height: 26px; white-space: nowrap; overflow: hidden;
+    border: 1px dashed var(--line-2); border-radius: 8px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 8px; position: relative; overflow: hidden; }
+  .card::before { content: ''; position: absolute; left: 0; top: 0; right: 0; height: 3px; background: var(--c); opacity: .9; }
+  .card .k { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; color: var(--dim); text-transform: uppercase; margin-bottom: 6px; }
+  .card .v { font-size: 14.5px; line-height: 1.3; color: #dfe5ea; }
+  .card.f .v { font-family: var(--mono); font-size: 12px; line-height: 1.42; white-space: pre-line; }
+  .card.f.r .v { color: var(--red); } .card.f.a .v { color: var(--amber); } .card.f.g .v { color: var(--green); }
+  .card.f { height: 132px; }
+  .card.w { height: 124px; }
+  .tag { font-family: var(--mono); font-weight: 700; font-size: 13px; text-align: center; height: 38px; line-height: 36px; border-radius: 9px; letter-spacing: .06em; }
+  .tag.r { background: rgba(255,118,118,.12); color: var(--red); border: 1px solid rgba(255,118,118,.35); }
+  .tag.a { background: rgba(251,192,78,.12); color: var(--amber); border: 1px solid rgba(251,192,78,.35); }
+  .tag.g { background: rgba(91,227,154,.12); color: var(--green); border: 1px solid rgba(91,227,154,.35); }
+  .col.running .card.f .v, .col.running .tag { visibility: hidden; }
+  .col.running .card.f::after { content: attr(data-run); position: absolute; left: 8px; top: 32px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+  .col.running .hd { box-shadow: 0 0 0 3px rgba(255,255,255,.18), 0 0 30px var(--c); }
+
+  /* verdict */
+  .verdict { position: absolute; left: 41px; right: 41px; top: 1062px; height: 104px; border-radius: 16px;
+    background: var(--panel-2); border: 1.5px solid var(--line-2); display: flex; align-items: center; padding: 0 26px; gap: 22px; }
+  .verdict.hidden { opacity: 0; }
+  .verdict .big { font-family: var(--mono); font-weight: 700; font-size: 34px; color: var(--red); white-space: nowrap; }
+  .verdict .small { font-family: var(--mono); font-size: 15px; color: var(--muted); white-space: nowrap; }
+  .verdict .sep { width: 1.5px; align-self: stretch; margin: 20px 0; background: var(--line-2); }
+  .verdict .proof { font-size: 17px; line-height: 1.35; color: var(--text); }
+  .verdict .proof .ok { color: var(--green); font-weight: 700; }
+  .verdict .proof small { display: block; font-family: var(--mono); font-size: 12.5px; color: var(--dim); margin-top: 3px; }
+
+  /* CTA */
+  .cta { position: absolute; left: 0; right: 0; bottom: 0; height: 140px; background: var(--accent); color: #13101b;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+  .cta .l { font-family: var(--display); font-weight: 800; font-size: 40px; letter-spacing: -.02em; display: flex; align-items: center; gap: 14px; }
+  .cta .kw { background: #13101b; color: #f4f0ff; font-family: var(--mono); font-weight: 700; border-radius: 12px; padding: 4px 16px; font-size: 36px; }
+  .cta .ft { font-size: 16px; font-weight: 600; opacity: .8; }
+</style>
+</head>
+<body>
+<div id="canvas">
+  <svg class="wires" id="wires"><defs><linearGradient id="wg" x1="0" x2="1"><stop offset="0" stop-color="#f2b8b4"/><stop offset="1" stop-color="#b9a6f5"/></linearGradient></defs></svg>
+  <div class="head">
+    <div class="kicker" id="kicker"></div>
+    <h1><span class="a" id="t1"></span><span class="b" id="t2"></span></h1>
+    <div class="sub" id="sub"></div>
+  </div>
+  <div class="ring" id="ring"><div class="c"></div><div class="n"><b id="ringN"></b><span id="ringL"></span></div></div>
+  <div class="root" id="root"><div class="ic" id="rootIc"></div><div><div class="cmd" id="rootCmd"></div><div class="lbl" id="rootLbl"></div></div></div>
+  <div class="cols" id="cols"></div>
+  <div class="verdict" id="verdict"><div><div class="big" id="vBig"></div><div class="small" id="vSmall"></div></div><div class="sep"></div><div class="proof" id="vProof"></div></div>
+  <div class="cta"><div class="l"><span id="ctaB"></span><span class="kw" id="ctaK"></span><span id="ctaA"></span></div><div class="ft" id="ft"></div></div>
+</div>
+<script>
+const S = window.SPEC;
+const ICONS = {
+  key: ["00000000","01110000","10001000","10001111","10001011","01110000","00000000","00000000"],
+  box: ["00111100","01000010","11111111","10011001","10011001","10000001","11111111","00000000"],
+  db: ["01111110","10000001","01111110","10000001","01111110","10000001","01111110","00000000"],
+  target: ["00111100","01000010","10011001","10100101","10100101","10011001","01000010","00111100"],
+  check: ["11111111","10000001","10000101","10001001","11010001","10100001","10000001","11111111"],
+  bug: ["10000001","01011010","00111100","11111111","00111100","11111111","01011010","10000001"],
+  bolt: ["00001100","00011000","00110000","01111110","00001100","00011000","00110000","01100000"],
+  doc: ["11111000","10001100","10000110","10111010","10000010","10111010","10000010","11111110"],
+  term: ["11111111","10000001","10100001","10010001","10100001","10001111","10000001","11111111"],
+};
+function pixel(name, size, color) {
+  const g = ICONS[name] || ICONS.term, n = g.length, s = size / n;
+  let r = '';
+  g.forEach((row, y) => [...row].forEach((v, x) => { if (v === '1') r += `<rect x="${x*s}" y="${y*s}" width="${s}" height="${s}"/>`; }));
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" fill="${color}" shape-rendering="crispEdges">${r}</svg>`;
+}
+const $ = id => document.getElementById(id);
+$('kicker').textContent = S.kicker || '';
+$('t1').textContent = S.title; $('t2').textContent = S.title2;
+$('sub').innerHTML = S.sub || '';
+$('ringN').textContent = S.ring.n; $('ringL').textContent = S.ring.label;
+$('rootIc').innerHTML = pixel(S.root.icon || 'term', 34, '#13101b');
+$('rootCmd').textContent = S.root.cmd; $('rootLbl').textContent = S.root.desc;
+$('vBig').textContent = S.verdict.big; $('vSmall').textContent = S.verdict.small;
+$('vProof').innerHTML = S.verdict.proof;
+$('ctaB').textContent = S.cta_before; $('ctaK').textContent = S.cta_keyword; $('ctaA').textContent = S.cta_after;
+$('ft').textContent = S.footer;
+
+// ring dots, one per column
+const ring = $('ring');
+S.columns.forEach((c, i) => {
+  const a = -Math.PI / 2 + i * 2 * Math.PI / S.columns.length, R = 105;
+  const d = document.createElement('div'); d.className = 'd';
+  d.style.left = (105 + R * Math.cos(a)) + 'px'; d.style.top = (105 + R * Math.sin(a)) + 'px';
+  d.style.background = c.color; d.style.color = c.color; ring.appendChild(d);
+});
+
+const cols = $('cols');
+const TAGC = { BLOCK: 'r', FIX: 'a' };
+S.columns.forEach((c, i) => {
+  const el = document.createElement('div'); el.className = 'col'; el.id = 'col' + i; el.style.setProperty('--c', c.color);
+  const fc = c.found_color || TAGC[c.tag] || 'g';
+  el.innerHTML = `
+    <div class="hd" style="background:${c.color}">${pixel(c.icon, 30, '#111318')}<div class="t">${c.title}</div></div>
+    <div class="sk">${c.skill}</div>
+    <div class="card w"><div class="k">${S.labels.checks}</div><div class="v">${c.checks}</div></div>
+    <div class="card f ${fc}" data-run="${S.labels.running}"><div class="k">${S.labels.found}</div><div class="v">${c.found}</div></div>
+    <div class="tag ${TAGC[c.tag] || 'g'}">${c.tag}</div>`;
+  cols.appendChild(el);
+});
+
+// wires: root bottom -> bus -> each column header
+function wires() {
+  const svg = $('wires'), cr = $('canvas').getBoundingClientRect();
+  [...svg.querySelectorAll('path')].forEach(p => p.remove());
+  const rb = $('root').getBoundingClientRect();
+  const x0 = rb.left + rb.width / 2 - cr.left, y0 = rb.bottom - cr.top, busY = y0 + 40;
+  const add = (d, id) => { const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('d', d); if (id) p.id = id; svg.appendChild(p); };
+  add(`M${x0} ${y0} V${busY}`, 'wroot');
+  S.columns.forEach((c, i) => {
+    const h = $('col' + i).querySelector('.hd').getBoundingClientRect();
+    const x = h.left + h.width / 2 - cr.left, y = h.top - cr.top;
+    add(`M${x0} ${busY} H${x} V${y}`, 'w' + i);
+  });
+}
+wires();
+
+// animation hooks
+window.R = {
+  cols(states) { states.forEach((s, i) => { $('col' + i).className = 'col' + (s === 'done' ? '' : ' ' + s); const w = $('w' + i); if (w) w.setAttribute('class', s === 'hidden' ? '' : 'on'); }); },
+  root(on) { $('root').className = 'root' + (on ? ' on' : ''); $('wroot').setAttribute('class', on ? 'on' : ''); },
+  verdict(show) { $('verdict').className = 'verdict' + (show ? '' : ' hidden'); },
+  run(label) { document.querySelectorAll('.card.f').forEach(e => e.dataset.run = label); },
+};
+</script>
+</body>
+</html>

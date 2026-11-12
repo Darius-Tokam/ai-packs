@@ -1,0 +1,105 @@
+{
+  "template": "orgchart",
+  "kicker": "Plugin Claude Code · open source",
+  "title": "Claude Code",
+  "title2": "Équipe de review",
+  "sub": "<b>8 agents</b> relisent ta branche avant chaque PR",
+  "ring": {
+    "n": "8",
+    "label": "AGENTS"
+  },
+  "root": {
+    "icon": "term",
+    "cmd": "/pr-squad:ship",
+    "desc": "Lance les 8 agents dans l'ordre, puis rend un verdict en une ligne"
+  },
+  "labels": {
+    "checks": "vérifie",
+    "found": "trouvé",
+    "running": "analyse…"
+  },
+  "columns": [
+    {
+      "title": "Secrets",
+      "skill": "secret-scan",
+      "icon": "key",
+      "color": "#f4a8b8",
+      "checks": "Clés et tokens avant le push",
+      "found": "settings.py\nligne 24 :\nclé Stripe",
+      "tag": "BLOCK"
+    },
+    {
+      "title": "Dépendances",
+      "skill": "dep-audit",
+      "icon": "box",
+      "color": "#cdb0f6",
+      "checks": "Failles connues, paquets inutiles",
+      "found": "PyYAML 5.3.1\nfaille connue\nnon importé",
+      "tag": "BLOCK"
+    },
+    {
+      "title": "Migrations",
+      "skill": "migration-guard",
+      "icon": "db",
+      "color": "#92d5f5",
+      "checks": "Rejouées sur une base remplie",
+      "found": "Integrity-\nError sur\nune base\nremplie",
+      "tag": "BLOCK"
+    },
+    {
+      "title": "Périmètre",
+      "skill": "scope-check",
+      "icon": "target",
+      "color": "#9fe7c6",
+      "checks": "Ce qui n'a rien à faire dans la PR",
+      "found": "export CSV\nde tous les\nclients",
+      "tag": "FIX"
+    },
+    {
+      "title": "Tests",
+      "skill": "test-gaps",
+      "icon": "check",
+      "color": "#f7d48f",
+      "checks": "Écrit les tests qui manquent",
+      "found": "4 écrits\n2 échouent",
+      "tag": "FIX"
+    },
+    {
+      "title": "Bugs",
+      "skill": "bug-hunt",
+      "icon": "bug",
+      "color": "#f6ae92",
+      "checks": "Chaque bug avec l'entrée qui casse",
+      "found": "remise 150 %\n→ total -500",
+      "tag": "BLOCK"
+    },
+    {
+      "title": "Requêtes N+1",
+      "skill": "query-check",
+      "icon": "bolt",
+      "color": "#aebcff",
+      "checks": "Comptées, pas devinées",
+      "found": "41 → 2\nrequêtes pour\n20 factures",
+      "tag": "FIX"
+    },
+    {
+      "title": "Description PR",
+      "skill": "pr-writer",
+      "icon": "doc",
+      "color": "#dbe692",
+      "checks": "Écrite depuis le diff et les verdicts",
+      "found": "DO NOT MERGE\nen 1re ligne",
+      "found_color": "r",
+      "tag": "ÉCRITE"
+    }
+  ],
+  "verdict": {
+    "big": "SHIP: STOP",
+    "small": "4 BLOCK · à corriger avant la review",
+    "proof": "<span class=\"ok\">✓ 8/8</span> défauts plantés trouvés sur un dépôt piège Django<small>rejouable avec test/run_checks.py</small>"
+  },
+  "cta_before": "Commente",
+  "cta_keyword": "SHIP",
+  "cta_after": "pour recevoir l'équipe",
+  "footer": "Darius Tokam · Arivex · gratuit, open source"
+}
