@@ -1,0 +1,22 @@
+{
+  "name": "pr-squad",
+  "version": "1.0.0",
+  "description": "8 Claude Code agents that review your branch before your lead does: secrets, dependencies, migrations, scope, tests, bugs, N+1 queries and the PR description. One command: /pr-squad:ship.",
+  "author": {
+    "name": "Darius Tokam (Arivex)",
+    "url": "https://tokamdarius.ca"
+  },
+  "repository": "https://github.com/Darius-Tokam/ai-packs",
+  "license": "MIT",
+  "keywords": ["code-review", "pull-request", "security", "testing", "django", "claude-code"],
+  "skills": [
+    "./skills/secret-scan",
+    "./skills/dep-audit",
+    "./skills/migration-guard",
+    "./skills/scope-check",
+    "./skills/test-gaps",
+    "./skills/bug-hunt",
+    "./skills/query-check",
+    "./skills/pr-writer"
+  ]
+}

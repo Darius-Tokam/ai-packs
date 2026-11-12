@@ -1,0 +1,170 @@
+{
+ "pills": [
+  {
+   "t": "Plugin Claude Code",
+   "dot": true
+  },
+  {
+   "t": "8 agents"
+  },
+  {
+   "t": "Open source"
+  }
+ ],
+ "pill_sep": "",
+ "title": "8 agents Claude Code",
+ "title_accent": "qui relisent ta PR avant la review",
+ "window_title": "claude · ~/billing",
+ "chip_html": "feat/discounts",
+ "prompt_glyph": ">",
+ "command": "/pr-squad:ship ",
+ "command_arg": "ajouter une remise aux factures",
+ "slash_hint": {
+  "cmd": "/pr-squad:ship",
+  "desc": "Run the 8 pr-squad agents on the current branch and give one merge verdict."
+ },
+ "cards": [
+  {
+   "skill": "secret-scan",
+   "title": "Secrets",
+   "tag": "BLOCK",
+   "desc": "Clés et tokens avant le push",
+   "preview": {
+    "type": "code",
+    "html": "<span class=\"m\">settings.py:24</span>\nSTRIPE_SECRET_KEY =\n  <span class=\"r\">\"sk_live_5…\"</span>"
+   }
+  },
+  {
+   "skill": "dep-audit",
+   "title": "Dépendances",
+   "tag": "BLOCK",
+   "desc": "Failles connues, paquets inutiles",
+   "preview": {
+    "type": "badges",
+    "items": [
+     {
+      "t": "PyYAML 5.3.1",
+      "c": "r"
+     },
+     {
+      "t": "PYSEC-2021-142",
+      "c": "r"
+     },
+     {
+      "t": "jamais importé",
+      "c": "a"
+     }
+    ]
+   }
+  },
+  {
+   "skill": "migration-guard",
+   "title": "Migrations",
+   "tag": "BLOCK",
+   "desc": "Rejouées sur une base remplie",
+   "preview": {
+    "type": "code",
+    "html": "$ manage.py migrate\n<span class=\"r\">IntegrityError: NOT NULL</span>\n<span class=\"m\">invoice.discount_percent</span>"
+   }
+  },
+  {
+   "skill": "scope-check",
+   "title": "Périmètre",
+   "tag": "FIX",
+   "desc": "Ce qui n'a rien à faire dans la PR",
+   "preview": {
+    "type": "rows",
+    "items": [
+     {
+      "k": "services.py",
+      "v": "IN",
+      "c": "g"
+     },
+     {
+      "k": "views.py",
+      "v": "IN",
+      "c": "g"
+     },
+     {
+      "k": "admin.py",
+      "v": "OUT",
+      "c": "a"
+     }
+    ]
+   }
+  },
+  {
+   "skill": "test-gaps",
+   "title": "Tests",
+   "tag": "FIX",
+   "desc": "Écrit les tests qui manquent",
+   "preview": {
+    "type": "dots",
+    "items": [
+     true,
+     true,
+     false,
+     false
+    ],
+    "label": "4 écrits, 2 échouent"
+   }
+  },
+  {
+   "skill": "bug-hunt",
+   "title": "Bugs",
+   "tag": "BLOCK",
+   "desc": "Chaque bug avec l'entrée qui casse",
+   "preview": {
+    "type": "code",
+    "html": "apply_discount(1000, 150)\n<span class=\"r\">→ -500.0</span>\n<span class=\"m\">total négatif</span>"
+   }
+  },
+  {
+   "skill": "query-check",
+   "title": "Requêtes N+1",
+   "tag": "FIX",
+   "desc": "Comptées, pas devinées",
+   "preview": {
+    "type": "bars",
+    "before": 41,
+    "after": 2,
+    "before_label": "avant",
+    "after_label": "après",
+    "note": "requêtes pour\n20 factures"
+   }
+  },
+  {
+   "skill": "pr-writer",
+   "title": "Description PR",
+   "desc": "Écrite depuis le diff et les verdicts",
+   "preview": {
+    "type": "code",
+    "html": "<span class=\"p\">feat(invoices):</span> add\npercentage discount\n<span class=\"r\">DO NOT MERGE</span>"
+   }
+  },
+  {
+   "skill": "/pr-squad:ship",
+   "title": "Verdict",
+   "highlight": true,
+   "desc": "Une ligne, avant la review",
+   "preview": {
+    "type": "verdict",
+    "big": "SHIP: STOP",
+    "small": "4 BLOCK · 4 FIX à corriger"
+   },
+   "dot": "block"
+  }
+ ],
+ "status_html": "<span class=\"ok\">✓ 8/8</span> défauts plantés trouvés <span class=\"sep\">·</span> dépôt piège Django <span class=\"right\">rejouable avec test/run_checks.py</span>",
+ "anim": {
+  "running": "analyse en cours",
+  "queued": "en attente",
+  "status_running": "<span class=\"ok\">{done}/{total}</span> agents terminés <span class=\"sep\">·</span> dans l'ordre, sans s'arrêter au premier problème",
+  "intro_glyph": "$",
+  "intro_command": "claude"
+ },
+ "cta_before": "Commente",
+ "cta_keyword": "SHIP",
+ "cta_after": "pour recevoir les 8 agents",
+ "footer": "Darius Tokam · Arivex  ·  gratuit, open source, testé sur un dépôt piège"
+}
