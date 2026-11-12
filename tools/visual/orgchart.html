@@ -70,6 +70,7 @@
   .card.f.r .v { color: var(--red); } .card.f.a .v { color: var(--amber); } .card.f.g .v { color: var(--green); }
   .card.f { height: 132px; }
   .card.w { height: 124px; }
+  .cols.wide .card .v { font-size: 17px; } .cols.wide .card.f .v { font-size: 15.5px; } .cols.wide .hd .t { font-size: 18px; }
   .tag { font-family: var(--mono); font-weight: 700; font-size: 13px; text-align: center; height: 38px; line-height: 36px; border-radius: 9px; letter-spacing: .06em; }
   .tag.r { background: rgba(255,118,118,.12); color: var(--red); border: 1px solid rgba(255,118,118,.35); }
   .tag.a { background: rgba(251,192,78,.12); color: var(--amber); border: 1px solid rgba(251,192,78,.35); }
@@ -137,7 +138,7 @@ $('sub').innerHTML = S.sub || '';
 $('ringN').textContent = S.ring.n; $('ringL').textContent = S.ring.label;
 $('rootIc').innerHTML = pixel(S.root.icon || 'term', 34, '#13101b');
 $('rootCmd').textContent = S.root.cmd; $('rootLbl').textContent = S.root.desc;
-$('vBig').textContent = S.verdict.big; $('vSmall').textContent = S.verdict.small;
+$('vBig').textContent = S.verdict.big; if (S.verdict.tone === 'ok') $('vBig').style.color = 'var(--green)'; $('vSmall').textContent = S.verdict.small;
 $('vProof').innerHTML = S.verdict.proof;
 $('ctaB').textContent = S.cta_before; $('ctaK').textContent = S.cta_keyword; $('ctaA').textContent = S.cta_after;
 $('ft').textContent = S.footer;
@@ -152,6 +153,8 @@ S.columns.forEach((c, i) => {
 });
 
 const cols = $('cols');
+cols.style.gridTemplateColumns = `repeat(${S.columns.length}, 1fr)`;
+if (S.columns.length <= 5) cols.classList.add('wide');
 const TAGC = { BLOCK: 'r', FIX: 'a' };
 S.columns.forEach((c, i) => {
   const el = document.createElement('div'); el.className = 'col'; el.id = 'col' + i; el.style.setProperty('--c', c.color);
@@ -161,7 +164,7 @@ S.columns.forEach((c, i) => {
     <div class="sk">${c.skill}</div>
     <div class="card w"><div class="k">${S.labels.checks}</div><div class="v">${c.checks}</div></div>
     <div class="card f ${fc}" data-run="${S.labels.running}"><div class="k">${S.labels.found}</div><div class="v">${c.found}</div></div>
-    <div class="tag ${TAGC[c.tag] || 'g'}">${c.tag}</div>`;
+    <div class="tag ${c.tag_color || TAGC[c.tag] || 'g'}">${c.tag}</div>`;
   cols.appendChild(el);
 });
 
