@@ -1,4 +1,4 @@
-# pr-squad : 8 agents Claude Code qui relisent ta PR avant ton lead
+# pr-squad : 8 agents Claude Code qui relisent ta PR avant la review
 
 Tu tapes `/pr-squad:ship` sur ta branche. Huit agents passent le diff au crible et te rendent un verdict : `GO`, `FIX FIRST` ou `STOP`.
 
@@ -31,6 +31,15 @@ Puis, sur ta branche :
 L'objectif après la commande est optionnel. Sans lui, scope-check le déduit du titre de la PR ou des commits.
 
 Tu peux aussi appeler un seul agent : « lance secret-scan sur ma branche ».
+
+## Sans taper la commande
+
+Dis simplement à Claude Code ce que tu veux : « fais une PR pour ajouter la remise aux factures ». Le skill `review-before-pr` lance la revue complète avant de créer la PR :
+
+- verdict `GO` : la PR est créée avec la description écrite par pr-writer ;
+- verdict `FIX FIRST` ou `STOP` : Claude te montre les problèmes et te demande s'il faut corriger d'abord ou ouvrir quand même la PR en brouillon.
+
+Un hook sert de garde-fou : tant que le commit en cours n'a pas été relu, il bloque `gh pr create`, `glab mr create` et les outils MCP qui créent une PR, et demande la revue d'abord. Un nouveau commit après la revue demande une nouvelle revue. Le hook n'utilise que bash et git. Pour le couper : `PR_SQUAD_SKIP=1`.
 
 ## Testé sur un dépôt piège
 

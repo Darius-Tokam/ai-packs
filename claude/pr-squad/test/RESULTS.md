@@ -30,9 +30,26 @@ Trouvés en plus, sans les avoir plantés :
 - la suite existante est rouge sur la branche (`test_invoice_total_sums_lines`, conséquence du défaut 4) ;
 - `django 5.2.8` et `requests 2.32.3` ont des failles connues (PYSEC-2026-3717, PYSEC-2026-4035, PYSEC-2026-1872, PYSEC-2026-2275). Elles existaient déjà sur `main`, donc dep-audit les classe en NOTE.
 
+## Le déclencheur (version 1.1.0, 12 novembre 2026)
+
+Le hook `hooks/require-review.sh` a été rejoué sur 8 cas avec `bash test/test_hook.sh` : 8 sur 8 conformes.
+
+| Cas | Attendu | Obtenu |
+|---|---|---|
+| `gh pr create` sans revue | bloqué | bloqué |
+| `glab mr create` sans revue | bloqué | bloqué |
+| outil MCP `create_pull_request` sans revue | bloqué | bloqué |
+| `git push` | laissé passer | laissé passer |
+| commande sans rapport (`ls`) | laissé passer | laissé passer |
+| `gh pr create` avec `PR_SQUAD_SKIP=1` | laissé passer | laissé passer |
+| `gh pr create` après une revue du commit en cours | laissé passer | laissé passer |
+| `gh pr create` après un nouveau commit | bloqué | bloqué |
+
 ## Limite du test
 
 Le même agent a planté les défauts puis lancé les contrôles. Les mesures outillées (detect-secrets, pip-audit, migration, pytest, comptage de requêtes) sont reproductibles avec `run_checks.py` et ne dépendent pas de lui. La lecture de scope-check et le choix des entrées de bug-hunt, eux, ne sont pas un test à l'aveugle. Lance `/pr-squad:ship` sur une de tes branches et compare.
+
+Pour le déclencheur, le script du hook est testé, pas le choix du modèle : que Claude Code active `review-before-pr` sur « fais une PR » dépend de la description du skill. Le hook est le filet si le skill n'est pas choisi.
 
 ## Description de PR générée par pr-writer
 

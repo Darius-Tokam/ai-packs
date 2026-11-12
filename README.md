@@ -10,7 +10,7 @@ Un pack par métier, prêt à l'emploi. Des agents Claude Code ou des workflows 
 
 | Pack | Pour qui | Ce que tu gagnes | Type |
 |---|---|---|---|
-| [pr-squad](claude/pr-squad) | Développeurs | 8 agents relisent ta branche avant ton lead : secrets, CVE, migrations, tests, bugs, N+1, description de PR | Claude Code |
+| [pr-squad](claude/pr-squad) | Développeurs | 8 agents relisent ta branche avant la review : secrets, CVE, migrations, tests, bugs, N+1, description de PR | Claude Code |
 
 ### Installer un pack Claude Code
 

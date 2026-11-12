@@ -1,14 +1,21 @@
 {
   "name": "pr-squad",
-  "version": "1.0.0",
-  "description": "8 Claude Code agents that review your branch before your lead does: secrets, dependencies, migrations, scope, tests, bugs, N+1 queries and the PR description. One command: /pr-squad:ship.",
+  "version": "1.1.0",
+  "description": "8 Claude Code agents that review your branch before code review: secrets, dependencies, migrations, scope, tests, bugs, N+1 queries and the PR description. Run /pr-squad:ship, or just ask for a PR: the review runs first and a hook holds the PR until the commit is reviewed.",
   "author": {
     "name": "Darius Tokam (Arivex)",
     "url": "https://tokamdarius.ca"
   },
   "repository": "https://github.com/Darius-Tokam/ai-packs",
   "license": "MIT",
-  "keywords": ["code-review", "pull-request", "security", "testing", "django", "claude-code"],
+  "keywords": [
+    "code-review",
+    "pull-request",
+    "security",
+    "testing",
+    "django",
+    "claude-code"
+  ],
   "skills": [
     "./skills/secret-scan",
     "./skills/dep-audit",
@@ -17,6 +24,7 @@
     "./skills/test-gaps",
     "./skills/bug-hunt",
     "./skills/query-check",
-    "./skills/pr-writer"
+    "./skills/pr-writer",
+    "./skills/review-before-pr"
   ]
 }

@@ -9,7 +9,7 @@
     {
       "name": "pr-squad",
       "source": "./claude/pr-squad",
-      "description": "8 Claude Code agents that review your branch before your lead does. One command: /pr-squad:ship.",
+      "description": "8 Claude Code agents that review your branch before code review. Run /pr-squad:ship, or just ask for a PR.",
       "category": "development",
       "keywords": ["code-review", "pull-request", "security", "testing"]
     }
