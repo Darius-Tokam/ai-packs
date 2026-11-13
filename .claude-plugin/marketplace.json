@@ -11,7 +11,24 @@
       "source": "./claude/pr-squad",
       "description": "8 Claude Code agents that review your branch before code review. Run /pr-squad:ship, or just ask for a PR.",
       "category": "development",
-      "keywords": ["code-review", "pull-request", "security", "testing"]
+      "keywords": [
+        "code-review",
+        "pull-request",
+        "security",
+        "testing"
+      ]
+    },
+    {
+      "name": "invoice-chaser",
+      "source": "./claude/invoice-chaser",
+      "description": "8 Claude Code agents that find the money freelancers are owed: bank reconciliation, tax and duplicate checks, one verified reminder per client. Run /invoice-chaser:chase, or just ask to chase your unpaid invoices.",
+      "category": "productivity",
+      "keywords": [
+        "freelance",
+        "invoices",
+        "reminders",
+        "bookkeeping"
+      ]
     }
   ]
 }

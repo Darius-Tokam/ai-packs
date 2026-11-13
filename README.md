@@ -11,6 +11,7 @@ Un pack par métier, prêt à l'emploi. Des agents Claude Code ou des workflows 
 | Pack | Pour qui | Ce que tu gagnes | Type |
 |---|---|---|---|
 | [pr-squad](claude/pr-squad) | Développeurs | 8 agents relisent ta branche avant la review : secrets, CVE, migrations, tests, bugs, N+1, description de PR | Claude Code |
+| [invoice-chaser](claude/invoice-chaser) | Freelances | 8 agents retrouvent l'argent qu'on te doit : rapprochement bancaire, taxes, doublons, un courriel de relance vérifié par client | Claude Code |
 
 ### Installer un pack Claude Code
 

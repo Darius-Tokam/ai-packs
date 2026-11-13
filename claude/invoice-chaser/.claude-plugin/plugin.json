@@ -1,0 +1,30 @@
+{
+  "name": "invoice-chaser",
+  "version": "1.0.0",
+  "description": "8 Claude Code agents that find the money freelancers are owed: reconcile invoices with the bank, check taxes and duplicates, rank late invoices and draft one verified reminder per client. Run /invoice-chaser:chase, or just ask to chase your unpaid invoices.",
+  "author": {
+    "name": "Darius Tokam (Arivex)",
+    "url": "https://tokamdarius.ca"
+  },
+  "repository": "https://github.com/Darius-Tokam/ai-packs",
+  "license": "MIT",
+  "keywords": [
+    "freelance",
+    "invoices",
+    "accounts-receivable",
+    "reminders",
+    "bookkeeping",
+    "claude-code"
+  ],
+  "skills": [
+    "./skills/ledger-import",
+    "./skills/bank-match",
+    "./skills/aging",
+    "./skills/tax-check",
+    "./skills/duplicate-guard",
+    "./skills/priority",
+    "./skills/reminder-writer",
+    "./skills/chase-plan",
+    "./skills/chase-unpaid-invoices"
+  ]
+}

@@ -1,0 +1,207 @@
+{
+ "pills": [
+  {
+   "t": "Plugin Claude Code",
+   "dot": true
+  },
+  {
+   "t": "Freelances"
+  },
+  {
+   "t": "Open source"
+  }
+ ],
+ "title": "8 agents Claude Code",
+ "title_accent": "qui retrouvent l'argent qu'on te doit",
+ "window_title": "claude · ~/factures-2026",
+ "chip_html": "comptes piégés",
+ "command": "/invoice-chaser:chase ",
+ "command_arg": "2026-11-12",
+ "cards": [
+  {
+   "num": "01",
+   "title": "Import",
+   "desc": "Ton export et ton relevé, au même format",
+   "preview": {
+    "type": "rows",
+    "items": [
+     {
+      "k": "invoices.csv",
+      "v": "21 factures",
+      "c": "g"
+     },
+     {
+      "k": "bank.csv",
+      "v": "11 lignes",
+      "c": "g"
+     },
+     {
+      "k": "clients",
+      "v": "7 fictifs",
+      "c": "a"
+     }
+    ]
+   }
+  },
+  {
+   "num": "02",
+   "title": "Rapprochement",
+   "tag": "FIX",
+   "desc": "Les factures déjà payées sortent des relances",
+   "preview": {
+    "type": "code",
+    "html": "<span class=\"m\">F-2026-007 · impayée ?</span>\n<span class=\"g\">virement 1 609,65 $</span>\n<span class=\"r\">ne pas relancer</span>"
+   }
+  },
+  {
+   "num": "03",
+   "title": "Retard",
+   "desc": "Le solde réel, par tranche de jours",
+   "preview": {
+    "type": "rows",
+    "items": [
+     {
+      "k": "1-30 jours",
+      "v": "3 441,66 $",
+      "c": "a"
+     },
+     {
+      "k": "31-60 jours",
+      "v": "3 596,59 $",
+      "c": "a"
+     },
+     {
+      "k": "90 jours et +",
+      "v": "2 069,55 $",
+      "c": "r"
+     }
+    ]
+   }
+  },
+  {
+   "num": "04",
+   "title": "Taxes",
+   "tag": "BLOCK",
+   "desc": "TPS et TVQ recalculées au cent près",
+   "preview": {
+    "type": "code",
+    "html": "<span class=\"m\">F-2026-016</span>\nTVQ facturée <span class=\"r\">152,00 $</span>\nattendue    <span class=\"g\">159,60 $</span>"
+   }
+  },
+  {
+   "num": "05",
+   "title": "Doublons",
+   "tag": "BLOCK",
+   "desc": "Même client, même date, même total",
+   "preview": {
+    "type": "badges",
+    "items": [
+     {
+      "t": "F-2026-018 doublon",
+      "c": "r"
+     },
+     {
+      "t": "F-2026-014 absente",
+      "c": "a"
+     },
+     {
+      "t": "en attente",
+      "c": "a"
+     }
+    ]
+   }
+  },
+  {
+   "num": "06",
+   "title": "Priorité",
+   "desc": "Solde x jours de retard",
+   "preview": {
+    "type": "rows",
+    "items": [
+     {
+      "k": "1. F-2026-004",
+      "v": "133 jours",
+      "c": "r"
+     },
+     {
+      "k": "2. F-2026-013",
+      "v": "33 jours",
+      "c": "a"
+     },
+     {
+      "k": "3. F-2026-008",
+      "v": "85 jours",
+      "c": "r"
+     }
+    ]
+   }
+  },
+  {
+   "num": "07",
+   "title": "Relances",
+   "desc": "Un courriel par client, le bon ton",
+   "preview": {
+    "type": "badges",
+    "items": [
+     {
+      "t": "3 derniers avis",
+      "c": "r"
+     },
+     {
+      "t": "1 relance ferme",
+      "c": "a"
+     },
+     {
+      "t": "acompte déduit",
+      "c": "g"
+     }
+    ]
+   }
+  },
+  {
+   "num": "08",
+   "title": "Vérification",
+   "desc": "Chaque montant contrôlé par script",
+   "preview": {
+    "type": "dots",
+    "items": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "label": "4 pièges sur 4 attrapés"
+   }
+  },
+  {
+   "num": "09",
+   "title": "Verdict",
+   "highlight": true,
+   "desc": "Ce que tu peux relancer ce matin",
+   "preview": {
+    "type": "verdict",
+    "go": true,
+    "big": "8 080,63 $",
+    "small": "7 factures · 4 courriels prêts"
+   }
+  }
+ ],
+ "cta_before": "Commente",
+ "cta_keyword": "RELANCE",
+ "cta_after": "pour recevoir les 8 agents",
+ "footer": "Darius Tokam · Arivex  ·  gratuit, open source, testé sur 21 factures fictives",
+ "pill_sep": "",
+ "prompt_glyph": ">",
+ "slash_hint": {
+  "cmd": "/invoice-chaser:chase",
+  "desc": "Find who owes you, draft one verified reminder per client."
+ },
+ "status_html": "<span class=\"ok\">✓ 8/8</span> défauts plantés trouvés <span class=\"sep\">·</span> 21 factures fictives <span class=\"right\">rejouable avec test/run_checks.py</span>",
+ "anim": {
+  "running": "analyse en cours",
+  "queued": "en attente",
+  "status_running": "<span class=\"ok\">{done}/{total}</span> agents terminés <span class=\"sep\">·</span> rien ne part sans toi",
+  "intro_glyph": "$",
+  "intro_command": "claude"
+ }
+}

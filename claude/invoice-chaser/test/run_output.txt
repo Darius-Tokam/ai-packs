@@ -1,0 +1,49 @@
+=== chase.py check ===
+# invoice-chaser report, as of 2026-11-12
+
+21 invoices, 10 deposits.
+
+## Findings
+
+| Severity | Agent | Invoice | Finding |
+|---|---|---|---|
+| BLOCK | duplicate-guard | F-2026-018 | same client, date and total as F-2026-017: probable duplicate. Cancel it or confirm it |
+| BLOCK | tax-check | F-2026-016 | TVQ is 152,00 $, expected 159,60 $ (9.975 % of 1 600,00 $). Fix the invoice before any reminder |
+| FIX | aging | F-2026-013 | no due date: 30-day terms assumed, due 2026-10-10. Put the due date on the invoice |
+| FIX | bank-match | F-2026-007 | marked unpaid in the books but paid in full: 2026-08-04 1 609,65 $ (Virement Demo Bravo F-2026-007). Do not chase, mark paid |
+| FIX | bank-match | F-2026-010 | partial payment 600,00 $ of 1 149,75 $: chase the balance 549,75 $ only |
+| FIX | bank-match | F-2026-012 | deposit of 1 437,19 $ on 2026-10-03 has no invoice number but matches amount and client: probably paid, confirm then mark paid |
+| FIX | duplicate-guard | F-2026-014 | missing from the sequence: never issued, deleted or forgotten in the export? Check before your tax return |
+| NOTE | bank-match | - | deposit 0,42 $ on 2026-10-31 (Interets compte) matches no invoice |
+| NOTE | priority | F-2026-004 | chase first: 2 069,55 $, 133 days late (Demo Delta) |
+
+=== planted defects ===
+FOUND | 1 | bank-match | F-2026-007 payee mais marquee impayee
+FOUND | 2 | bank-match | F-2026-010 payee en partie (600 $)
+FOUND | 3 | bank-match | F-2026-012 payee sans numero de facture dans le virement
+FOUND | 4 | duplicate-guard | F-2026-018 doublon de F-2026-017
+FOUND | 5 | duplicate-guard | F-2026-014 absente de la numerotation
+FOUND | 6 | tax-check | F-2026-016 TVQ calculee a 9,5 %
+FOUND | 7 | aging | F-2026-013 sans date d'echeance
+FOUND | 8 | priority | F-2026-004 la plus en retard (133 jours) passe en tete
+8/8 planted defects found; 1 other findings:
+  NOTE | bank-match | - | deposit 0,42 $ on 2026-10-31 (Interets compte) matches no invoice
+
+=== money ===
+to recover: 8080.63 on 7 invoices, 4 emails; on hold: 2406.88
+reminders avoided on invoices already paid: F-2026-012, F-2026-007
+
+=== verify: drafted reminders ===
+VERIFY: 4 emails checked, 0 problems
+
+=== verify: trap reminders (4 planted mistakes) ===
+PROBLEM demo-alpha-inc.md: invoice F-2026-022 is not due yet (due 2026-12-09), do not chase it
+PROBLEM demo-delta.md: amount 2 568,94 $ matches no balance, total or payment of this client
+PROBLEM demo-foxtrot.md: invoice F-2026-015 is overdue for this client but missing from the email
+PROBLEM demo-golf.md: invoice F-2026-018 is on hold (duplicate), fix it before chasing
+VERIFY: 4 emails checked, 4 problems
+
+=== dashes in the pack ===
+files with a long or medium dash: none
+
+RESULT: PASS
