@@ -1,0 +1,273 @@
+{
+  "name": "relance-radar : relancer les devis et prospects sans réponse",
+  "nodes": [
+    {
+      "id": "b12437ad-cbf0-4a1f-97aa-dd271009865c",
+      "name": "Chaque matin de semaine, 8 h",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "weeksInterval": 1,
+              "triggerAtDay": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "triggerAtHour": 8,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "4994dce6-0141-4fac-909f-7b63d1a29c72",
+      "name": "Réglages",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        0
+      ],
+      "parameters": {
+        "mode": "manual",
+        "includeOtherFields": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "mon-adresse",
+              "name": "mon_adresse",
+              "value": "toi@exemple.com",
+              "type": "string"
+            },
+            {
+              "id": "jours",
+              "name": "jours_avant_relance",
+              "value": 5,
+              "type": "number"
+            },
+            {
+              "id": "max",
+              "name": "relances_max",
+              "value": 2,
+              "type": "number"
+            },
+            {
+              "id": "fenetre",
+              "name": "fenetre_jours",
+              "value": 45,
+              "type": "number"
+            },
+            {
+              "id": "exclusion",
+              "name": "liste_exclusion",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "signature",
+              "name": "signature",
+              "value": "Ton prénom",
+              "type": "string"
+            },
+            {
+              "id": "date",
+              "name": "date_du_jour",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fb4b63cb-ea23-46aa-9554-f3d0a6b3ff71",
+      "name": "Fils envoyés",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        0
+      ],
+      "parameters": {
+        "resource": "thread",
+        "operation": "getAll",
+        "returnAll": true,
+        "filters": {
+          "q": "=in:sent newer_than:{{ $json.fenetre_jours }}d",
+          "readStatus": "both"
+        }
+      }
+    },
+    {
+      "id": "9d769f6a-2683-4cf9-a95e-5f593ae28595",
+      "name": "Lire le fil",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        0
+      ],
+      "parameters": {
+        "resource": "thread",
+        "operation": "get",
+        "threadId": "={{ $json.id }}",
+        "simple": true,
+        "options": {
+          "returnOnlyMessages": true
+        }
+      }
+    },
+    {
+      "id": "eb06987b-819d-45a6-aa31-65291a4ca10a",
+      "name": "Choisir les relances",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// relance-radar : choisir les fils à relancer. Ne crée rien, ne envoie rien :\n// rend une décision par fil (relancer ou ignorer, avec la raison).\nconst s = $('Réglages').first().json;\nconst me = String(s.mon_adresse || '').trim().toLowerCase();\nconst waitDays = Number(s.jours_avant_relance || 5);\nconst maxFollow = Number(s.relances_max || 2);\nconst excluded = String(s.liste_exclusion || '').toLowerCase().split(/[\\s,;]+/).filter(Boolean);\nconst signature = String(s.signature || '').trim();\nconst now = s.date_du_jour ? new Date(String(s.date_du_jour) + 'T12:00:00Z') : new Date();\nconst DAY = 86400000;\nconst dayOf = d => Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());\n\nconst addr = v => {\n  const m = String(v || '').match(/<([^>]+)>/);\n  return (m ? m[1] : String(v || '')).trim().toLowerCase();\n};\nconst firstName = v => {\n  const m = String(v || '').match(/^\\s*\"?([^\"<,@]+?)\"?\\s*</);\n  return m ? m[1].trim().split(/\\s+/)[0] : '';\n};\nconst labelsOf = m => (m.labels || m.labelIds || []).map(l => String(l.id || l.name || l).toUpperCase());\nconst dateOf = m => new Date(Number(m.internalDate) || Date.parse(m.Date || m.date || 0));\nconst fr = d => d.toLocaleDateString('fr-CA', { day: 'numeric', month: 'long', timeZone: 'UTC' });\nconst isExcluded = a => excluded.some(x => (x.startsWith('@') ? a.endsWith(x) : a === x));\n\n// Les messages arrivent un par item (ou groupés dans messages[]) : on les range par fil.\nconst threads = {};\nfor (const it of $input.all()) {\n  const j = it.json;\n  const list = Array.isArray(j.messages) ? j.messages : [j];\n  for (const m of list) {\n    const t = m.threadId || j.id;\n    (threads[t] = threads[t] || []).push(m);\n  }\n}\n\nconst out = [];\nfor (const [threadId, msgs] of Object.entries(threads)) {\n  msgs.sort((a, b) => dateOf(a) - dateOf(b));\n  const drafts = msgs.filter(m => labelsOf(m).includes('DRAFT'));\n  const real = msgs.filter(m => !labelsOf(m).includes('DRAFT'));\n  const mine = real.filter(m => addr(m.From) === me);\n  const others = real.filter(m => addr(m.From) !== me);\n  const first = mine[0];\n  const decision = { threadId, a: first ? addr(first.To) : '', sujet: String((first || msgs[0]).Subject || '').replace(/^\\s*((re|tr|fwd?)\\s*:\\s*)+/i, '') };\n  const skip = raison => out.push({ json: { ...decision, action: 'ignorer', raison } });\n\n  if (!first) { skip(\"aucun message envoyé par toi dans ce fil\"); continue; }\n  if (others.some(m => /mailer-daemon|postmaster/i.test(addr(m.From)))) { skip('adresse en erreur (message non distribué)'); continue; }\n  if (others.length) { skip('a répondu'); continue; }\n  if (isExcluded(decision.a)) { skip(\"sur ta liste d'exclusion\"); continue; }\n  if (drafts.length) { skip('un brouillon de relance attend déjà dans ce fil'); continue; }\n  const done = mine.length - 1;\n  if (done >= maxFollow) { skip(`déjà relancé ${done} fois, maximum atteint`); continue; }\n  const last = mine[mine.length - 1];\n  const days = Math.round((dayOf(now) - dayOf(dateOf(last))) / DAY);\n  if (days < waitDays) { skip(`trop récent (${days} jours, attente de ${waitDays})`); continue; }\n\n  const n = done + 1;\n  const hello = firstName(first.To) ? `Bonjour ${firstName(first.To)},` : 'Bonjour,';\n  const sentences = n === 1\n    ? [\n        `Je reviens vers vous au sujet de mon message du ${fr(dateOf(first))}, « ${decision.sujet} ».`,\n        \"Est-ce toujours d'actualité de votre côté ?\",\n        'Une réponse en un mot me suffit : oui, non ou plus tard.',\n      ]\n    : [\n        `Je n'ai pas eu de retour sur « ${decision.sujet} », envoyé le ${fr(dateOf(first))}.`,\n        \"Si ce n'est plus une priorité, dites-le-moi et je ferme le dossier de mon côté.\",\n        \"Si ça l'est encore, je vous propose un court appel cette semaine pour avancer.\",\n      ];\n  out.push({\n    json: {\n      ...decision,\n      action: 'relancer',\n      raison: `${days} jours sans réponse, relance n°${n}`,\n      relance_numero: n,\n      jours_sans_reponse: days,\n      objet: `Re: ${decision.sujet}`,\n      message: [hello, '', ...sentences, '', signature].join('\\n').trim(),\n    },\n  });\n}\nreturn out;\n"
+      }
+    },
+    {
+      "id": "c813ff72-5603-448e-ae02-62a4c7a74ddc",
+      "name": "À relancer",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.action }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "relancer"
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "032e6ca2-37ff-421b-90f2-048181c88249",
+      "name": "Créer le brouillon",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1344,
+        0
+      ],
+      "parameters": {
+        "resource": "draft",
+        "operation": "create",
+        "subject": "={{ $json.objet }}",
+        "emailType": "text",
+        "message": "={{ $json.message }}",
+        "options": {
+          "threadId": "={{ $json.threadId }}",
+          "sendTo": "={{ $json.a }}"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Chaque matin de semaine, 8 h": {
+      "main": [
+        [
+          {
+            "node": "Réglages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Réglages": {
+      "main": [
+        [
+          {
+            "node": "Fils envoyés",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fils envoyés": {
+      "main": [
+        [
+          {
+            "node": "Lire le fil",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lire le fil": {
+      "main": [
+        [
+          {
+            "node": "Choisir les relances",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Choisir les relances": {
+      "main": [
+        [
+          {
+            "node": "À relancer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "À relancer": {
+      "main": [
+        [
+          {
+            "node": "Créer le brouillon",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

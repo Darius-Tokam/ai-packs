@@ -1,0 +1,38 @@
+| Fil | Attendu | Décision | Raison | Résultat |
+|---|---|---|---|---|
+| t01 | relancer (relance1) | relancer | 15 jours sans réponse, relance n°1 | PASS |
+| t02 | relancer (relance1) | relancer | 15 jours sans réponse, relance n°1 | PASS |
+| t03 | relancer (relance1) | relancer | 15 jours sans réponse, relance n°1 | PASS |
+| t04 | relancer (relance1) | relancer | 15 jours sans réponse, relance n°1 | PASS |
+| t05 | relancer (relance1) | relancer | 15 jours sans réponse, relance n°1 | PASS |
+| t06 | relancer (relance1) | relancer | 15 jours sans réponse, relance n°1 | PASS |
+| t07 | relancer (relance1) | relancer | 15 jours sans réponse, relance n°1 | PASS |
+| t08 | ignorer (exclusion) | ignorer | sur ta liste d'exclusion | PASS |
+| t09 | relancer (relance1) | relancer | 8 jours sans réponse, relance n°1 | PASS |
+| t10 | relancer (relance1) | relancer | 8 jours sans réponse, relance n°1 | PASS |
+| t11 | relancer (relance1) | relancer | 8 jours sans réponse, relance n°1 | PASS |
+| t12 | relancer (relance1) | relancer | 8 jours sans réponse, relance n°1 | PASS |
+| t13 | relancer (relance1) | relancer | 8 jours sans réponse, relance n°1 | PASS |
+| t14 | relancer (relance1) | relancer | 8 jours sans réponse, relance n°1 | PASS |
+| t15 | relancer (relance1) | relancer | 8 jours sans réponse, relance n°1 | PASS |
+| t16 | ignorer (recent) | ignorer | trop récent (3 jours, attente de 5) | PASS |
+| t17 | ignorer (recent) | ignorer | trop récent (3 jours, attente de 5) | PASS |
+| t18 | ignorer (recent) | ignorer | trop récent (3 jours, attente de 5) | PASS |
+| t19 | ignorer (recent) | ignorer | trop récent (3 jours, attente de 5) | PASS |
+| t20 | ignorer (recent) | ignorer | trop récent (1 jours, attente de 5) | PASS |
+| t21 | ignorer (recent) | ignorer | trop récent (1 jours, attente de 5) | PASS |
+| t22 | ignorer (recent) | ignorer | trop récent (1 jours, attente de 5) | PASS |
+| t23 | ignorer (replied) | ignorer | a répondu | PASS |
+| t24 | ignorer (bounce) | ignorer | adresse en erreur (message non distribué) | PASS |
+| t25 | ignorer (max) | ignorer | déjà relancé 2 fois, maximum atteint | PASS |
+| t26 | relancer (relance2) | relancer | 8 jours sans réponse, relance n°2 | PASS |
+| t27 | ignorer (draft) | ignorer | un brouillon de relance attend déjà dans ce fil | PASS |
+
+threads: 27; drafts: 15; skipped: 12 {'exclusion': 1, 'recent': 7, 'replied': 1, 'bounce': 1, 'max': 1, 'draft': 1}
+drafts to an excluded, answered, bounced, maxed-out or already drafted thread: none
+drafts with greeting, 3 sentences, clean Re: subject and original date: 15/15
+second follow-up uses the other wording: ['t26']
+second run, drafts already in place: new drafts = 0
+files with a long or medium dash: none
+
+RESULT: PASS
