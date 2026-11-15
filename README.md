@@ -13,6 +13,7 @@ Un pack par métier, prêt à l'emploi. Des agents Claude Code ou des workflows 
 | [pr-squad](claude/pr-squad) | Développeurs | 8 agents relisent ta branche avant la review : secrets, CVE, migrations, tests, bugs, N+1, description de PR | Claude Code |
 | [invoice-chaser](claude/invoice-chaser) | Freelances | 8 agents retrouvent l'argent qu'on te doit : rapprochement bancaire, taxes, doublons, un courriel de relance vérifié par client | Claude Code |
 | [relance-radar](n8n/relance-radar) | Freelances | Chaque matin, un brouillon de relance dans Gmail pour les devis et prospects sans réponse. N'envoie rien. Guide d'installation inclus | n8n |
+| [post-recycler](claude/post-recycler) | Créateurs de contenu | 8 agents déclinent ton post en 10 formats (X, Threads, Bluesky, carrousel, Instagram, vidéo, newsletter...) et un script vérifie chaque limite et chaque chiffre | Claude Code |
 
 ### Installer un pack Claude Code
 

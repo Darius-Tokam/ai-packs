@@ -1,0 +1,30 @@
+{
+  "name": "post-recycler",
+  "version": "1.0.0",
+  "description": "8 Claude Code agents that turn one post into 10 formats (X post and thread, Threads, Bluesky, carousel, Instagram, 30 s video, newsletter, quote card, story) and check every limit and every number with a script. Run /post-recycler:recycle, or just ask to repurpose your post.",
+  "author": {
+    "name": "Darius Tokam (Arivex)",
+    "url": "https://tokamdarius.ca"
+  },
+  "repository": "https://github.com/Darius-Tokam/ai-packs",
+  "license": "MIT",
+  "keywords": [
+    "content",
+    "repurposing",
+    "social-media",
+    "creators",
+    "linkedin",
+    "claude-code"
+  ],
+  "skills": [
+    "./skills/x-writer",
+    "./skills/short-posts",
+    "./skills/carousel",
+    "./skills/insta-caption",
+    "./skills/video-script",
+    "./skills/newsletter",
+    "./skills/quote-card",
+    "./skills/fact-guard",
+    "./skills/recycle-my-post"
+  ]
+}

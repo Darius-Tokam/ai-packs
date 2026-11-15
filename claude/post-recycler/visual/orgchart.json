@@ -1,0 +1,105 @@
+{
+  "template": "orgchart",
+  "kicker": "Plugin Claude Code · open source",
+  "title": "Claude Code",
+  "title2": "Équipe contenu",
+  "sub": "<b>8 agents</b> déclinent ton post en 10 formats",
+  "ring": {
+    "n": "8",
+    "label": "AGENTS"
+  },
+  "root": {
+    "icon": "term",
+    "cmd": "/post-recycler:recycle",
+    "desc": "Ou dis « décline mon post pour X et Instagram »"
+  },
+  "labels": {
+    "checks": "écrit",
+    "found": "mesuré",
+    "running": "écrit…"
+  },
+  "columns": [
+    {
+      "title": "X",
+      "skill": "x-writer",
+      "icon": "bolt",
+      "color": "#f4a8b8",
+      "checks": "Un post et un fil",
+      "found": "240/280 car.\nfil de\n6 posts",
+      "tag": "PASS"
+    },
+    {
+      "title": "Threads, Bluesky",
+      "skill": "short-posts",
+      "icon": "term",
+      "color": "#cdb0f6",
+      "checks": "Deux posts, deux accroches",
+      "found": "286/500\noctets\n219/300 car.",
+      "tag": "PASS"
+    },
+    {
+      "title": "Carrousel",
+      "skill": "carousel",
+      "icon": "box",
+      "color": "#92d5f5",
+      "checks": "Une idée par slide",
+      "found": "8 slides\n20 mots max\npar slide",
+      "tag": "PASS"
+    },
+    {
+      "title": "Instagram",
+      "skill": "insta-caption",
+      "icon": "target",
+      "color": "#9fe7c6",
+      "checks": "Légende et hashtags",
+      "found": "550 car.\n5 hashtags",
+      "tag": "PASS"
+    },
+    {
+      "title": "Vidéo",
+      "skill": "video-script",
+      "icon": "bolt",
+      "color": "#f7d48f",
+      "checks": "Script vertical de 30 s",
+      "found": "64 mots\ndits",
+      "tag": "PASS"
+    },
+    {
+      "title": "Newsletter",
+      "skill": "newsletter",
+      "icon": "doc",
+      "color": "#f6ae92",
+      "checks": "Objet et une section",
+      "found": "objet de\n45 car.\n154 mots",
+      "tag": "PASS"
+    },
+    {
+      "title": "Citation, story",
+      "skill": "quote-card",
+      "icon": "doc",
+      "color": "#aebcff",
+      "checks": "Une citation et 4 écrans",
+      "found": "17 mots\nstory de\n4 écrans",
+      "tag": "PASS"
+    },
+    {
+      "title": "Garde-fou",
+      "skill": "fact-guard",
+      "icon": "check",
+      "color": "#dbe692",
+      "checks": "Chaque limite, chaque chiffre",
+      "found": "piège :\n8 défauts\n8 attrapés",
+      "tag": "8/8"
+    }
+  ],
+  "verdict": {
+    "big": "10/10 PASS",
+    "small": "0 chiffre absent du post source",
+    "proof": "<span class=\"ok\">✓ 8/8</span> défauts plantés attrapés, 0 fausse alerte<small>rejouable avec test/run_checks.py</small>",
+    "tone": "ok"
+  },
+  "cta_before": "Commente",
+  "cta_keyword": "RECYCLE",
+  "cta_after": "pour recevoir l'équipe",
+  "footer": "Darius Tokam · Arivex · gratuit, open source"
+}

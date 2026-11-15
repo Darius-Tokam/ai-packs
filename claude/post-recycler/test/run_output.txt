@@ -1,0 +1,45 @@
+=== guard on the 10 recycled formats ===
+| Format | Résultat | Mesure | Problèmes |
+|---|---|---|---|
+| x-post | PASS | 240/280 car. |  |
+| x-thread | PASS | 6 posts, max 191/280 |  |
+| threads | PASS | 286/500 octets |  |
+| bluesky | PASS | 219/300 car. |  |
+| carousel | PASS | 8 slides, max 20 mots |  |
+| instagram | PASS | 550/2200 car., 5 hashtags |  |
+| video-script | PASS | 64 mots dits |  |
+| newsletter | PASS | objet 45/60 car., 154 mots |  |
+| quote-card | PASS | 17/20 mots |  |
+| story | PASS | 4 écrans, max 9 mots |  |
+
+GUARD VERDICT: 10/10 formats PASS
+
+=== guard on the trap (8 planted defects) ===
+| Format | Résultat | Mesure | Problèmes |
+|---|---|---|---|
+| x-post | FAIL | 359/280 car. | 359 characters, X limit is 280 |
+| x-thread | FAIL | 6 posts, max 302/280 | post 4: 302 characters, X limit is 280 |
+| threads | FAIL | 516/500 octets | 516 UTF-8 bytes (476 characters), Threads limit is 500 (accents count double) |
+| bluesky | FAIL | 257/300 car. | numbers not in the source: 73 |
+| carousel | FAIL | 8 slides, max 49 mots | slide 2: 49 words, the pack allows 30 |
+| instagram | FAIL | 590/2200 car., 9 hashtags | 9 hashtags, the pack allows 5 |
+| video-script | PASS | 64 mots dits |  |
+| newsletter | FAIL | objet 74/60 car., 154 mots | subject 74 characters, the pack allows 60 |
+| quote-card | FAIL | 17/20 mots | long or medium dash |
+| story | PASS | 4 écrans, max 9 mots |  |
+
+GUARD VERDICT: 2/10 formats PASS, 8 to rewrite
+CAUGHT | x-post | X limit is 280
+CAUGHT | x-thread | X limit is 280
+CAUGHT | threads | UTF-8 bytes
+CAUGHT | bluesky | numbers not in the source: 73
+CAUGHT | carousel | the pack allows 30
+CAUGHT | instagram | 9 hashtags
+CAUGHT | newsletter | subject
+CAUGHT | quote-card | long or medium dash
+8/8 planted defects caught, 0 false alarms 
+
+=== dashes in the pack ===
+files with a long or medium dash: none
+
+RESULT: PASS

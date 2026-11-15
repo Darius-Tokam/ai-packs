@@ -29,6 +29,18 @@
         "reminders",
         "bookkeeping"
       ]
+    },
+    {
+      "name": "post-recycler",
+      "source": "./claude/post-recycler",
+      "description": "8 Claude Code agents that turn one post into 10 formats (X post and thread, Threads, Bluesky, carousel, Instagram, 30 s video, newsletter, quote card, story), then a script checks every limit and every number. Run /post-recycler:recycle, or just ask to repurpose your post.",
+      "category": "productivity",
+      "keywords": [
+        "content",
+        "repurposing",
+        "social-media",
+        "creators"
+      ]
     }
   ]
 }
