@@ -26,6 +26,18 @@ With "template": "mesure" (a measured comparison): the complete visual, then
 the bars are cleared and grow one after the other with their value; a group
 too small to conclude on shows in colour first, then is greyed with its stamp.
 
+With "template": "choix" (one input, one decision, several paths): everything
+stays on screen and dots run from the rule into the decision and down every
+path (2.4 s loop).
+
+With "template": "agent" (the Arivex mascot, what goes in and what comes out):
+every card stays on screen, dots run along the wires into the mascot and out
+of it, and its eyes look left, right, back, then blink (2.4 s loop).
+
+With "template": "ecart" (announced face to real): the complete visual, then
+each claim shows what was announced, then what exists with the gap marked
+in red, and the lesson last.
+
 With "template": "duo" (Claude Code pack + n8n bonus): the complete visual,
 then everything resets, the Claude Code agents light up one by one (orange
 while running, then their check), then the n8n workflow runs node by node as
@@ -59,7 +71,10 @@ anim.update(spec.get("anim", {}))
 ORG = template(spec) == "orgchart"
 DUO = template(spec) == "duo"
 MES = template(spec) == "mesure"
-if not ORG and not DUO and not MES:
+ECA = template(spec) == "ecart"
+AGT = template(spec) == "agent"
+CHX = template(spec) == "choix"
+if not ORG and not DUO and not MES and not ECA and not AGT and not CHX:
     labels = {"running": anim["running"], "queued": anim["queued"]}
     n_cards = len(spec["cards"])
     total = sum(1 for c in spec["cards"] if not c.get("highlight")) or n_cards
@@ -73,9 +88,15 @@ work = Path(tempfile.mkdtemp(prefix="gif-frames-"))
 
 
 def shot(page, seconds):
-    path = work / f"f{len(frames):03d}.png"
-    page.locator("#canvas").screenshot(path=str(path))
-    frames.append((path, seconds))
+    # the corner mascot lives on its own clock. A long hold is cut into 0.1 s frames so its
+    # eyes keep moving while the rest of the visual waits.
+    has_mascot = page.evaluate("!!window.MASCOT")
+    parts = max(1, round(seconds / 0.1)) if has_mascot and seconds >= 0.25 else 1
+    for k in range(parts):
+        page.evaluate("s => window.MASCOT && window.MASCOT.at(s)", sum(d for _, d in frames))
+        path = work / f"f{len(frames):03d}.png"
+        page.locator("#canvas").screenshot(path=str(path))
+        frames.append((path, seconds / parts))
 
 
 def run_status(done):
@@ -162,12 +183,51 @@ def mesure_loop(page):
     shot(page, 2.8)
 
 
-if ORG or DUO or MES:
+def ecart_loop(page):
+    """Ecart: complete, cleared, each claim shows what was announced, then what exists with
+    the gap marked; the lesson comes last; complete again."""
+    n = page.evaluate("R.n")
+
+    def st(rows, lesson):
+        page.evaluate("([r, l]) => { R.rows(r); R.lesson(l); }", [rows, lesson])
+
+    st(["done"] * n, True)
+    shot(page, 1.8)
+    st(["hidden"] * n, False)
+    shot(page, 0.5)
+    for i in range(n):
+        st(["done"] * i + ["left"] + ["hidden"] * (n - i - 1), False)
+        shot(page, 0.8)
+        st(["done"] * (i + 1) + ["hidden"] * (n - i - 1), False)
+        shot(page, 1.0)
+    st(["done"] * n, True)
+    shot(page, 3.2)
+
+
+def agent_loop(page):
+    """Agent: every card stays on screen; dots run along the wires into the mascot and out of
+    it, and the mascot's eyes look left, right, back, then blink. A short seamless loop."""
+    n = 30
+    for k in range(n):
+        page.evaluate("t => R.frame(t)", k / n)
+        shot(page, 0.08)
+
+
+def flow_loop(page):
+    """Choix: everything stays on screen, dots run from the rule into the hook and down every path.
+    30 frames of 0.08 s: 2.4 s, the corner mascot's own cycle, so the loop is seamless."""
+    n = 30
+    for k in range(n):
+        page.evaluate("t => R.frame(t)", k / n)
+        shot(page, 0.08)
+
+
+if ORG or DUO or MES or ECA or AGT or CHX:
     with sync_playwright() as p:
         browser = launch(p)
         page = open_page(browser, spec)
         warnings = layout_warnings(page, spec)
-        (org_loop if ORG else duo_loop if DUO else mesure_loop)(page)
+        (org_loop if ORG else duo_loop if DUO else mesure_loop if MES else ecart_loop if ECA else agent_loop if AGT else flow_loop)(page)
         browser.close()
 else:
     with sync_playwright() as p:

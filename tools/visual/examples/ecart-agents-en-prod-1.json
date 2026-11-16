@@ -1,0 +1,58 @@
+{
+  "template": "ecart",
+  "pills": [
+    {
+      "text": "Agents en prod",
+      "dot": "purple"
+    },
+    {
+      "text": "La vérité sur les agents",
+      "dot": "none"
+    },
+    {
+      "text": "Vécu, août et septembre 2026",
+      "dot": "none"
+    }
+  ],
+  "title": "« C'est fait »",
+  "title2": "n'est pas une preuve",
+  "left": {
+    "title": "Le compte rendu",
+    "sub": "ce que l'agent annonce",
+    "icon": "?"
+  },
+  "right": {
+    "title": "La boîte d'envoi",
+    "sub": "ce qui existe",
+    "icon": "="
+  },
+  "rows": [
+    {
+      "what": "brouillons de courriel",
+      "announced": "5 créés",
+      "real": "4 créés"
+    },
+    {
+      "what": "fiche d'un prospect",
+      "announced": "cite un brouillon",
+      "real": "jamais créé"
+    },
+    {
+      "what": "envois du jour",
+      "announced": "5 comptés",
+      "real": "6 partis",
+      "real_note": "4 jours de suite"
+    },
+    {
+      "what": "liste de suppression",
+      "announced": "respectée",
+      "real": "1 brouillon",
+      "real_note": "vers un contact exclu"
+    }
+  ],
+  "lesson_tag": "ce que j'ai changé",
+  "lesson": "Lis le système cible, pas le compte rendu.",
+  "band_series": "Agents en prod",
+  "band_number": "n°1",
+  "footer": "Darius Tokam · Arivex · prochain : la mémoire d'un agent"
+}

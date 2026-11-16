@@ -30,7 +30,7 @@ def _font_faces():
 
 
 def template(spec):
-    """grid (terminal + cards, the default), orgchart (orchestrator + columns), duo (Claude pack + n8n bonus) or mesure (bars of a measured comparison)."""
+    """grid (terminal + cards, the default), orgchart (orchestrator + columns), duo (Claude pack + n8n bonus), mesure (bars of a measured comparison), ecart (announced face to real), agent (the Arivex mascot, what goes in and what comes out) or choix (one decision, several paths)."""
     return spec.get("template", "grid")
 
 
@@ -43,6 +43,11 @@ def prepare(spec, spec_path):
 
     The path is relative to the spec file, or else to the repo root. Only node names,
     types, positions, operation, resource and mode are kept: no credential, no ID."""
+    if template(spec) == "agent":
+        # the Arivex mascot (head and body from arivex.ca), embedded so the page needs no network
+        spec["_mascot"] = {k: "data:image/webp;base64," + base64.b64encode((HERE / "assets" / f"arivex-{k}.webp").read_bytes()).decode()
+                           for k in ("head", "body")}
+        return spec
     if template(spec) != "duo":
         return spec
     n8n = spec["n8n"]
@@ -60,11 +65,64 @@ def prepare(spec, spec_path):
     return spec
 
 
+# The Arivex mascot in a corner of every visual (Darius, 2026-11-15): its eyes look left,
+# right, back and blink. "mascot": false removes it; {"pos": "tl"|"tr"|"bl"|"br", "size": 96,
+# "x": .., "y": ..} moves it. The "agent" template already has it in the middle.
+MASCOT_JS = r"""
+(function () {
+  const M = window.__MASCOT; if (!M) return;
+  const W = M.size, H = Math.round(W * 1.425), cv = document.getElementById('canvas');
+  const el = document.createElement('div');
+  el.id = 'mz'; el.style.cssText = `position:absolute;z-index:50;width:${W}px;height:${H}px;pointer-events:none;`;
+  const pos = M.pos || 'tr';
+  if (M.x !== undefined) el.style.left = M.x + 'px'; else if (pos[1] === 'l') el.style.left = '22px'; else el.style.right = '22px';
+  if (M.y !== undefined) el.style.top = M.y + 'px'; else if (pos[0] === 't') el.style.top = '14px'; else el.style.bottom = (M.bottom || 180) + 'px';
+  el.innerHTML = `<img src="${M.body}" style="position:absolute;left:0;top:${Math.round(W * 0.509)}px;width:${W}px">
+    <img src="${M.head}" style="position:absolute;left:0;top:0;width:${W}px">
+    <svg id="mzeyes" viewBox="0 0 840 840" style="position:absolute;left:0;top:0;width:${W}px;height:${W}px;overflow:visible"></svg>`;
+  cv.appendChild(el);
+  const EY = { happy: '<path d="M405 430 Q440 372 475 430" /><path d="M555 430 Q590 372 625 430" />', flat: '<path d="M405 420 H475" /><path d="M555 420 H625" />' };
+  function eyes(dx, open) {
+    const k = open < 0.35 ? 'flat' : 'happy', sy = open >= 1 ? 1 : Math.max(0.15, open);
+    document.getElementById('mzeyes').innerHTML = `<defs><filter id="mzg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+      <g transform="translate(${dx} ${(1 - sy) * 418}) scale(1 ${sy})"><g filter="url(#mzg)" stroke="#c9b8ff" stroke-width="24" stroke-linecap="round" fill="none">${EY[k]}</g></g>`;
+  }
+  /* at(seconds): one 2.4 s cycle, gaze left, right, back to the centre, then a blink */
+  window.MASCOT = {
+    at(sec) {
+      const t = ((sec % 2.4) + 2.4) % 2.4 / 2.4;
+      const gaze = t < 0.25 ? -Math.sin(t / 0.25 * Math.PI / 2) : t < 0.5 ? -Math.cos((t - 0.25) / 0.25 * Math.PI) :
+                   t < 0.75 ? Math.cos((t - 0.5) / 0.25 * Math.PI / 2) : 0;
+      const blink = t > 0.84 && t < 0.94 ? Math.abs((t - 0.89) / 0.05) : 1;
+      eyes(gaze * 30, blink);
+    },
+  };
+  window.MASCOT.at(0);
+})();
+"""
+
+
+def _mascot(spec):
+    opt = spec.get("mascot", True)
+    if opt is False or template(spec) == "agent":
+        return None
+    opt = dict(opt) if isinstance(opt, dict) else {}
+    opt.setdefault("size", 96)
+    for k in ("head", "body"):
+        opt[k] = "data:image/webp;base64," + base64.b64encode((HERE / "assets" / f"arivex-{k}.webp").read_bytes()).decode()
+    return opt
+
+
 def build_html(spec):
     html = (HERE / f"{template(spec)}.html").read_text()
     html = html.replace("/*FONTS*/", _font_faces())
-    return html.replace("const S = window.SPEC;",
+    html = html.replace("const S = window.SPEC;",
                         "const S = " + json.dumps(spec, ensure_ascii=False) + ";")
+    m = _mascot(spec)
+    if m:
+        html = html.replace("</body>", "<script>window.__MASCOT = " + json.dumps(m) + ";" + MASCOT_JS + "</script>\n</body>")
+    return html
 
 
 def launch(p):
@@ -88,9 +146,9 @@ def layout_warnings(page, spec=None):
         return _orgchart_warnings(page)
     if spec is not None and template(spec) == "duo":
         return _duo_warnings(page)
-    if spec is not None and template(spec) == "mesure":
+    if spec is not None and template(spec) in ("mesure", "ecart", "agent", "choix"):
         warnings = list(page.evaluate("R.warnings"))
-        overflow = page.evaluate("""() => [...document.querySelectorAll('.pill, .card, .row .lb, .stat, .sub, .cta .l, .cta .ft')]
+        overflow = page.evaluate("""() => [...document.querySelectorAll('.pill, .card, .row .lb, .stat, .sub, .cta .l, .cta .ft, .hd, .cell, .lesson, .band .l, .band .ft, .io, .box, .lane, .lane li, .note')]
             .filter(e => e.scrollHeight > e.clientHeight + 1 || e.scrollWidth > e.clientWidth + 1)
             .map(e => e.textContent.trim().slice(0, 40))""")
         if overflow:

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<style>
+  /*FONTS*/
+  :root {
+    --bg: #07080a; --panel: #0e1116; --panel-2: #121720; --line: #1d2530; --line-2: #2b3543;
+    --text: #f3f5f7; --muted: #9aa7b4; --dim: #5f6d7b;
+    --red: #ff7676; --amber: #fbc04e; --green: #5be39a; --purple: #b9a6f5; --cyan: #2dd4bf; --coral: #f2a28a;
+    --accent: linear-gradient(100deg, #f2b8b4 0%, #d6aef0 55%, #b9a6f5 100%);
+    --sans: 'Inter', system-ui, sans-serif; --display: 'Inter Display', 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1350px; background: var(--bg); }
+  #canvas { position: relative; width: 1080px; height: 1350px; overflow: hidden; color: var(--text); font-family: var(--sans);
+    background:
+      radial-gradient(560px 420px at 60px 120px, rgba(255,118,118,.08), transparent 70%),
+      radial-gradient(560px 420px at 1020px 80px, rgba(214,174,240,.14), transparent 70%),
+      var(--bg); }
+  .pills { position: absolute; left: 0; right: 0; top: 44px; display: flex; justify-content: center; gap: 10px; }
+  .pill { height: 40px; padding: 0 18px; border: 1px solid var(--line-2); border-radius: 20px; background: rgba(14,17,22,.85);
+    display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 600; white-space: nowrap; }
+  .pill i { width: 9px; height: 9px; border-radius: 50%; display: block; }
+  h1 { position: absolute; left: 40px; right: 40px; top: 104px; text-align: center; font-family: var(--display); font-weight: 800;
+    font-size: 60px; line-height: 1.0; letter-spacing: -.035em; }
+  h1 span { display: block; white-space: nowrap; }
+  h1 .a { background: var(--accent); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: 4px; }
+
+  /* one source rule, the hook, and the paths a commit can take */
+  #flow { position: absolute; left: 0; right: 0; }
+  #wires { position: absolute; left: 0; top: 0; }
+  .src { position: absolute; left: 56px; right: 56px; display: grid; grid-template-columns: 1fr 64px 1fr; align-items: center; }
+  .box { border-radius: 16px; padding: 14px 20px; border: 1.5px solid var(--line-2); background: rgba(14,17,22,.94); overflow: hidden; }
+  .box .k { font-family: var(--mono); font-size: 15px; color: var(--muted); margin-bottom: 6px; white-space: nowrap; }
+  .box .v { font-family: var(--mono); font-size: 20px; font-weight: 700; white-space: nowrap; }
+  .box.rule .v { color: var(--purple); }
+  .arrow { text-align: center; font-family: var(--mono); font-size: 28px; color: var(--muted); }
+  .hub { position: absolute; left: 50%; transform: translateX(-50%); border-radius: 18px; padding: 14px 26px; border: 2px solid var(--purple);
+    background: linear-gradient(180deg, rgba(185,166,245,.14), rgba(185,166,245,.04)), var(--panel); text-align: center; white-space: nowrap; }
+  .hub .n { font-family: var(--mono); font-size: 26px; font-weight: 700; }
+  .hub .s { font-size: 16px; color: var(--muted); margin-top: 4px; }
+  .lanes { position: absolute; left: 40px; right: 40px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .lane { border-radius: 18px; padding: 16px 18px 18px; border: 1.5px solid var(--line-2); background: var(--panel); overflow: hidden; }
+  .lane .h { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+  .lane .h b { font-family: var(--mono); font-size: 22px; letter-spacing: .04em; }
+  .lane .sub { font-size: 17px; color: var(--muted); margin-bottom: 12px; white-space: nowrap; }
+  .lane ul { list-style: none; display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+  .lane li { font-family: var(--mono); font-size: 18px; padding: 7px 11px; border-radius: 8px; background: rgba(255,255,255,.04); white-space: nowrap; overflow: hidden; }
+  .lane .st { font-family: var(--display); font-weight: 800; font-size: 52px; letter-spacing: -.02em; line-height: 1; }
+  .lane .sl { font-size: 16px; color: var(--muted); margin-top: 6px; line-height: 1.3; }
+  .lane.r { border-color: rgba(255,118,118,.55); } .lane.r b, .lane.r .st { color: var(--red); }
+  .lane.a { border-color: rgba(251,192,78,.55); } .lane.a b, .lane.a .st { color: var(--amber); }
+  .lane.g { border-color: rgba(91,227,154,.5); } .lane.g b, .lane.g .st { color: var(--green); }
+  .note { position: absolute; left: 56px; right: 56px; border-radius: 16px; padding: 16px 22px; border: 1.5px dashed var(--line-2);
+    display: flex; align-items: center; gap: 16px; }
+  .note .tag { font-family: var(--mono); font-size: 15px; color: var(--amber); border: 1.5px solid var(--amber); border-radius: 8px; padding: 4px 10px; white-space: nowrap; }
+  .note .t { font-size: 21px; font-weight: 600; line-height: 1.3; }
+
+  .cta { position: absolute; left: 0; right: 0; bottom: 0; height: 168px; background: var(--accent); color: #13101b;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+  .cta .l { font-family: var(--display); font-weight: 800; font-size: 44px; letter-spacing: -.02em; display: flex; align-items: center; gap: 16px; white-space: nowrap; }
+  .cta .kw { background: #13101b; color: #f4f0ff; font-family: var(--mono); font-weight: 700; border-radius: 12px; padding: 4px 18px; font-size: 40px; }
+  .cta .ft { font-size: 17px; font-weight: 600; opacity: .8; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="canvas">
+  <div class="pills" id="pills"></div>
+  <h1><span id="t1"></span><span class="a" id="t2"></span></h1>
+  <div id="flow">
+    <svg id="wires"></svg>
+    <div class="src" id="src">
+      <div class="box"><div class="k" id="sk"></div><div class="v" id="sv"></div></div>
+      <div class="arrow">→</div>
+      <div class="box rule"><div class="k" id="rk"></div><div class="v" id="rv"></div></div>
+    </div>
+    <div class="hub" id="hub"><div class="n" id="hn"></div><div class="s" id="hs"></div></div>
+    <div class="lanes" id="lanes"></div>
+  </div>
+  <div class="note" id="note"><div class="tag" id="ntag"></div><div class="t" id="nt"></div></div>
+  <div class="cta"><div class="l"><span id="ctaB"></span><span class="kw" id="ctaK"></span><span id="ctaA"></span></div><div class="ft" id="ft"></div></div>
+</div>
+<script>
+const S = window.SPEC;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const WARN = [];
+
+/* choix: one input goes through one decision and takes one of several paths, each with what
+   it covers and its measured result. Dots run from the hook down every path. */
+const DOTS = { coral: 'var(--coral)', cyan: 'var(--cyan)', purple: 'var(--purple)', green: 'var(--green)', amber: 'var(--amber)', red: 'var(--red)', none: '' };
+$('pills').innerHTML = (S.pills || []).map(p => {
+  const o = typeof p === 'string' ? { text: p, dot: 'none' } : p;
+  const dot = DOTS[o.dot || 'none'];
+  return `<div class="pill">${dot ? `<i style="background:${dot}"></i>` : ''}${esc(o.text)}</div>`;
+}).join('');
+$('t1').textContent = S.title; $('t2').textContent = S.title2;
+$('sk').textContent = S.source.k; $('sv').textContent = S.source.v;
+$('rk').textContent = S.rule.k; $('rv').textContent = S.rule.v;
+$('hn').textContent = S.hub.name; $('hs').textContent = S.hub.sub || '';
+$('lanes').innerHTML = (S.lanes || []).map(l => `<div class="lane ${l.tone || 'r'}">
+  <div class="h"><b>${esc(l.label)}</b></div><div class="sub">${esc(l.sub || '')}</div>
+  <ul>${(l.items || []).map(i => `<li>${esc(i)}</li>`).join('')}</ul>
+  <div class="st">${esc(l.stat)}</div><div class="sl">${esc(l.stat_label || '')}</div></div>`).join('');
+$('ntag').textContent = S.note_tag || 'pourquoi'; $('nt').textContent = S.note || '';
+$('ctaB').textContent = S.cta_before; $('ctaK').textContent = S.cta_keyword; $('ctaA').textContent = S.cta_after;
+$('ft').textContent = S.footer;
+
+/* layout */
+const top0 = S.flow_top || 262;
+const gap = S.gap || 44;
+$('flow').style.top = top0 + 'px';
+$('src').style.top = '0px';
+const hubTop = $('src').offsetHeight + gap;
+$('hub').style.top = hubTop + 'px';
+const lanesTop = hubTop + $('hub').offsetHeight + gap + 14;
+$('lanes').style.top = lanesTop + 'px';
+const flowH = lanesTop + $('lanes').offsetHeight;
+$('flow').style.height = flowH + 'px';
+const free = 1350 - 168 - 26 - (top0 + flowH) - $('note').offsetHeight;
+$('note').style.top = (top0 + flowH + Math.max(18, free)) + 'px';
+if (free < 18) WARN.push(`note runs into the CTA band by ${Math.round(18 - free)}px`);
+
+/* wires: the rule into the hub, the hub down to every path */
+const FLOW = 30;
+const W = $('wires'); W.setAttribute('width', 1080); W.setAttribute('height', flowH);
+const fr = $('flow').getBoundingClientRect();
+const rel = el => { const r = el.getBoundingClientRect(); return { l: r.left - fr.left, r: r.right - fr.left, t: r.top - fr.top, b: r.bottom - fr.top, cx: (r.left + r.right) / 2 - fr.left }; };
+const H = rel($('hub')), SR = rel($('src'));
+const COL = { r: '#ff7676', a: '#fbc04e', g: '#5be39a' }, LIGHT = { r: '#ffb3b3', a: '#ffe0a3', g: '#b6f5d2' };
+let svg = '';
+const wire = (d, c, lc) => `<path d="${d}" fill="none" stroke="${c}" stroke-width="2.6" opacity=".55"/>
+  <path class="flow" d="${d}" fill="none" stroke="${lc}" stroke-width="7" stroke-linecap="round" stroke-dasharray="0.1 ${FLOW}"/>`;
+svg += wire(`M${H.cx} ${SR.b + 2}V${H.t - 2}`, '#b9a6f5', '#e2d8ff');
+[...document.querySelectorAll('.lane')].forEach((el, i) => {
+  const L = rel(el), tone = (S.lanes[i] || {}).tone || 'r';
+  const y1 = H.b + 2, y2 = L.t - 2, ym = (y1 + y2) / 2;
+  svg += wire(`M${H.cx} ${y1}C${H.cx} ${ym} ${L.cx} ${ym} ${L.cx} ${y2}`, COL[tone], LIGHT[tone]);
+});
+W.innerHTML = svg;
+
+const R = {
+  warnings: WARN,
+  frame(t) { document.querySelectorAll('.flow').forEach(f => f.setAttribute('stroke-dashoffset', String(-t * FLOW * 2))); },
+};
+R.frame(0);
+</script>
+</body>
+</html>

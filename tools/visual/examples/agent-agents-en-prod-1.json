@@ -1,0 +1,59 @@
+{
+  "template": "agent",
+  "pills": [
+    {
+      "text": "Agents en prod",
+      "dot": "purple"
+    },
+    {
+      "text": "La vérité sur les agents",
+      "dot": "none"
+    },
+    {
+      "text": "Vécu, août et septembre 2026",
+      "dot": "none"
+    }
+  ],
+  "title": "« C'est fait »",
+  "title2": "n'est pas une preuve",
+  "in_label": "ce qui entre",
+  "out_label": "ce qui sort",
+  "agent_name": "mon agent de prospection",
+  "inputs": [
+    {
+      "k": "la mission",
+      "v": "Prospecter pour moi",
+      "note": "chercher des pistes, écrire des brouillons"
+    },
+    {
+      "k": "chaque matin",
+      "v": "Fais ton compte rendu"
+    },
+    {
+      "k": "la consigne",
+      "v": "Liste de suppression",
+      "note": "contacts à ne jamais écrire"
+    }
+  ],
+  "outputs": [
+    {
+      "k": "ce qu'il annonce",
+      "v": "5 brouillons, 5 envois",
+      "note": "liste de suppression respectée",
+      "tone": "p"
+    },
+    {
+      "k": "ce qui existe",
+      "v": "4 brouillons, 6 envois",
+      "note": "1 brouillon vers un contact exclu",
+      "tone": "r"
+    }
+  ],
+  "neq": true,
+  "eyes": "happy",
+  "lesson_tag": "ce que j'ai changé",
+  "lesson": "Lis le système cible, pas le compte rendu.",
+  "band_series": "Agents en prod",
+  "band_number": "n°1",
+  "footer": "Darius Tokam · Arivex · prochain : la mémoire d'un agent"
+}

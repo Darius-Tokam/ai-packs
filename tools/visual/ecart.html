@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<style>
+  /*FONTS*/
+  :root {
+    --bg: #07080a; --panel: #0e1116; --panel-2: #121720; --line: #1d2530; --line-2: #2b3543;
+    --text: #f3f5f7; --muted: #9aa7b4; --dim: #5f6d7b;
+    --red: #ff7676; --amber: #fbc04e; --green: #5be39a; --purple: #b9a6f5; --cyan: #2dd4bf; --coral: #f2a28a;
+    --accent: linear-gradient(100deg, #f2b8b4 0%, #d6aef0 55%, #b9a6f5 100%);
+    --sans: 'Inter', system-ui, sans-serif; --display: 'Inter Display', 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1350px; background: var(--bg); }
+  #canvas { position: relative; width: 1080px; height: 1350px; overflow: hidden; color: var(--text); font-family: var(--sans);
+    background:
+      radial-gradient(560px 420px at 60px 120px, rgba(185,166,245,.10), transparent 70%),
+      radial-gradient(560px 420px at 1020px 80px, rgba(255,118,118,.10), transparent 70%),
+      var(--bg); }
+
+  .pills { position: absolute; left: 0; right: 0; top: 44px; display: flex; justify-content: center; gap: 10px; }
+  .pill { height: 40px; padding: 0 18px; border: 1px solid var(--line-2); border-radius: 20px; background: rgba(14,17,22,.85);
+    display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 600; white-space: nowrap; }
+  .pill i { width: 9px; height: 9px; border-radius: 50%; display: block; }
+  h1 { position: absolute; left: 40px; right: 40px; top: 104px; text-align: center; font-family: var(--display); font-weight: 800;
+    font-size: 60px; line-height: 1.0; letter-spacing: -.035em; }
+  h1 span { display: block; white-space: nowrap; }
+  h1 .a { background: var(--accent); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: 4px; }
+
+  /* two panels, one row per claim: what was announced, what exists */
+  .board { position: absolute; left: 56px; right: 56px; }
+  .heads { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px; }
+  .hd { border-radius: 16px; padding: 14px 20px; display: flex; align-items: center; gap: 12px; border: 1.5px solid var(--line-2); background: rgba(10,12,16,.92); }
+  .hd .ic { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-weight: 700; font-size: 18px; }
+  .hd.l .ic { background: rgba(185,166,245,.16); color: var(--purple); }
+  .hd.r .ic { background: rgba(91,227,154,.14); color: var(--green); }
+  .hd .t { font-size: 22px; font-weight: 700; white-space: nowrap; }
+  .hd .s { font-size: 15px; color: var(--muted); margin-left: auto; font-family: var(--mono); white-space: nowrap; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px; position: relative; }
+  .cell { border-radius: 16px; padding: 18px 22px; min-height: 146px; border: 1.5px solid var(--line); background: var(--panel); overflow: hidden; }
+  .cell .k { font-family: var(--mono); font-size: 17px; color: var(--muted); margin-bottom: 8px; white-space: nowrap; }
+  .cell .v { font-family: var(--display); font-weight: 800; font-size: 42px; letter-spacing: -.02em; line-height: 1.1; }
+  .cell .v small { display: block; font-family: var(--sans); font-weight: 400; font-size: 18px; color: var(--muted); letter-spacing: 0; margin-top: 4px; }
+  .cell.l .v { color: var(--purple); }
+  .cell.r .v { color: var(--text); }
+  .pair.bad .cell.r { border-color: rgba(255,118,118,.55); background: linear-gradient(180deg, rgba(255,118,118,.08), rgba(255,118,118,.02)), var(--panel); }
+  .pair.bad .cell.r .v { color: var(--red); }
+  .x { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border-radius: 50%;
+    background: var(--bg); border: 2px solid var(--red); color: var(--red); display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-weight: 700; font-size: 22px; z-index: 2; }
+  .pair .x { visibility: hidden; }
+  .pair.bad .x { visibility: visible; }
+  .cell.hide { visibility: hidden; }
+
+  .lesson { position: absolute; left: 56px; right: 56px; border-radius: 18px; padding: 26px 28px; border: 1.5px solid var(--line-2);
+    background: rgba(10,12,16,.92); display: flex; align-items: center; gap: 18px; }
+  .lesson .tag { font-family: var(--mono); font-size: 15px; color: var(--amber); border: 1.5px solid var(--amber); border-radius: 8px; padding: 4px 10px; white-space: nowrap; }
+  .lesson .t { font-family: var(--display); font-weight: 800; font-size: 34px; letter-spacing: -.02em; line-height: 1.15; }
+  .lesson.hide { visibility: hidden; }
+
+  /* series band (no keyword: an educational post asks for nothing) */
+  .band { position: absolute; left: 0; right: 0; bottom: 0; height: 150px; background: var(--accent); color: #13101b;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+  .band .l { font-family: var(--display); font-weight: 800; font-size: 42px; letter-spacing: -.02em; white-space: nowrap; display: flex; align-items: center; gap: 14px; }
+  .band .n { background: #13101b; color: #f4f0ff; font-family: var(--mono); font-weight: 700; border-radius: 12px; padding: 2px 16px; font-size: 36px; }
+  .band .ft { font-size: 17px; font-weight: 600; opacity: .8; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="canvas">
+  <div class="pills" id="pills"></div>
+  <h1><span id="t1"></span><span class="a" id="t2"></span></h1>
+  <div class="board" id="board">
+    <div class="heads">
+      <div class="hd l"><div class="ic" id="hli"></div><div class="t" id="hl"></div><div class="s" id="hls"></div></div>
+      <div class="hd r"><div class="ic" id="hri"></div><div class="t" id="hr"></div><div class="s" id="hrs"></div></div>
+    </div>
+    <div id="pairs"></div>
+  </div>
+  <div class="lesson" id="lesson"><div class="tag" id="ltag"></div><div class="t" id="lt"></div></div>
+  <div class="band"><div class="l"><span id="bl"></span><span class="n" id="bn"></span></div><div class="ft" id="ft"></div></div>
+</div>
+<script>
+const S = window.SPEC;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const WARN = [];
+
+/* ecart: what was announced, face to what exists. One row per claim, the gap marked in red. */
+const DOTS = { coral: 'var(--coral)', cyan: 'var(--cyan)', purple: 'var(--purple)', green: 'var(--green)', amber: 'var(--amber)', red: 'var(--red)', none: '' };
+$('pills').innerHTML = (S.pills || []).map(p => {
+  const o = typeof p === 'string' ? { text: p, dot: 'none' } : p;
+  const dot = DOTS[o.dot || 'none'];
+  return `<div class="pill">${dot ? `<i style="background:${dot}"></i>` : ''}${esc(o.text)}</div>`;
+}).join('');
+$('t1').textContent = S.title; $('t2').textContent = S.title2;
+$('hl').textContent = S.left.title; $('hls').textContent = S.left.sub || ''; $('hli').textContent = S.left.icon || '?';
+$('hr').textContent = S.right.title; $('hrs').textContent = S.right.sub || ''; $('hri').textContent = S.right.icon || '=';
+const rows = S.rows || [];
+$('pairs').innerHTML = rows.map((r, i) => `
+  <div class="pair${r.gap === false ? '' : ' bad'}" data-i="${i}">
+    <div class="cell l"><div class="k">${esc(r.what)}</div><div class="v">${esc(r.announced)}${r.announced_note ? `<small>${esc(r.announced_note)}</small>` : ''}</div></div>
+    <div class="cell r"><div class="k">${esc(r.what)}</div><div class="v">${esc(r.real)}${r.real_note ? `<small>${esc(r.real_note)}</small>` : ''}</div></div>
+    <div class="x">≠</div>
+  </div>`).join('');
+$('ltag').textContent = S.lesson_tag || 'la leçon'; $('lt').textContent = S.lesson;
+$('bl').textContent = S.band_series; $('bn').textContent = S.band_number; $('ft').textContent = S.footer;
+
+/* vertical placement, free height spread between the blocks */
+const top0 = S.board_top || 250;
+const bandTop = 1350 - 150;
+const bh = $('board').offsetHeight, lh = $('lesson').offsetHeight;
+const free = bandTop - top0 - bh - lh - 30;
+const g = Math.max(18, Math.min(40, free / 3));
+$('board').style.top = (top0 + g) + 'px';
+$('lesson').style.top = (top0 + g + bh + g) + 'px';
+if (top0 + 2 * g + bh + lh > bandTop - 14) WARN.push(`lesson bottom ${Math.round(top0 + 2 * g + bh + lh)}px overlaps the band`);
+
+/* states: each row hidden, left (announced only), done (both, the gap marked); lesson on or off */
+const pairEls = [...document.querySelectorAll('.pair')];
+const R = {
+  warnings: WARN, n: pairEls.length,
+  rows(states) {
+    pairEls.forEach((el, i) => {
+      const s = states[i] || 'done';
+      el.querySelector('.cell.l').classList.toggle('hide', s === 'hidden');
+      el.querySelector('.cell.r').classList.toggle('hide', s !== 'done');
+      el.classList.toggle('bad', s === 'done' && rows[i].gap !== false);
+    });
+  },
+  lesson(on) { $('lesson').classList.toggle('hide', !on); },
+};
+R.rows(rows.map(() => 'done')); R.lesson(true);
+</script>
+</body>
+</html>

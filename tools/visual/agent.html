@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<style>
+  /*FONTS*/
+  :root {
+    --bg: #07080a; --panel: #0e1116; --panel-2: #121720; --line: #1d2530; --line-2: #2b3543;
+    --text: #f3f5f7; --muted: #9aa7b4; --dim: #5f6d7b;
+    --red: #ff7676; --amber: #fbc04e; --green: #5be39a; --purple: #b9a6f5; --cyan: #2dd4bf; --coral: #f2a28a;
+    --accent: linear-gradient(100deg, #f2b8b4 0%, #d6aef0 55%, #b9a6f5 100%);
+    --sans: 'Inter', system-ui, sans-serif; --display: 'Inter Display', 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1350px; background: var(--bg); }
+  #canvas { position: relative; width: 1080px; height: 1350px; overflow: hidden; color: var(--text); font-family: var(--sans);
+    background:
+      radial-gradient(420px 420px at 540px 640px, rgba(185,166,245,.16), transparent 70%),
+      radial-gradient(560px 420px at 60px 120px, rgba(242,184,180,.08), transparent 70%),
+      var(--bg); }
+
+  .pills { position: absolute; left: 0; right: 0; top: 44px; display: flex; justify-content: center; gap: 10px; }
+  .pill { height: 40px; padding: 0 18px; border: 1px solid var(--line-2); border-radius: 20px; background: rgba(14,17,22,.85);
+    display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 600; white-space: nowrap; }
+  .pill i { width: 9px; height: 9px; border-radius: 50%; display: block; }
+  h1 { position: absolute; left: 40px; right: 40px; top: 104px; text-align: center; font-family: var(--display); font-weight: 800;
+    font-size: 60px; line-height: 1.0; letter-spacing: -.035em; }
+  h1 span { display: block; white-space: nowrap; }
+  h1 .a { background: var(--accent); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: 4px; }
+
+  /* the stage: inputs on the left, the mascot in the middle, outputs on the right */
+  #stage { position: absolute; left: 0; right: 0; }
+  #wires { position: absolute; left: 0; top: 0; }
+  .col { position: absolute; width: 282px; display: flex; flex-direction: column; gap: 14px; }
+  .col.in { left: 24px; } .col.out { right: 24px; }
+  .colh { font-family: var(--mono); font-size: 17px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+    display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
+  .colh b { width: 10px; height: 10px; border-radius: 50%; display: block; }
+  .col { gap: 18px; }
+  .col.in .colh b { background: var(--cyan); } .col.out .colh b { background: var(--coral); }
+  .io { border-radius: 16px; padding: 16px 18px; border: 1.5px solid var(--line-2); background: rgba(14,17,22,.94); overflow: hidden; }
+  .io .k { font-family: var(--mono); font-size: 16px; color: var(--muted); margin-bottom: 6px; white-space: nowrap; }
+  .io .v { font-size: 23px; font-weight: 700; line-height: 1.25; }
+  .io .v small { display: block; font-size: 17px; font-weight: 400; color: var(--muted); margin-top: 4px; line-height: 1.3; }
+  .io.p { border-color: rgba(185,166,245,.6); } .io.p .v { color: var(--purple); }
+  .io.r { border-color: rgba(255,118,118,.6); background: linear-gradient(180deg, rgba(255,118,118,.08), rgba(255,118,118,.02)), var(--panel); } .io.r .v { color: var(--red); }
+  .io.g { border-color: rgba(91,227,154,.5); } .io.g .v { color: var(--green); }
+  .io.c { border-color: rgba(45,212,191,.5); }
+  .io.off { opacity: .42; border-style: dashed; }
+  .io.off .k::after { content: '  · reste dehors'; color: var(--amber); }
+  .io.hide { visibility: hidden; }
+  .neq { position: absolute; width: 44px; height: 44px; border-radius: 50%; background: var(--bg); border: 2px solid var(--red); color: var(--red);
+    display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-weight: 700; font-size: 22px; }
+
+  /* the Arivex mascot: body, head on the neck, LED eyes drawn on the visor */
+  .bot { position: absolute; width: 440px; height: 627px; }
+  .bot img { position: absolute; display: block; }
+  .bot .body { width: 440px; left: 0; top: 224px; }
+  .bot .head { width: 440px; left: 0; top: 0; }
+  .bot svg.eyes { position: absolute; left: 0; top: 0; width: 440px; height: 440px; overflow: visible; }
+  .bot .name { position: absolute; left: -40px; right: -40px; bottom: -14px; text-align: center; font-family: var(--mono); font-size: 18px; color: var(--muted); white-space: nowrap; }
+
+  .lesson { position: absolute; left: 56px; right: 56px; border-radius: 18px; padding: 22px 28px; border: 1.5px solid var(--line-2);
+    background: rgba(10,12,16,.92); display: flex; align-items: center; gap: 18px; }
+  .lesson .tag { font-family: var(--mono); font-size: 15px; color: var(--amber); border: 1.5px solid var(--amber); border-radius: 8px; padding: 4px 10px; white-space: nowrap; }
+  .lesson .t { font-family: var(--display); font-weight: 800; font-size: 34px; letter-spacing: -.02em; line-height: 1.15; }
+  .lesson.hide { visibility: hidden; }
+
+  .band { position: absolute; left: 0; right: 0; bottom: 0; height: 150px; background: var(--accent); color: #13101b;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+  .band .l { font-family: var(--display); font-weight: 800; font-size: 42px; letter-spacing: -.02em; white-space: nowrap; display: flex; align-items: center; gap: 14px; }
+  .band .n { background: #13101b; color: #f4f0ff; font-family: var(--mono); font-weight: 700; border-radius: 12px; padding: 2px 16px; font-size: 36px; }
+  .band .ft { font-size: 17px; font-weight: 600; opacity: .8; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="canvas">
+  <div class="pills" id="pills"></div>
+  <h1><span id="t1"></span><span class="a" id="t2"></span></h1>
+  <div id="stage">
+    <svg id="wires"></svg>
+    <div class="col in" id="cin"><div class="colh"><b></b><span id="inl"></span></div></div>
+    <div class="bot" id="bot">
+      <img class="body" id="mb" alt="">
+      <img class="head" id="mh" alt="">
+      <svg class="eyes" id="eyes" viewBox="0 0 840 840"></svg>
+      <div class="name" id="bname"></div>
+    </div>
+    <div class="col out" id="cout"><div class="colh"><b></b><span id="outl"></span></div></div>
+  </div>
+  <div class="lesson" id="lesson"><div class="tag" id="ltag"></div><div class="t" id="lt"></div></div>
+  <div class="band"><div class="l"><span id="bl"></span><span class="n" id="bn"></span></div><div class="ft" id="ft"></div></div>
+</div>
+<script>
+const S = window.SPEC;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const WARN = [];
+
+/* agent: the Arivex mascot in the middle, what goes in on the left, what comes out on the right.
+   An input marked "off" stays outside (greyed): what the agent never reads. Two outputs can be
+   set face to face with "neq" (what the agent says, what exists). */
+const DOTS = { coral: 'var(--coral)', cyan: 'var(--cyan)', purple: 'var(--purple)', green: 'var(--green)', amber: 'var(--amber)', red: 'var(--red)', none: '' };
+$('pills').innerHTML = (S.pills || []).map(p => {
+  const o = typeof p === 'string' ? { text: p, dot: 'none' } : p;
+  const dot = DOTS[o.dot || 'none'];
+  return `<div class="pill">${dot ? `<i style="background:${dot}"></i>` : ''}${esc(o.text)}</div>`;
+}).join('');
+$('t1').textContent = S.title; $('t2').textContent = S.title2;
+$('inl').textContent = S.in_label || 'ce qui entre'; $('outl').textContent = S.out_label || 'ce qui sort';
+$('mh').src = S._mascot.head; $('mb').src = S._mascot.body;
+$('bname').textContent = S.agent_name || '';
+const card = (o, side, i) => `<div class="io ${o.tone || ''}${o.off ? ' off' : ''}" data-side="${side}" data-i="${i}">
+  <div class="k">${esc(o.k)}</div><div class="v">${esc(o.v)}${o.note ? `<small>${esc(o.note)}</small>` : ''}</div></div>`;
+$('cin').insertAdjacentHTML('beforeend', (S.inputs || []).map((o, i) => card(o, 'in', i)).join(''));
+$('cout').insertAdjacentHTML('beforeend', (S.outputs || []).map((o, i) => card(o, 'out', i)).join(''));
+$('ltag').textContent = S.lesson_tag || 'la leçon'; $('lt').textContent = S.lesson;
+$('bl').textContent = S.band_series; $('bn').textContent = S.band_number; $('ft').textContent = S.footer;
+
+/* LED eyes on the visor, in the head image's own coordinates (840 x 840) */
+const EYES = {
+  happy: `<path d="M405 430 Q440 372 475 430" /><path d="M555 430 Q590 372 625 430" />`,
+  think: `<circle cx="440" cy="418" r="15" /><circle cx="590" cy="418" r="15" />`,
+  flat:  `<path d="M405 420 H475" /><path d="M555 420 H625" />`,
+};
+function eyes(kind, dx = 0, open = 1) {
+  /* dx moves the gaze sideways (visor units), open closes the eyes around their line (blink) */
+  const k = open >= 1 ? kind : (open < 0.35 ? 'flat' : kind);
+  const sy = open >= 1 ? 1 : Math.max(0.15, open);
+  $('eyes').innerHTML = `<defs><filter id="gl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+    <g transform="translate(${dx} ${(1 - sy) * 418}) scale(1 ${sy})"><g filter="url(#gl)" stroke="#c9b8ff" stroke-width="22" stroke-linecap="round"
+      fill="${k === 'think' ? '#c9b8ff' : 'none'}">${EYES[k] || EYES.happy}</g></g>`;
+}
+eyes(S.eyes || 'happy');
+
+/* layout: stage between the title and the lesson, columns centred on the mascot */
+const top0 = S.stage_top || 256;
+const lessonH = $('lesson').offsetHeight;
+const stageH = Math.max($('cin').offsetHeight, $('cout').offsetHeight, 600, 1350 - 150 - 34 - lessonH - 30 - top0);
+$('stage').style.top = top0 + 'px'; $('stage').style.height = stageH + 'px';
+const SH = S.stage_shift === undefined ? -50 : S.stage_shift;  /* lift the group a little under the title */
+$('cin').style.top = ((stageH - $('cin').offsetHeight) / 2 + SH) + 'px';
+$('cout').style.top = ((stageH - $('cout').offsetHeight) / 2 + SH) + 'px';
+const bot = $('bot');
+bot.style.left = (540 - 220) + 'px'; bot.style.top = ((stageH - 627) / 2 + SH) + 'px';
+const lessonTop = top0 + stageH + 30;
+$('lesson').style.top = lessonTop + 'px';
+if (lessonTop + $('lesson').offsetHeight > 1350 - 150 - 16) WARN.push(`lesson bottom ${Math.round(lessonTop + $('lesson').offsetHeight)}px overlaps the band`);
+
+/* wires: each input to the left side of the mascot, the mascot to each output */
+const FLOW = 34;  /* spacing of the dots that run along the wires */
+const W = $('wires'); W.setAttribute('width', 1080); W.setAttribute('height', stageH);
+const sr = $('stage').getBoundingClientRect();
+const rel = el => { const r = el.getBoundingClientRect(); return { l: r.left - sr.left, r: r.right - sr.left, t: r.top - sr.top, b: r.bottom - sr.top, cy: (r.top + r.bottom) / 2 - sr.top }; };
+const B = rel(bot);
+const portIn = { x: B.l + 44, y: B.t + 400 }, portOut = { x: B.r - 44, y: B.t + 400 };
+let svg = `<defs><marker id="m" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6d7a88"/></marker></defs>`;
+const ins = [...document.querySelectorAll('.io[data-side="in"]')], outs = [...document.querySelectorAll('.io[data-side="out"]')];
+ins.forEach((el, i) => {
+  const a = rel(el), off = (S.inputs[i] || {}).off;
+  const x1 = a.r, y1 = a.cy, x2 = portIn.x, y2 = portIn.y, mx = (x1 + x2) / 2;
+  svg += `<path class="w in" data-i="${i}" d="M${x1} ${y1}C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}" fill="none" stroke="${off ? '#3a4350' : '#2dd4bf'}" stroke-width="2.4"
+    ${off ? 'stroke-dasharray="6 7"' : ''} opacity="${off ? 0.8 : 0.55}"/>`;
+  if (!off) svg += `<path class="w in flow" data-i="${i}" d="M${x1} ${y1}C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}" fill="none" stroke="#7ff3e1" stroke-width="6"
+    stroke-linecap="round" stroke-dasharray="0.1 ${FLOW}"/>`;
+  if (off) svg += `<g class="w in" data-i="${i}"><circle cx="${mx}" cy="${(y1 + y2) / 2}" r="15" fill="#07080a" stroke="#fbc04e" stroke-width="2"/>
+    <path d="M${mx - 6} ${(y1 + y2) / 2 - 6}l12 12M${mx + 6} ${(y1 + y2) / 2 - 6}l-12 12" stroke="#fbc04e" stroke-width="2.4" stroke-linecap="round"/></g>`;
+});
+outs.forEach((el, i) => {
+  const a = rel(el);
+  const x1 = portOut.x, y1 = portOut.y, x2 = a.l - 2, y2 = a.cy, mx = (x1 + x2) / 2;
+  svg += `<path class="w out" data-i="${i}" d="M${x1} ${y1}C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}" fill="none" stroke="#f2a28a" stroke-width="2.4" opacity=".55" marker-end="url(#m)"/>`;
+  svg += `<path class="w out flow" data-i="${i}" d="M${x1} ${y1}C${mx} ${y1} ${mx} ${y2} ${x2 - 8} ${y2}" fill="none" stroke="#ffc7b4" stroke-width="6"
+    stroke-linecap="round" stroke-dasharray="0.1 ${FLOW}"/>`;
+});
+W.innerHTML = svg;
+if (S.neq && outs.length >= 2) {
+  const a = rel(outs[0]), b = rel(outs[1]);
+  const n = document.createElement('div'); n.className = 'neq'; n.textContent = '≠'; n.id = 'neq';
+  n.style.left = (a.l + (a.r - a.l) / 2 - 22) + 'px'; n.style.top = ((a.b + b.t) / 2 - 22) + 'px';
+  $('stage').appendChild(n);
+}
+
+/* states: inputs and outputs shown one by one, the mascot's eyes while it works, the lesson last */
+const R = {
+  warnings: WARN, nIn: ins.length, nOut: outs.length,
+  show(nIn, nOut, eyesKind, lesson) {
+    ins.forEach((el, i) => el.classList.toggle('hide', i >= nIn));
+    outs.forEach((el, i) => el.classList.toggle('hide', i >= nOut));
+    document.querySelectorAll('.w.in').forEach(w => w.style.visibility = +w.dataset.i < nIn ? 'visible' : 'hidden');
+    document.querySelectorAll('.w.out').forEach(w => w.style.visibility = +w.dataset.i < nOut ? 'visible' : 'hidden');
+    const n = $('neq'); if (n) n.style.visibility = nOut >= 2 ? 'visible' : 'hidden';
+    eyes(eyesKind || S.eyes || 'happy');
+    $('lesson').classList.toggle('hide', !lesson);
+  },
+};
+/* frame(t), t in [0, 1): one phase of the loop. Every card stays visible; the dots run along
+   the wires (into the mascot, then out of it), and the eyes look left, right, back, and blink. */
+R.frame = function (t) {
+  document.querySelectorAll('.flow').forEach(f => f.setAttribute('stroke-dashoffset', String(-t * FLOW * 2)));
+  const gaze = t < 0.25 ? -Math.sin(t / 0.25 * Math.PI / 2) : t < 0.5 ? -Math.cos((t - 0.25) / 0.25 * Math.PI) :
+               t < 0.75 ? Math.cos((t - 0.5) / 0.25 * Math.PI / 2) : 0;
+  const blink = t > 0.84 && t < 0.94 ? Math.abs((t - 0.89) / 0.05) : 1;
+  eyes(S.eyes || 'happy', gaze * 26, blink);
+};
+R.show(ins.length, outs.length, S.eyes || 'happy', true);
+R.frame(0);
+</script>
+</body>
+</html>
