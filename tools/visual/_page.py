@@ -47,6 +47,11 @@ def prepare(spec, spec_path):
         # the Arivex mascot (head and body from arivex.ca), embedded so the page needs no network
         spec["_mascot"] = {k: "data:image/webp;base64," + base64.b64encode((HERE / "assets" / f"arivex-{k}.webp").read_bytes()).decode()
                            for k in ("head", "body")}
+        # pack variant: a hub with the tool's logo in the middle (logo files in assets/, e.g. "claude")
+        hub = spec.get("hub")
+        if isinstance(hub, dict) and hub.get("logo"):
+            f = HERE / "assets" / f"{hub['logo']}.svg"
+            hub["_logo"] = "data:image/svg+xml;base64," + base64.b64encode(f.read_bytes()).decode()
         return spec
     if template(spec) != "duo":
         return spec
@@ -105,7 +110,7 @@ MASCOT_JS = r"""
 
 def _mascot(spec):
     opt = spec.get("mascot", True)
-    if opt is False or template(spec) == "agent":
+    if opt is False or (template(spec) == "agent" and not spec.get("hub")):
         return None
     opt = dict(opt) if isinstance(opt, dict) else {}
     opt.setdefault("size", 96)

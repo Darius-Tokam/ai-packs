@@ -1,0 +1,29 @@
+{
+  "template": "agent",
+  "pills": [
+    {"text": "Agents en prod", "dot": "purple"},
+    {"text": "La vérité sur les agents", "dot": "none"},
+    {"text": "Doc Claude Code + vécu", "dot": "none"}
+  ],
+  "title": "Ton agent ne se souvient de rien.",
+  "title2": "Il relit.",
+  "in_label": "ce qu'il relit",
+  "out_label": "ce qui sort",
+  "agent_name": "un agent de mon second cerveau",
+  "inputs": [
+    {"k": "chargé en entier", "v": "CLAUDE.md"},
+    {"k": "chargé en partie", "v": "MEMORY.md", "note": "ses 200 premières lignes"},
+    {"k": "chargé au besoin", "v": "les fichiers de sujets"},
+    {"k": "jamais relu", "v": "le fichier de la résolution", "off": true}
+  ],
+  "outputs": [
+    {"k": "ce qu'il fait", "v": "Il recrée la tâche", "note": "6 fois en 24 jours", "tone": "r"},
+    {"k": "dont", "v": "5 déjà résolues", "note": "la résolution était écrite", "tone": "r"}
+  ],
+  "eyes": "happy",
+  "lesson_tag": "la vérité",
+  "lesson": "Ce qu'il ne relit pas n'existe pas pour lui.",
+  "band_series": "Agents en prod",
+  "band_number": "n°2",
+  "footer": "Darius Tokam · Arivex · prochain : les outils d'un agent"
+}

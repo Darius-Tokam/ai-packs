@@ -34,9 +34,8 @@ With "template": "agent" (the Arivex mascot, what goes in and what comes out):
 every card stays on screen, dots run along the wires into the mascot and out
 of it, and its eyes look left, right, back, then blink (2.4 s loop).
 
-With "template": "ecart" (announced face to real): the complete visual, then
-each claim shows what was announced, then what exists with the gap marked
-in red, and the lesson last.
+With "template": "ecart" (announced face to real): everything stays on screen
+and each gap mark swells in turn (2.4 s loop).
 
 With "template": "duo" (Claude Code pack + n8n bonus): the complete visual,
 then everything resets, the Claude Code agents light up one by one (orange
@@ -184,24 +183,12 @@ def mesure_loop(page):
 
 
 def ecart_loop(page):
-    """Ecart: complete, cleared, each claim shows what was announced, then what exists with
-    the gap marked; the lesson comes last; complete again."""
-    n = page.evaluate("R.n")
-
-    def st(rows, lesson):
-        page.evaluate("([r, l]) => { R.rows(r); R.lesson(l); }", [rows, lesson])
-
-    st(["done"] * n, True)
-    shot(page, 1.8)
-    st(["hidden"] * n, False)
-    shot(page, 0.5)
-    for i in range(n):
-        st(["done"] * i + ["left"] + ["hidden"] * (n - i - 1), False)
-        shot(page, 0.8)
-        st(["done"] * (i + 1) + ["hidden"] * (n - i - 1), False)
-        shot(page, 1.0)
-    st(["done"] * n, True)
-    shot(page, 3.2)
+    """Ecart: everything stays on screen (nobody waits for the cards); each gap mark swells in
+    turn, 30 frames of 0.08 s, the corner mascot's own 2.4 s cycle."""
+    n = 30
+    for k in range(n):
+        page.evaluate("t => R.pulse(t)", k / n)
+        shot(page, 0.08)
 
 
 def agent_loop(page):

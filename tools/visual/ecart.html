@@ -80,7 +80,7 @@
     <div id="pairs"></div>
   </div>
   <div class="lesson" id="lesson"><div class="tag" id="ltag"></div><div class="t" id="lt"></div></div>
-  <div class="band"><div class="l"><span id="bl"></span><span class="n" id="bn"></span></div><div class="ft" id="ft"></div></div>
+  <div class="band" id="band"><div class="l"><span id="bl"></span><span class="n" id="bn"></span></div><div class="ft" id="ft"></div></div>
 </div>
 <script>
 const S = window.SPEC;
@@ -106,11 +106,16 @@ $('pairs').innerHTML = rows.map((r, i) => `
     <div class="x">≠</div>
   </div>`).join('');
 $('ltag').textContent = S.lesson_tag || 'la leçon'; $('lt').textContent = S.lesson;
-$('bl').textContent = S.band_series; $('bn').textContent = S.band_number; $('ft').textContent = S.footer;
+/* a pack post ends on its keyword (cta_keyword), an educational post on its series band */
+if (S.cta_keyword) {
+  $('band').style.height = '168px';
+  $('band').querySelector('.l').innerHTML = `<span>${esc(S.cta_before || 'Commente')}</span><span class="n">${esc(S.cta_keyword)}</span><span>${esc(S.cta_after || '')}</span>`;
+} else { $('bl').textContent = S.band_series; $('bn').textContent = S.band_number; }
+$('ft').textContent = S.footer;
 
 /* vertical placement, free height spread between the blocks */
 const top0 = S.board_top || 250;
-const bandTop = 1350 - 150;
+const bandTop = 1350 - (S.cta_keyword ? 168 : 150);
 const bh = $('board').offsetHeight, lh = $('lesson').offsetHeight;
 const free = bandTop - top0 - bh - lh - 30;
 const g = Math.max(18, Math.min(40, free / 3));
@@ -131,6 +136,16 @@ const R = {
     });
   },
   lesson(on) { $('lesson').classList.toggle('hide', !on); },
+  /* pulse(t), t in [0, 1): everything stays on screen; each gap mark swells in turn */
+  pulse(t) {
+    const xs = [...document.querySelectorAll('.pair .x')], n = xs.length || 1;
+    xs.forEach((x, i) => {
+      const d = Math.abs(((t * n - i) % n + n) % n);
+      const k = d < 1 ? Math.sin(d * Math.PI) : 0;
+      x.style.transform = `translate(-50%, -50%) scale(${1 + 0.35 * k})`;
+      x.style.boxShadow = k > 0 ? `0 0 ${Math.round(18 * k)}px rgba(255,118,118,${(0.7 * k).toFixed(2)})` : 'none';
+    });
+  },
 };
 R.rows(rows.map(() => 'done')); R.lesson(true);
 </script>

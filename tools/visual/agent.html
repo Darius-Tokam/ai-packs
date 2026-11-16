@@ -61,6 +61,15 @@
   .bot svg.eyes { position: absolute; left: 0; top: 0; width: 440px; height: 440px; overflow: visible; }
   .bot .name { position: absolute; left: -40px; right: -40px; bottom: -14px; text-align: center; font-family: var(--mono); font-size: 18px; color: var(--muted); white-space: nowrap; }
 
+  /* pack variant: a hub in the middle (the tool's logo, its name, its agents) instead of the mascot */
+  .hub { position: absolute; width: 400px; border-radius: 28px; padding: 40px 28px 30px; text-align: center;
+    border: 2px solid rgba(217,119,87,.55); background: radial-gradient(260px 220px at 50% 30%, rgba(217,119,87,.18), transparent 70%), rgba(14,17,22,.96); }
+  .hub .logo { width: 210px; height: 210px; margin: 0 auto 24px; display: block; filter: drop-shadow(0 0 22px rgba(217,119,87,.45)); }
+  .hub .t { font-family: var(--display); font-weight: 800; font-size: 40px; letter-spacing: -.02em; line-height: 1.1; }
+  .hub .s { font-size: 19px; color: var(--muted); margin-top: 6px; }
+  .hub .ag { display: flex; flex-direction: column; gap: 12px; margin-top: 22px; }
+  .hub .ag div { font-family: var(--mono); font-size: 21px; font-weight: 700; padding: 12px 14px; border-radius: 12px;
+    border: 1.5px solid var(--line-2); background: rgba(255,255,255,.04); }
   .lesson { position: absolute; left: 56px; right: 56px; border-radius: 18px; padding: 22px 28px; border: 1.5px solid var(--line-2);
     background: rgba(10,12,16,.92); display: flex; align-items: center; gap: 18px; }
   .lesson .tag { font-family: var(--mono); font-size: 15px; color: var(--amber); border: 1.5px solid var(--amber); border-radius: 8px; padding: 4px 10px; white-space: nowrap; }
@@ -72,6 +81,7 @@
   .band .l { font-family: var(--display); font-weight: 800; font-size: 42px; letter-spacing: -.02em; white-space: nowrap; display: flex; align-items: center; gap: 14px; }
   .band .n { background: #13101b; color: #f4f0ff; font-family: var(--mono); font-weight: 700; border-radius: 12px; padding: 2px 16px; font-size: 36px; }
   .band .ft { font-size: 17px; font-weight: 600; opacity: .8; white-space: nowrap; }
+  .band.cta { height: 168px; } .band.cta .l { font-size: 44px; } .band.cta .n { font-size: 40px; padding: 4px 18px; }
 </style>
 </head>
 <body>
@@ -87,10 +97,11 @@
       <svg class="eyes" id="eyes" viewBox="0 0 840 840"></svg>
       <div class="name" id="bname"></div>
     </div>
+    <div class="hub" id="hub" style="display:none"><img class="logo" id="hlogo" alt=""><div class="t" id="ht"></div><div class="s" id="hs"></div><div class="ag" id="hag"></div></div>
     <div class="col out" id="cout"><div class="colh"><b></b><span id="outl"></span></div></div>
   </div>
   <div class="lesson" id="lesson"><div class="tag" id="ltag"></div><div class="t" id="lt"></div></div>
-  <div class="band"><div class="l"><span id="bl"></span><span class="n" id="bn"></span></div><div class="ft" id="ft"></div></div>
+  <div class="band" id="band"><div class="l"><span id="bl"></span><span class="n" id="bn"></span></div><div class="ft" id="ft"></div></div>
 </div>
 <script>
 const S = window.SPEC;
@@ -116,7 +127,21 @@ const card = (o, side, i) => `<div class="io ${o.tone || ''}${o.off ? ' off' : '
 $('cin').insertAdjacentHTML('beforeend', (S.inputs || []).map((o, i) => card(o, 'in', i)).join(''));
 $('cout').insertAdjacentHTML('beforeend', (S.outputs || []).map((o, i) => card(o, 'out', i)).join(''));
 $('ltag').textContent = S.lesson_tag || 'la leçon'; $('lt').textContent = S.lesson;
-$('bl').textContent = S.band_series; $('bn').textContent = S.band_number; $('ft').textContent = S.footer;
+/* a pack post ends on its keyword, an educational post on its series band */
+if (S.cta_keyword) {
+  $('band').classList.add('cta');
+  $('band').querySelector('.l').innerHTML = `<span>${esc(S.cta_before || 'Commente')}</span><span class="n">${esc(S.cta_keyword)}</span><span>${esc(S.cta_after || '')}</span>`;
+} else { $('bl').textContent = S.band_series; $('bn').textContent = S.band_number; }
+$('ft').textContent = S.footer;
+const BAND_H = S.cta_keyword ? 168 : 150;
+/* pack variant: the hub replaces the mascot (the corner mascot is added by the page builder) */
+const HUB = S.hub || null;
+if (HUB) {
+  $('bot').style.display = 'none'; $('hub').style.display = 'block';
+  if (HUB._logo) $('hlogo').src = HUB._logo; else $('hlogo').style.display = 'none';
+  $('ht').textContent = HUB.title || ''; $('hs').textContent = HUB.sub || '';
+  $('hag').innerHTML = (HUB.items || []).map(a => `<div>${esc(a)}</div>`).join('');
+}
 
 /* LED eyes on the visor, in the head image's own coordinates (840 x 840) */
 const EYES = {
@@ -138,16 +163,17 @@ eyes(S.eyes || 'happy');
 /* layout: stage between the title and the lesson, columns centred on the mascot */
 const top0 = S.stage_top || 256;
 const lessonH = $('lesson').offsetHeight;
-const stageH = Math.max($('cin').offsetHeight, $('cout').offsetHeight, 600, 1350 - 150 - 34 - lessonH - 30 - top0);
+const stageH = Math.max($('cin').offsetHeight, $('cout').offsetHeight, 600, 1350 - BAND_H - 34 - lessonH - 30 - top0);
 $('stage').style.top = top0 + 'px'; $('stage').style.height = stageH + 'px';
 const SH = S.stage_shift === undefined ? -50 : S.stage_shift;  /* lift the group a little under the title */
 $('cin').style.top = ((stageH - $('cin').offsetHeight) / 2 + SH) + 'px';
 $('cout').style.top = ((stageH - $('cout').offsetHeight) / 2 + SH) + 'px';
-const bot = $('bot');
-bot.style.left = (540 - 220) + 'px'; bot.style.top = ((stageH - 627) / 2 + SH) + 'px';
+const bot = HUB ? $('hub') : $('bot');
+if (HUB) { bot.style.left = (540 - 200) + 'px'; bot.style.top = ((stageH - bot.offsetHeight) / 2 + SH) + 'px'; }
+else { bot.style.left = (540 - 220) + 'px'; bot.style.top = ((stageH - 627) / 2 + SH) + 'px'; }
 const lessonTop = top0 + stageH + 30;
 $('lesson').style.top = lessonTop + 'px';
-if (lessonTop + $('lesson').offsetHeight > 1350 - 150 - 16) WARN.push(`lesson bottom ${Math.round(lessonTop + $('lesson').offsetHeight)}px overlaps the band`);
+if (lessonTop + $('lesson').offsetHeight > 1350 - BAND_H - 16) WARN.push(`lesson bottom ${Math.round(lessonTop + $('lesson').offsetHeight)}px overlaps the band`);
 
 /* wires: each input to the left side of the mascot, the mascot to each output */
 const FLOW = 34;  /* spacing of the dots that run along the wires */
@@ -155,7 +181,8 @@ const W = $('wires'); W.setAttribute('width', 1080); W.setAttribute('height', st
 const sr = $('stage').getBoundingClientRect();
 const rel = el => { const r = el.getBoundingClientRect(); return { l: r.left - sr.left, r: r.right - sr.left, t: r.top - sr.top, b: r.bottom - sr.top, cy: (r.top + r.bottom) / 2 - sr.top }; };
 const B = rel(bot);
-const portIn = { x: B.l + 44, y: B.t + 400 }, portOut = { x: B.r - 44, y: B.t + 400 };
+const portIn = HUB ? { x: B.l - 2, y: (B.t + B.b) / 2 } : { x: B.l + 44, y: B.t + 400 };
+const portOut = HUB ? { x: B.r + 2, y: (B.t + B.b) / 2 } : { x: B.r - 44, y: B.t + 400 };
 let svg = `<defs><marker id="m" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6d7a88"/></marker></defs>`;
 const ins = [...document.querySelectorAll('.io[data-side="in"]')], outs = [...document.querySelectorAll('.io[data-side="out"]')];
 ins.forEach((el, i) => {
@@ -204,6 +231,7 @@ R.frame = function (t) {
                t < 0.75 ? Math.cos((t - 0.5) / 0.25 * Math.PI / 2) : 0;
   const blink = t > 0.84 && t < 0.94 ? Math.abs((t - 0.89) / 0.05) : 1;
   eyes(S.eyes || 'happy', gaze * 26, blink);
+  if (HUB) $('hlogo').style.transform = `scale(${1 + 0.05 * Math.sin(t * Math.PI * 2)})`;
 };
 R.show(ins.length, outs.length, S.eyes || 'happy', true);
 R.frame(0);
