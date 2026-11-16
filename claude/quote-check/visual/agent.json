@@ -1,0 +1,65 @@
+{
+  "template": "agent",
+  "pills": [
+    {
+      "text": "2 agents Claude Code",
+      "dot": "coral"
+    },
+    {
+      "text": "Freelances",
+      "dot": "none"
+    }
+  ],
+  "title": "Ton devis, relu",
+  "title2": "avant que tu l'envoies",
+  "in_label": "ce que tu lui donnes",
+  "out_label": "ce qu'il trouve",
+  "hub": {
+    "logo": "claude",
+    "title": "quote-check",
+    "sub": "2 agents Claude Code",
+    "items": [
+      "brief-reader",
+      "quote-auditor"
+    ]
+  },
+  "inputs": [
+    {
+      "k": "le courriel du client",
+      "v": "Ce qu'il demande",
+      "note": "paiement, rappels, bilingue, import"
+    },
+    {
+      "k": "ton devis",
+      "v": "40 h à 75 $",
+      "note": "dont un « module de réservation » de 12 h"
+    }
+  ],
+  "outputs": [
+    {
+      "k": "demandées, pas chiffrées",
+      "v": "4 demandes",
+      "note": "aucune ligne au devis",
+      "tone": "r"
+    },
+    {
+      "k": "travail caché",
+      "v": "3 lignes",
+      "note": "fuseaux horaires, annulations, rôles",
+      "tone": "r"
+    },
+    {
+      "k": "calculs",
+      "v": "2 erreurs",
+      "note": "650 $ au lieu de 600 $, TVQ à 9,5 %",
+      "tone": "r"
+    }
+  ],
+  "lesson_tag": "verdict",
+  "lesson": "FIX FIRST : 9 défauts sur 9, avant l'envoi.",
+  "cta_before": "Commente",
+  "cta_keyword": "DEVIS",
+  "cta_after": "pour recevoir les 2 agents",
+  "footer": "Darius Tokam · Arivex · gratuit, open source, testé avant sa sortie",
+  "stage_shift": -20
+}

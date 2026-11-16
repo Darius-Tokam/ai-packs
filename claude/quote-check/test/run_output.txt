@@ -1,0 +1,12 @@
+| Cas | Défauts plantés | Trouvés | En trop | Heures | Fourchette | Verdict | Résultat |
+|---|---|---|---|---|---|---|---|
+| a-platform-booking | 9 | 9 | 0  | 40 | 44 à 60 h | FIX FIRST (9) | PASS |
+| b-platform-fixed | 0 | 0 | 0  | 80 | - | SEND | PASS |
+| c-studio-en | 0 | 0 | 0  | 37 | - | SEND | PASS |
+
+planted defects: 9/9 found, 0 extra finding(s)
+clean quotes: 2/2 reported SEND (0 false alarm)
+files with a long or medium dash: none
+files with the old account name: none
+
+RESULT: PASS

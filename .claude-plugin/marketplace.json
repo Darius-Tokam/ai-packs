@@ -77,6 +77,18 @@
         "security",
         "claude-md"
       ]
+    },
+    {
+      "name": "quote-check",
+      "source": "./claude/quote-check",
+      "description": "2 Claude Code agents that check a freelance quote against the client's brief before you send it: what the brief asks and the quote forgets, the hidden work behind a line, and every calculation, taxes included. Run /quote-check:check, or just ask to check your quote.",
+      "category": "productivity",
+      "keywords": [
+        "freelance",
+        "quotes",
+        "estimates",
+        "pricing"
+      ]
     }
   ]
 }
