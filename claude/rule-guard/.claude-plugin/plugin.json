@@ -1,0 +1,22 @@
+{
+  "name": "rule-guard",
+  "version": "1.0.0",
+  "description": "One Claude Code skill and one hook that check the rules of your CLAUDE.md on every git commit. Real dangers (a secret in clear, a private key, a .env file, DROP TABLE in a migration) block the commit with the rule, the file, the line and the fix; style rules only warn and never freeze your work. Just ask to turn your CLAUDE.md rules into checks.",
+  "author": {
+    "name": "Darius Tokam (Arivex)",
+    "url": "https://tokamdarius.ca"
+  },
+  "repository": "https://github.com/Darius-Tokam/ai-packs",
+  "license": "MIT",
+  "keywords": [
+    "claude-md",
+    "rules",
+    "git-hooks",
+    "pre-commit",
+    "secrets",
+    "claude-code"
+  ],
+  "skills": [
+    "./skills/rule-guard"
+  ]
+}

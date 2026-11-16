@@ -1,0 +1,75 @@
+{
+  "template": "choix",
+  "pills": [
+    {
+      "text": "1 skill + 1 hook Claude Code",
+      "dot": "coral"
+    },
+    {
+      "text": "Développeurs",
+      "dot": "none"
+    }
+  ],
+  "title": "La règle que ton agent oublie,",
+  "title2": "vérifiée à chaque commit",
+  "source": {
+    "k": "ton CLAUDE.md",
+    "v": "never commit the .env file"
+  },
+  "rule": {
+    "k": ".rule-guard/rules.tsv",
+    "v": "block  path  .env"
+  },
+  "hub": {
+    "name": "rule-guard",
+    "sub": "le hook, avant chaque commit de ton agent"
+  },
+  "lanes": [
+    {
+      "label": "BLOQUE",
+      "tone": "r",
+      "sub": "les dangers",
+      "items": [
+        ".env",
+        "clé d'API",
+        "clé privée",
+        "DROP TABLE"
+      ],
+      "stat": "17/17",
+      "stat_label": "commits dangereux refusés"
+    },
+    {
+      "label": "PRÉVIENT",
+      "tone": "a",
+      "sub": "le style, sans bloquer",
+      "items": [
+        "console.log",
+        "tiret long",
+        "TODO sans ticket",
+        "print( oublié"
+      ],
+      "stat": "15/15",
+      "stat_label": "commits sains passés, 5 avec avertissement"
+    },
+    {
+      "label": "LAISSE PASSER",
+      "tone": "g",
+      "sub": "si le hook tombe en panne, et le dit",
+      "items": [
+        "pas de règles",
+        "hors dépôt git",
+        "diff illisible",
+        "script cassé"
+      ],
+      "stat": "0/4",
+      "stat_label": "commit bloqué par ses pannes"
+    }
+  ],
+  "note_tag": "pourquoi",
+  "note": "En juillet, mon garde-fou a gelé mes commits 3 jours, sans alerte. D'où les deux niveaux.",
+  "cta_before": "Commente",
+  "cta_keyword": "GARDE",
+  "cta_after": "pour recevoir le pack",
+  "footer": "Darius Tokam · Arivex · gratuit, open source, testé avant sa sortie",
+  "gap": 64
+}

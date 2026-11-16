@@ -65,6 +65,18 @@
         "analytics",
         "creators"
       ]
+    },
+    {
+      "name": "rule-guard",
+      "source": "./claude/rule-guard",
+      "description": "One Claude Code skill and one hook that check the rules of your CLAUDE.md on every git commit: real dangers (secret, private key, .env, DROP TABLE) block the commit, style rules only warn. Never blocks on its own failures. Just ask to turn your CLAUDE.md rules into checks.",
+      "category": "development",
+      "keywords": [
+        "hooks",
+        "git",
+        "security",
+        "claude-md"
+      ]
     }
   ]
 }

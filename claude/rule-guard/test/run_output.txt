@@ -1,0 +1,58 @@
+rule-guard hook test, 2026-11-15, git 2.43.0, bash 5.2.21(1)-release
+
+Sample: what Claude receives when a commit is refused (case "warn + block in one commit")
+[permissionDecision]
+deny
+[permissionDecisionReason]
+rule-guard: commit refused, 1 blocking item(s).
+  BLOCK  .env  .env file [rules.tsv line 13]  Fix: git rm --cached the file, then add .env to .gitignore
+rule-guard: 1 warning(s), they do not block.
+  WARN   src/cart.js:5  console.log in src/ [rules.tsv line 19]  Fix: use the logger in src/log.js
+Fix the BLOCK items, stage the fix and commit again. Do not edit .rule-guard/rules.tsv, lower a rule to warn or rewrite the command to get past this check unless the user asks. If a match looks like a false positive, show it to the user: they can set that rule to warn in .rule-guard/rules.tsv, or turn the check off with RULE_GUARD_SKIP=1.
+
+Sample: what the user sees when a commit only warns (case "long dash in docs/guide.md")
+[systemMessage]
+rule-guard: 1 warning(s), they do not block.
+  WARN   docs/guide.md:5  long dash in a Markdown file [rules.tsv line 17]  Fix: use a colon, a comma or a new sentence
+
+#   case                                                     expected                 got                      reported                     ms    check
+1   API key (AWS format) in src/config.js                    deny(block)              deny(block)              src/config.js:1              107   ok
+2   API key (Stripe live format) in app/settings.py          deny(block)              deny(block)              app/settings.py:3            131   ok
+3   private key in deploy/id_rsa                             deny(block)              deny(block)              deploy/id_rsa:1              117   ok
+4   .env at the root                                         deny(block)              deny(block)              .env                         131   ok
+5   .env in a subfolder (api/.env)                           deny(block)              deny(block)              api/.env                     115   ok
+6   DROP TABLE in migrations/0002_drop_legacy.sql            deny(block)              deny(block)              migrations/0002_drop_legacy.sql:1 117   ok
+7   long dash in docs/guide.md                               allow(warn)              allow(warn)              docs/guide.md:5              117   ok
+8   console.log in src/cart.js                               allow(warn)              allow(warn)              src/cart.js:5                122   ok
+9   TODO without an issue number in app/orders.py            allow(warn)              allow(warn)              app/orders.py:9              108   ok
+10  print( debugging in app/orders.py                        allow(warn)              allow(warn)              app/orders.py:11             99    ok
+11  clean commit with 6 near misses (.env.example...)        allow                    allow                    -                            122   ok
+12  judgment rules only: message "wip", 120-line function    allow                    allow                    -                            97    ok
+13  warn + block in one commit (console.log + .env)          deny(block+warn)         deny(block+warn)         .env, src/cart.js:5          132   ok
+14  git commit -am, API key only in the working tree         deny(block)              deny(block)              src/cart.js:5                134   ok
+15  git commit (no -a), same key left unstaged               allow                    allow                    -                            110   ok
+16  git add -A && git commit, new .env untracked             deny(block)              deny(block)              .env                         139   ok
+17  git add src/cart.js && git commit, .env left out         allow                    allow                    -                            154   ok
+18  heredoc message (Claude Code style), GitHub token        deny(block)              deny(block)              scripts/deploy.sh:2          101   ok
+19  git -C <repo> commit, run from another folder            deny(block)              deny(block)              .env                         107   ok
+20  cd <repo> && git commit, run from another folder         deny(block)              deny(block)              .env                         109   ok
+21  not a commit: git status, .env staged                    allow                    allow                    -                            18    ok
+22  RULE_GUARD_SKIP=1, .env staged                           allow                    allow                    -                            9     ok
+23  hooks.json command line, .env staged                     deny(block)              deny(block)              .env                         -     ok
+24  hooks.json command line, script with a syntax error      allow(exit 1)            allow(exit 1)            syntax error                 -     ok
+25  missing rules file, .env staged                          allow(notice)            allow(notice)            no .rule-guard/rules.tsv     37    ok
+26  3 malformed rules lines, .env + console.log staged       deny(block+warn+notice)  deny(block+warn+notice)  line 26 skipped, line 27 skipped, line 28 skipped, .env 106   ok
+27  not a git repository                                     allow(notice)            allow(notice)            not inside a git repository  30    ok
+28  unreadable diff (corrupt index)                          allow(notice)            allow(notice)            could not read the diff      83    ok
+29  git pre-commit hook: .env staged                         deny(block)              deny(block)              .env                         -     ok
+30  git pre-commit hook: console.log staged                  allow(warn)              allow(warn)              src/cart.js:5                -     ok
+31  git pre-commit hook: commit -a, key unstaged             deny(block)              deny(block)              src/cart.js:5                -     ok
+32  run by hand with --git-hook (skill self-check)           deny(block)              deny(block)              .env                         -     ok
+
+commits that had to be refused: 17/17 refused
+commits that had to go through: 15/15 went through (0 refused by mistake)
+style-only commits: 5/5 went through with their warning shown
+hook failures (no rules file, no repo, unreadable diff, script crash): 0/4 blocked the commit
+hook time under Claude Code, 26 runs: median 109 ms, slowest 154 ms
+cases: 32, as expected: 32, not as expected: 0
+RESULT: PASS

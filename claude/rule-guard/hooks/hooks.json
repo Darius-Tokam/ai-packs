@@ -1,0 +1,17 @@
+{
+  "description": "rule-guard: before every git commit, checks the rules of .rule-guard/rules.tsv on what the commit adds. block rules refuse the commit, warn rules only report. A failure of the script itself never blocks (any error exits 1, which Claude Code reports and lets through). Set RULE_GUARD_SKIP=1 to turn it off.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/rule-guard.sh\" || exit 1",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

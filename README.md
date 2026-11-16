@@ -17,6 +17,7 @@ Un pack par métier, prêt à l'emploi. Des agents Claude Code ou des workflows 
 | [deploy-doctor](claude/deploy-doctor) | Développeurs | Ton déploiement a planté : un skill lit les logs, nomme la cause, montre la ligne de code et donne le correctif. Un arrêt normal n'est jamais un crash | Claude Code |
 | [crash-triage](n8n/crash-triage) | Développeurs | Bonus de deploy-doctor : à chaque déploiement qui plante, sur Railway ou n'importe quel hébergeur ou CI, la cause arrive avec l'alerte. Rien sur un arrêt normal. Guide d'installation inclus | n8n |
 | [post-autopsy](claude/post-autopsy) | Créateurs de contenu | Un skill et un script mesurent quelles accroches, quels formats et quelles heures portent tes impressions. Jamais de conclusion sur moins de 5 posts | Claude Code |
+| [rule-guard](claude/rule-guard) | Développeurs | Les règles de ton CLAUDE.md vérifiées à chaque commit de ton agent : les dangers bloquent (clé, .env, DROP TABLE), le style prévient sans bloquer | Claude Code |
 
 ### Installer un pack Claude Code
 
