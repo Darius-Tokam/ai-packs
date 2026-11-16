@@ -30,8 +30,34 @@ def _font_faces():
 
 
 def template(spec):
-    """grid (terminal + cards, the default) or orgchart (orchestrator + columns)."""
+    """grid (terminal + cards, the default), orgchart (orchestrator + columns) or duo (Claude pack + n8n bonus)."""
     return spec.get("template", "grid")
+
+
+REPO = HERE.parent.parent
+KEEP_PARAMS = ("operation", "resource", "mode")
+
+
+def prepare(spec, spec_path):
+    """duo: read the workflow named in n8n.workflow and keep only what the canvas draws.
+
+    The path is relative to the spec file, or else to the repo root. Only node names,
+    types, positions, operation, resource and mode are kept: no credential, no ID."""
+    if template(spec) != "duo":
+        return spec
+    n8n = spec["n8n"]
+    if "graph" not in n8n:
+        rel = Path(n8n["workflow"])
+        path = next((p for p in (Path(spec_path).resolve().parent / rel, REPO / rel) if p.exists()), None)
+        if path is None:
+            raise SystemExit(f"workflow not found: {rel}")
+        wf = json.loads(path.read_text())
+        nodes = [{"name": n["name"], "type": n["type"], "position": n.get("position", [0, 0]),
+                  "parameters": {k: v for k, v in (n.get("parameters") or {}).items()
+                                 if k in KEEP_PARAMS and isinstance(v, str)}}
+                 for n in wf.get("nodes", [])]
+        n8n["graph"] = {"nodes": nodes, "connections": wf.get("connections", {})}
+    return spec
 
 
 def build_html(spec):
@@ -60,6 +86,8 @@ def open_page(browser, spec):
 def layout_warnings(page, spec=None):
     if spec is not None and template(spec) == "orgchart":
         return _orgchart_warnings(page)
+    if spec is not None and template(spec) == "duo":
+        return _duo_warnings(page)
     warnings = []
     overflow = page.evaluate("""() => [...document.querySelectorAll('.card, .window, .hint')]
         .filter(e => e.scrollHeight > e.clientHeight + 1 || e.scrollWidth > e.clientWidth + 1)
@@ -91,4 +119,29 @@ def _orgchart_warnings(page):
         warnings.append(f"columns bottom {geo['cols']:.0f}px runs into the verdict ({geo['vtop']:.0f}px)")
     if geo["vbot"] > geo["cta"] - 12:
         warnings.append(f"verdict bottom {geo['vbot']:.0f}px overlaps the CTA band ({geo['cta']:.0f}px)")
+    return warnings
+
+
+def _duo_warnings(page):
+    warnings = list(page.evaluate("R.warnings"))
+    overflow = page.evaluate("""() => [...document.querySelectorAll('.pill, .hdr, .agent, .stat, .note, .cta .l, .cta .ft')]
+        .filter(e => e.scrollHeight > e.clientHeight + 1 || e.scrollWidth > e.clientWidth + 1)
+        .map(e => e.textContent.trim().slice(0, 40))""")
+    if overflow:
+        warnings.append(f"overflow in: {overflow}")
+    geo = page.evaluate("""() => {
+        const b = s => document.querySelector(s).getBoundingClientRect();
+        const p = [...document.querySelectorAll('.pill')].map(e => e.getBoundingClientRect());
+        const pills = p.length ? p[p.length - 1].right - p[0].left : 0;
+        const wide = [...document.querySelectorAll('h1 span')].map(e => e.scrollWidth - e.clientWidth);
+        return {pills, title: b('h1').bottom, wide: Math.max(0, ...wide), c1: b('#c1').top, c2: b('#c2').bottom, cta: b('.cta').top};
+    }""")
+    if geo["pills"] > WIDTH - 40:
+        warnings.append(f"pills are {geo['pills']:.0f}px wide, wider than the visual")
+    if geo["wide"] > 1:
+        warnings.append("a title line is wider than the visual: shorten title or title2")
+    if geo["title"] > geo["c1"] - 6:
+        warnings.append(f"title bottom {geo['title']:.0f}px runs into card 1 ({geo['c1']:.0f}px)")
+    if geo["c2"] > geo["cta"] - 12:
+        warnings.append(f"card 2 bottom {geo['c2']:.0f}px overlaps the CTA band ({geo['cta']:.0f}px)")
     return warnings

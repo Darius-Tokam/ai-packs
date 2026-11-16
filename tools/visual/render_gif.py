@@ -22,6 +22,13 @@ the orchestrator lights up, then each column lights up in turn (wire,
 "analyse..." then its finding and tag), and the verdict bar comes last.
 The label shown while a column runs is labels.running in the spec.
 
+With "template": "duo" (Claude Code pack + n8n bonus): the complete visual,
+then everything resets, the Claude Code agents light up one by one (orange
+while running, then their check), then the n8n workflow runs node by node as
+in n8n (node running in orange, node done in green with its check, its links
+turn green with the item count of the test execution), and the loop ends on
+the complete visual, held. About 12 s for 8 agents and 7 nodes.
+
 Limits checked at the end: LinkedIn plays a GIF uploaded through the post
 composer when it is under 5 MB and 400 frames, otherwise it freezes it on
 the first frame. Needs ffmpeg.
@@ -36,17 +43,18 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _page import launch, layout_warnings, open_page, template  # noqa: E402
+from _page import launch, layout_warnings, open_page, prepare, template  # noqa: E402
 
 MAX_BYTES, MAX_FRAMES = 5 * 1024 * 1024, 400
 
 spec_path, out_path = Path(sys.argv[1]), Path(sys.argv[2])
-spec = json.loads(spec_path.read_text())
+spec = prepare(json.loads(spec_path.read_text()), spec_path)
 anim = {"running": "analyse en cours", "queued": "en attente", "status_ready": "",
         "status_running": "{done}/{total} agents terminés"}
 anim.update(spec.get("anim", {}))
 ORG = template(spec) == "orgchart"
-if not ORG:
+DUO = template(spec) == "duo"
+if not ORG and not DUO:
     labels = {"running": anim["running"], "queued": anim["queued"]}
     n_cards = len(spec["cards"])
     total = sum(1 for c in spec["cards"] if not c.get("highlight")) or n_cards
@@ -96,12 +104,39 @@ def org_loop(page):
     shot(page, 2.6)
 
 
-if ORG:
+def duo_loop(page):
+    """Duo: complete, reset, agents one by one, then the workflow node by node, complete."""
+    na = len(spec["claude"]["agents"])
+    nn = len(page.evaluate("R.order"))
+
+    def duo(agents, nodes):
+        page.evaluate("([a, n]) => { R.agents(a); R.nodes(n); }", [agents, nodes])
+
+    done_a, done_n = ["done"] * na, ["done"] * nn
+    duo(done_a, done_n)
+    shot(page, 1.8)
+    duo(["idle"] * na, ["idle"] * nn)
+    shot(page, 0.52)
+    for i in range(na):
+        duo(["done"] * i + ["running"] + ["idle"] * (na - i - 1), ["idle"] * nn)
+        shot(page, 0.16)
+        duo(["done"] * (i + 1) + ["idle"] * (na - i - 1), ["idle"] * nn)
+        shot(page, 0.12)
+    for j in range(nn):
+        duo(done_a, ["done"] * j + ["running"] + ["idle"] * (nn - j - 1))
+        shot(page, 0.36)
+        duo(done_a, ["done"] * (j + 1) + ["idle"] * (nn - j - 1))
+        shot(page, 0.32)
+    duo(done_a, done_n)
+    shot(page, 2.8)
+
+
+if ORG or DUO:
     with sync_playwright() as p:
         browser = launch(p)
         page = open_page(browser, spec)
         warnings = layout_warnings(page, spec)
-        org_loop(page)
+        (org_loop if ORG else duo_loop)(page)
         browser.close()
 else:
     with sync_playwright() as p:

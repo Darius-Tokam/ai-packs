@@ -1,0 +1,47 @@
+{
+  "template": "duo",
+  "pills": [
+    {"text": "8 agents Claude Code", "dot": "coral"},
+    {"text": "Workflow n8n en bonus", "dot": "cyan"},
+    {"text": "Freelances", "dot": "none"}
+  ],
+  "title": "Tes factures et tes devis",
+  "title2": "relancés sans gêne",
+  "claude": {
+    "name": "invoice-chaser",
+    "what": "les factures impayées",
+    "label": "8 agents Claude Code",
+    "agents": ["ledger-import", "bank-match", "aging", "tax-check", "duplicate-guard", "priority", "reminder-writer", "chase-plan"],
+    "stats": [
+      {"value": "8 080,63 $", "label": "à relancer sur 7 factures", "color": "g"},
+      {"value": "2", "label": "factures déjà payées, sorties des relances", "color": "a"},
+      {"value": "8/8", "label": "défauts plantés trouvés", "color": "p"}
+    ]
+  },
+  "n8n": {
+    "name": "relance-radar",
+    "what": "les devis et prospects sans réponse",
+    "label": "Bonus n8n",
+    "workflow": "n8n/relance-radar/workflow.json",
+    "counts": {
+      "Chaque matin de semaine, 8 h": 1,
+      "Réglages": 1,
+      "Fils envoyés": 27,
+      "Lire le fil": 33,
+      "Choisir les relances": 27,
+      "À relancer": 15
+    },
+    "output_labels": {"À relancer": ["Kept"]},
+    "stats": [
+      {"value": "15", "label": "brouillons de relance dans Gmail", "color": "g"},
+      {"value": "12", "label": "fils ignorés, avec la raison", "color": "a"},
+      {"value": "0", "label": "doublon le lendemain", "color": "c"}
+    ],
+    "note": "+ guide d'installation pas à pas",
+    "note2": "rien n'est envoyé sans toi"
+  },
+  "cta_before": "Commente",
+  "cta_keyword": "RELANCE",
+  "cta_after": "pour recevoir les deux",
+  "footer": "Darius Tokam · Arivex · gratuit, open source, chacun testé avant sa sortie"
+}
