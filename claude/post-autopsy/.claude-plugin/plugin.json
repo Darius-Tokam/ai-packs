@@ -1,0 +1,15 @@
+{
+  "name": "post-autopsy",
+  "version": "1.0.0",
+  "description": "One Claude Code skill and a Python script that read an export of your LinkedIn posts and measure which hook angles, formats, weekdays and hours go with more of your impressions, with the number of posts and the median of each group. A group of fewer than 5 posts is never concluded on. Just ask what works in your posts.",
+  "author": {
+    "name": "Darius Tokam (Arivex)",
+    "url": "https://tokamdarius.ca"
+  },
+  "repository": "https://github.com/Darius-Tokam/ai-packs",
+  "license": "MIT",
+  "keywords": ["linkedin", "content", "analytics", "impressions", "creators", "claude-code"],
+  "skills": [
+    "./skills/post-autopsy"
+  ]
+}

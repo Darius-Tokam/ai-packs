@@ -1,0 +1,40 @@
+post-autopsy : test sur 42 posts reconstitués (graine 20261115)
+
+| Contrôle | Attendu | Mesuré | Résultat |
+|---|---|---|---|
+| forme de l'historique | médiane proche de 90, la plupart entre 20 et 120, quelques-uns entre 300 et 600 | médiane 88, 25/40 entre 20 et 120, 5 entre 300 et 600 (300, 340, 416, 470, 590) | PASS |
+| lignes lues / posts analysés / exclus | 42 / 40 / 2 | 42 / 40 / 2 | PASS |
+| posts sans impressions nommés | n° 3, 7 | n° 3, 7 | PASS |
+| médiane de l'ensemble | 88 | 88 | PASS |
+| réactions / commentaires médians | 2 / 1 | 2 / 1 | PASS |
+| sortie JSON lisible | oui | oui | PASS |
+| classement de chaque post (40 posts x 6 critères) | 240/240 | 240/240 | PASS |
+| post à la limite (10:00, post n° 40) | 10h à 12h59 | 10h à 12h59 | PASS |
+| groupes : n, médiane, écart, lecture | 23/23, aucun en trop | 23/23, aucun en trop | PASS |
+| groupes de moins de 5 posts marqués « échantillon trop petit » | 3 | 3 (Accroche : question, Jour : lundi, Jour : samedi) | PASS |
+| groupes de moins de 5 posts dans les conclusions | 0 | 0 | PASS |
+| groupes de moins de 5 posts listés à part | 3 | 3 | PASS |
+| conclusions (n >= 5 et écart >= 25 %) | 7, avec n et les deux médianes | 7, identiques | PASS |
+| effet planté : Accroche je, au-dessus | 150 sur 12 posts | 150 sur 12 posts, contre 88 (+70 %) | PASS |
+| effet planté : Accroche tu, en dessous | 37,5 sur 10 posts | 37,5 sur 10 posts, contre 88 (-57 %) | PASS |
+| effet planté : Heure 7h à 9h59, au-dessus | 150 sur 14 posts | 150 sur 14 posts, contre 88 (+70 %) | PASS |
+| effet planté : Heure 18h à 23h59, en dessous | 48,5 sur 8 posts | 48,5 sur 8 posts, contre 88 (-45 %) | PASS |
+| piège : Accroche question (3 posts, médiane 470) | marqué, jamais conclu | médiane 470, marqué, jamais conclu | PASS |
+| code de sortie sur l'historique | 0 | 0 | PASS |
+| entrée JSON : même rapport | identique | identique | PASS |
+| export de tableur français (; en-têtes français, 12/11/2026, 8h00) | même rapport | même rapport | PASS |
+| fichier de 3 posts : refuse de conclure | code 1, 0 conclusion | code 1, 0 conclusion | PASS |
+| fichier absent | code 2 | code 2 | PASS |
+| colonne impressions absente | code 2 | code 2 | PASS |
+| tiret long ou moyen dans le pack | aucun | aucun | PASS |
+
+Conclusions écrites par autopsy.py sur l'historique :
+- **Accroche : je** : médiane 150 impressions sur 12 posts, contre 88 pour l'ensemble (+70 %).
+- **Heure : 7h à 9h59** : médiane 150 impressions sur 14 posts, contre 88 pour l'ensemble (+70 %).
+- **Jour : jeudi** : médiane 135,5 impressions sur 6 posts, contre 88 pour l'ensemble (+54 %).
+- **Accroche : tu** : médiane 37,5 impressions sur 10 posts, contre 88 pour l'ensemble (-57 %).
+- **Heure : 13h à 17h59** : médiane 40 impressions sur 6 posts, contre 88 pour l'ensemble (-55 %).
+- **Heure : 18h à 23h59** : médiane 48,5 impressions sur 8 posts, contre 88 pour l'ensemble (-45 %).
+- **Jour : mardi** : médiane 51 impressions sur 7 posts, contre 88 pour l'ensemble (-42 %).
+
+RESULT: PASS

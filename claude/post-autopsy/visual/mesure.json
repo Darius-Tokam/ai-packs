@@ -1,0 +1,32 @@
+{
+  "template": "mesure",
+  "pills": [
+    {"text": "1 skill Claude Code", "dot": "coral"},
+    {"text": "Script Python inclus", "dot": "green"},
+    {"text": "Créateurs de contenu", "dot": "none"}
+  ],
+  "title": "Ce qui fait tes impressions,",
+  "title2": "pas un coup de chance",
+  "glyph": "›",
+  "command": "analyse mes posts LinkedIn",
+  "sub_html": "post-autopsy · <b>40 posts</b> lus, 2 exclus sans impressions",
+  "chart_title": "Médiane des impressions par groupe",
+  "chart_unit": "historique de test",
+  "reference": {"value": 88, "label": "ensemble : 88"},
+  "bars": [
+    {"label": "Accroche question", "n": 3, "value": 470, "small": true, "delta": "?", "stamp": "3 posts : trop peu, jamais conclu"},
+    {"label": "Accroche « je »", "n": 12, "value": 150, "delta": "+70 %", "tone": "g"},
+    {"label": "Publié de 7h à 9h59", "n": 14, "value": 150, "delta": "+70 %", "tone": "g"},
+    {"label": "Publié de 18h à 23h59", "n": 8, "value": 48.5, "delta": "-45 %", "tone": "r"},
+    {"label": "Accroche « tu »", "n": 10, "value": 37.5, "delta": "-57 %", "tone": "r"}
+  ],
+  "stats": [
+    {"value": "240/240", "label": "classements justes", "color": "g"},
+    {"value": "4/4", "label": "effets plantés retrouvés", "color": "p"},
+    {"value": "0", "label": "conclusion sur moins de 5 posts", "color": "a"}
+  ],
+  "cta_before": "Commente",
+  "cta_keyword": "AUTOPSIE",
+  "cta_after": "pour recevoir le skill",
+  "footer": "Darius Tokam · Arivex · gratuit, open source, testé avant sa sortie"
+}
