@@ -5,5 +5,6 @@ Un dossier par pack : le workflow `workflow.json`, un guide d'installation pas �
 | Workflow | Pour qui | Ce qu'il fait |
 |---|---|---|
 | [relance-radar](relance-radar) | Freelances | Chaque matin, un brouillon de relance dans Gmail pour les devis et prospects sans réponse. N'envoie rien. |
+| [crash-triage](crash-triage) | Développeurs | À chaque déploiement qui plante, sur Railway ou n'importe quel hébergeur, CI ou script, t'envoie la cause, la ligne qui la prouve et le correctif. Rien sur un arrêt normal. |
 
 Import : dans n8n, menu du workflow (les trois points), **Import from File**. Aucun fichier ne contient d'identifiant : tu branches tes propres comptes, comme l'explique chaque `GUIDE.md`.

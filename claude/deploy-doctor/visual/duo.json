@@ -1,0 +1,163 @@
+{
+  "template": "duo",
+  "pills": [
+    {
+      "text": "1 skill Claude Code",
+      "dot": "coral"
+    },
+    {
+      "text": "Workflow n8n en bonus",
+      "dot": "cyan"
+    },
+    {
+      "text": "Développeurs",
+      "dot": "none"
+    }
+  ],
+  "title": "Le crash et sa cause",
+  "title2": "dans la même alerte",
+  "claude": {
+    "name": "deploy-doctor",
+    "what": "les déploiements qui plantent",
+    "label": "1 skill Claude Code · 8 pannes reconnues",
+    "agents": [
+      "npm en PID 1",
+      "python absent",
+      "variable absente",
+      "réglages de dev",
+      "127.0.0.1",
+      "mémoire",
+      "migrations",
+      "module manquant"
+    ],
+    "stats": [
+      {
+        "value": "8/8",
+        "label": "pannes nommées sur 11 déploiements",
+        "color": "g"
+      },
+      {
+        "value": "0",
+        "label": "fausse alerte sur 3 déploiements sains",
+        "color": "a"
+      },
+      {
+        "value": "5/5",
+        "label": "causes appuyées par une ligne de code",
+        "color": "p"
+      }
+    ]
+  },
+  "n8n": {
+    "name": "crash-triage",
+    "what": "chaque déploiement qui plante, sur Railway ou ailleurs",
+    "label": "Bonus n8n",
+    "workflow": "n8n/crash-triage/workflow.json",
+    "counts": {
+      "Railway : statut du déploiement": 15,
+      "Hébergeur ou CI : log du déploiement": 6,
+      "Réglages": 21,
+      "Lire l'entrée": 21,
+      "À analyser": 18,
+      "Logs à lire chez Railway ?": [
+        13,
+        5
+      ],
+      "Logs du déploiement (Railway)": 13,
+      "Lignes Railway": 13,
+      "Nommer la cause": 18,
+      "Vraie panne ?": [
+        15,
+        3
+      ]
+    },
+    "output_labels": {
+      "Logs à lire chez Railway ?": [
+        "true",
+        "false"
+      ],
+      "Vraie panne ?": [
+        "true",
+        "false"
+      ]
+    },
+    "stats": [
+      {
+        "value": "10/10",
+        "label": "causes nommées sur 21 alertes de test",
+        "color": "g"
+      },
+      {
+        "value": "0",
+        "label": "courriel sur 3 arrêts normaux",
+        "color": "a"
+      },
+      {
+        "value": "15/15",
+        "label": "même cause que le skill",
+        "color": "c"
+      }
+    ],
+    "note": "+ guide d'installation pas à pas",
+    "note2": "Docker et GitHub Actions compris",
+    "canvas_height": 436,
+    "grid": {
+      "cols": 6,
+      "units": 3,
+      "at": {
+        "Railway : statut du déploiement": [
+          0,
+          0
+        ],
+        "Hébergeur ou CI : log du déploiement": [
+          0,
+          1
+        ],
+        "Réglages": [
+          1,
+          0.5
+        ],
+        "Lire l'entrée": [
+          2,
+          0.5
+        ],
+        "À analyser": [
+          3,
+          0.5
+        ],
+        "Logs à lire chez Railway ?": [
+          4,
+          0.5
+        ],
+        "Logs du déploiement (Railway)": [
+          5,
+          0
+        ],
+        "Lignes Railway": [
+          2,
+          2
+        ],
+        "Nommer la cause": [
+          3,
+          2.5
+        ],
+        "Vraie panne ?": [
+          4,
+          2.5
+        ],
+        "M'envoyer la cause": [
+          5,
+          2
+        ],
+        "Arrêt normal, rien à envoyer": [
+          5,
+          3
+        ]
+      }
+    }
+  },
+  "cta_before": "Commente",
+  "cta_keyword": "CRASH",
+  "cta_after": "pour recevoir les deux",
+  "footer": "Darius Tokam · Arivex · gratuit, open source, chacun testé avant sa sortie"
+}

@@ -1,0 +1,405 @@
+{
+  "name": "crash-triage : la cause de chaque panne de déploiement",
+  "nodes": [
+    {
+      "id": "5c5f5f53-9a60-4d1a-a6d6-c33decb59728",
+      "name": "Railway : statut du déploiement",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "crash-triage",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {
+          "noResponseBody": true
+        }
+      }
+    },
+    {
+      "id": "1bcef7b5-4009-4053-b0f9-ff13632e4d7a",
+      "name": "Hébergeur ou CI : log du déploiement",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        200
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "crash-triage-log",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {
+          "noResponseBody": true
+        }
+      }
+    },
+    {
+      "id": "5c336494-9030-45f2-adb8-0942567a48cc",
+      "name": "Réglages",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        100
+      ],
+      "parameters": {
+        "mode": "manual",
+        "includeOtherFields": true,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "mon-adresse",
+              "name": "mon_adresse",
+              "value": "toi@exemple.com",
+              "type": "string"
+            },
+            {
+              "id": "lignes",
+              "name": "lignes_de_log",
+              "value": 300,
+              "type": "number"
+            },
+            {
+              "id": "projets",
+              "name": "projets_suivis",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "e0778e02-6d15-498e-89f6-9a3fe72af5a1",
+      "name": "Lire l'entrée",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        100
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Lit ce qui arrive (alerte Railway, ou log envoyé par n'importe quel hébergeur ou CI)\n// et décide s'il faut l'analyser.\nconst r = $('Réglages').first().json;\nconst item = $input.first().json;\nconst body = (item.body && typeof item.body === 'object') ? item.body : {};\nconst max = Math.min(Math.max(Number(r.lignes_de_log) || 300, 20), 1000);\nconst suivis = String(r.projets_suivis || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);\nconst horsSuivi = p => suivis.length && p && !suivis.includes(String(p).toLowerCase());\n\n// 1. Un log envoyé directement : champ log (texte) ou lines (liste).\nif ('log' in body || 'lines' in body || 'service' in body) {\n  let lignes = [];\n  if (Array.isArray(body.lines)) lignes = body.lines.map(l => String((l && typeof l === 'object') ? (l.message || '') : l));\n  else if (typeof body.log === 'string') lignes = body.log.split(/\\r?\\n/);\n  while (lignes.length && !lignes[lignes.length - 1].trim()) lignes.pop();\n  lignes = lignes.slice(-max);\n  const projet = String(body.projet || body.project || '');\n  const suivre = !horsSuivi(projet);\n  return [{ json: {\n    source: 'direct', suivre,\n    raison: suivre ? 'log envoyé par un hébergeur ou une CI' : `projet ${projet} absent de projets_suivis`,\n    type: '', statut: String(body.statut || body.status || 'FAILED').toUpperCase(), deploymentId: '',\n    projet, service: String(body.service || ''), environnement: String(body.environnement || body.environment || ''),\n    commit: String(body.commit || '').slice(0, 7), message_commit: String(body.message_commit || '').split('\\n')[0].slice(0, 80),\n    date: String(body.date || ''), lignes, erreurs: [],\n  } }];\n}\n\n// 2. Une alerte Railway (webhook du projet).\nconst details = body.details || {};\nconst res = body.resource || {};\nconst type = String(body.type || '');\nconst statut = String(details.status || '').toUpperCase();\nconst projet = String((res.project || {}).name || '');\nconst projetId = String((res.project || {}).id || '');\nconst deploymentId = String((res.deployment || {}).id || details.id || '');\nconst annonce = /\\.(crashed|failed)$/i.test(type) || ['CRASHED', 'FAILED'].includes(statut);\n\nlet suivre = true;\nlet raison = 'panne annoncée par Railway';\nif (!annonce) {\n  suivre = false;\n  raison = `événement ${type || 'sans type'} (${statut || 'sans statut'}) : pas une panne annoncée`;\n} else if (horsSuivi(projet) && horsSuivi(projetId)) {\n  suivre = false;\n  raison = `projet ${projet || projetId} absent de projets_suivis`;\n} else if (!deploymentId) {\n  suivre = false;\n  raison = \"l'événement ne donne pas l'identifiant du déploiement\";\n}\n\nreturn [{ json: {\n  source: 'railway', suivre, raison, type, statut, deploymentId, projet,\n  service: String((res.service || {}).name || ''),\n  environnement: String((res.environment || {}).name || ''),\n  commit: String(details.commitHash || '').slice(0, 7),\n  message_commit: String(details.commitMessage || '').split('\\n')[0].slice(0, 80),\n  date: String(body.timestamp || ''),\n  graphql: {\n    query: 'query deploymentLogs($deploymentId: String!, $limit: Int) { deploymentLogs(deploymentId: $deploymentId, limit: $limit) { timestamp message } }',\n    variables: { deploymentId, limit: max },\n  },\n} }];\n"
+      }
+    },
+    {
+      "id": "5f3f02b9-92bf-42e1-98e7-3f53cc547efe",
+      "name": "À analyser",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        720,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.suivre }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "58bda522-3fea-429b-ab83-d0b306ca8569",
+      "name": "Logs à lire chez Railway ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        960,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.source }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "railway"
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "5894c856-5beb-40b4-a2b8-4def19a45e92",
+      "name": "Logs du déploiement (Railway)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1200,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://backboard.railway.com/graphql/v2",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.graphql) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 20000
+        }
+      }
+    },
+    {
+      "id": "9ed72518-ae38-49fd-832d-009c61542378",
+      "name": "Lignes Railway",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Range la réponse de l'API Railway dans la même forme qu'un log envoyé directement.\nconst ev = { ...$(\"Lire l'entrée\").first().json };\ndelete ev.graphql;\nconst body = $input.first().json || {};\nconst logs = ((body.data || {}).deploymentLogs) || [];\nconst erreurs = body.errors || (body.error ? [body.error] : []);\nreturn [{ json: { ...ev, lignes: logs.map(l => String((l && l.message) || '')), erreurs } }];\n"
+      }
+    },
+    {
+      "id": "c0766488-c854-45de-9c1b-e09bea0c0511",
+      "name": "Nommer la cause",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        100
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Nomme la cause de la panne à partir des logs du déploiement.\n// Mêmes signatures que le skill deploy-doctor (claude/deploy-doctor).\n// Entrée : les champs de l'événement, lignes (liste de textes) et erreurs.\nconst ev = $input.first().json || {};\nconst erreurs = ev.erreurs || [];\nconst lignes = (ev.lignes || []).map((t, i) => ({ n: i + 1, texte: String(t) }));\nconst railway = ev.source === 'railway';\n\nconst REGLES = [\n  { id: 'npm-pid1-sigterm', titre: 'npm transforme un redéploiement normal en panne',\n    motifs: [/npm (?:error|ERR!) signal SIGTERM/, /ELIFECYCLE.*SIGTERM/, /(?:yarn|pnpm).*(?:SIGTERM|exit code 143)/],\n    cause: \"Le conteneur démarre par npm (ou yarn, pnpm). À chaque redéploiement, l'hébergeur envoie SIGTERM ; npm le déclare en échec et sort avec un code non nul. L'hébergeur annonce une panne alors que l'app s'est arrêtée normalement.\",\n    correctif: 'Démarre le serveur avec node directement (Dockerfile : CMD [\"node\", \"dist/server.js\"]) et gère SIGTERM : ferme le serveur, puis sors avec le code 0.',\n    verifier: \"Redéploie deux fois : le log de l'ancien conteneur finit sans « npm error », et plus aucune alerte n'arrive.\" },\n  { id: 'python-not-found', titre: \"la commande appelle python, l'image n'a que python3\",\n    motifs: [/\\bpython: command not found/, /\\/bin\\/(?:ba)?sh: \\d+: python: not found/, /exec: \"python\": executable file not found/],\n    cause: \"La commande de démarrage ou le cron appelle « python », mais l'image ne fournit que « python3 ». Le service meurt avant d'exécuter une ligne.\",\n    correctif: \"Appelle python3 dans la commande de démarrage ou du cron (ou installe le paquet python-is-python3 dans l'image).\",\n    verifier: 'Lance le cron une fois à la main : il affiche sa propre sortie, pas « command not found ».' },\n  { id: 'missing-env-var', titre: \"une variable d'environnement obligatoire manque\",\n    motifs: [/KeyError: '([A-Z][A-Z0-9_]{2,})'/, /ImproperlyConfigured: Set the ([A-Z][A-Z0-9_]+) environment variable/, /[Mm]issing (?:required )?environment variable:? ['\"]?([A-Z][A-Z0-9_]+)/],\n    cause: \"Le code lit {var} sans valeur par défaut et la variable n'existe pas sur ce service : l'app plante au démarrage.\",\n    correctif: 'Ajoute {var} sur chaque service qui exécute ce code (web, worker, cron), puis redéploie. Ne colle sa valeur ni dans un chat ni dans un log.',\n    verifier: 'Liste les variables du service et vérifie que {var} y est (valeur masquée), puis redéploie : le log atteint la ligne où le serveur écoute.' },\n  { id: 'dev-settings-in-prod', titre: 'la production tourne avec les réglages de développement',\n    motifs: [/you have DEBUG = True in your Django settings/, /Watching for file changes with StatReloader/, /Starting development server at/],\n    cause: \"L'app déployée tourne en réglages de développement (DEBUG actif, souvent une base SQLite jetable) : le module de réglages dépend d'une variable absente sur l'hébergeur.\",\n    correctif: 'Fixe DJANGO_SETTINGS_MODULE sur le module de production pour chaque service, ou dans la commande de démarrage. Ajoute d\\'abord ALLOWED_HOSTS : des réglages de production qui la lisent sans défaut plantent au démarrage.',\n    verifier: \"Demande une page qui n'existe pas : tu dois voir un simple 404, pas la page de débogage.\" },\n  { id: 'port-binding', titre: 'le serveur écoute sur localhost, le proxy ne le joint pas',\n    motifs: [/(?:[Ll]istening|running|Running) (?:on|at):? (?:https?:\\/\\/)?(?:127\\.0\\.0\\.1|localhost)(?::\\d+)?/, /Listening at: https?:\\/\\/(?:127\\.0\\.0\\.1|localhost)/],\n    cause: \"Le serveur écoute sur localhost dans le conteneur. Le proxy de l'hébergeur ne peut pas le joindre : chaque requête finit en 502 « Application failed to respond ».\",\n    correctif: \"Écoute sur 0.0.0.0 et sur le port de la variable PORT (uvicorn --host 0.0.0.0 --port $PORT ; Express : app.listen(process.env.PORT, '0.0.0.0')).\",\n    verifier: \"Après le redéploiement, le log affiche 0.0.0.0 et la valeur de PORT, et l'adresse publique répond.\" },\n  { id: 'out-of-memory', titre: 'le processus a manqué de mémoire',\n    motifs: [/JavaScript heap out of memory/, /Reached heap limit/, /exit(?:ed with)? code:? 137\\b/, /OOMKilled/, /\\bMemoryError\\b/, /^\\s*Killed\\s*$/],\n    cause: \"Le processus a dépassé sa limite de mémoire et a été tué (le code 137 correspond à SIGKILL). Les dernières lignes avant l'arrêt montrent ce qui tournait.\",\n    correctif: 'Repère le pic dans les métriques de mémoire, puis baisse-le (moins de workers, des lots plus petits, NODE_OPTIONS=--max-old-space-size pour Node) ou relève la limite du service.',\n    verifier: \"Rejoue la même charge après le redéploiement : la mémoire reste sous la limite et aucun code 137 n'apparaît.\" },\n  { id: 'migrations-not-applied', titre: 'le schéma de la base est en retard sur le code',\n    motifs: [/relation \"([^\"]+)\" does not exist/, /no such table: (\\w+)/, /column \"[^\"]+\" (?:of relation \"[^\"]+\" )?does not exist/, /You have \\d+ unapplied migration/],\n    cause: \"Le code attend une table ou une colonne que cette base n'a pas : les migrations n'ont pas été appliquées sur cet environnement.\",\n    correctif: 'Lance les migrations pendant le déploiement (commande de pré-déploiement, par exemple python manage.py migrate), puis redéploie.',\n    verifier: \"python manage.py showmigrations (ou l'équivalent de ton outil) ne liste aucune migration en attente, et la requête qui échouait passe.\" },\n  { id: 'missing-dependency', titre: 'une dépendance manque dans le build',\n    motifs: [/ModuleNotFoundError: No module named '([\\w.]+)'/, /Error: Cannot find module '([^']+)'/, /ImportError: No module named ([\\w.]+)/],\n    cause: \"Le code importe {var}, que le build n'a pas installé : il manque dans requirements.txt ou package.json (ou il n'est que dans devDependencies).\",\n    correctif: 'Ajoute {var} au fichier de dépendances utilisé par le build, commite, redéploie.',\n    verifier: 'Le log du build installe {var}, et le démarrage passe l\\'import.' },\n];\nconst ARRET_PROPRE = [/Received SIGTERM/, /SIGTERM received/, /Handling signal: term/, /[Gg]raceful(?:ly)? (?:shutdown|stopping)/, /[Ss]hutting down/];\n\nconst trouvees = [];\nfor (const regle of REGLES) {\n  for (const l of lignes) {\n    const m = regle.motifs.map(rx => l.texte.match(rx)).find(Boolean);\n    if (!m) continue;\n    const v = m[1] || '';\n    const remplir = s => s.split('{var}').join(v);\n    trouvees.push({ id: regle.id, titre: remplir(regle.titre), variable: v, ligne: l.n,\n      preuve: l.texte.trim().slice(0, 160), cause: remplir(regle.cause),\n      correctif: remplir(regle.correctif), verifier: remplir(regle.verifier) });\n    break;\n  }\n}\nconst arret = trouvees.length ? null : lignes.find(l => ARRET_PROPRE.some(rx => rx.test(l.texte)));\n\nconst ou = [ev.service || 'service inconnu', ev.projet && `projet ${ev.projet}`, ev.environnement && `environnement ${ev.environnement}`].filter(Boolean).join(', ');\nconst entete = [\n  `Service : ${ou}`,\n  ev.commit ? `Commit : ${ev.commit}${ev.message_commit ? ` (${ev.message_commit})` : ''}` : '',\n  railway ? `Annoncé par Railway : ${ev.statut || '?'} (${ev.type || 'sans type'})${ev.date ? `, le ${ev.date}` : ''}` : `Log envoyé par ton hébergeur ou ta CI${ev.date ? `, le ${ev.date}` : ''}`,\n].filter(Boolean).join('\\n');\nconst fin = `${lignes.length ? `Lu par crash-triage (n8n) sur ${lignes.length} lignes de log. ` : ''}Pour la ligne de code qui provoque la panne, lance deploy-doctor dans Claude Code et dis « mon déploiement a planté ».`;\nconst queue = lignes.slice(-15).map(l => `${l.n}: ${l.texte}`).join('\\n');\n\nlet verdict, cause_id = '', titre, texte;\nif (erreurs.length) {\n  verdict = 'inconnue'; titre = 'Railway a refusé la lecture des logs';\n  texte = `${entete}\\n\\nLa panne est annoncée, mais Railway a refusé la lecture des logs : ${String((erreurs[0] || {}).message || erreurs[0]).slice(0, 200)}\\nVérifie le jeton Railway du nœud « Logs du déploiement (Railway) ».\\n\\n${fin}`;\n} else if (trouvees.length) {\n  const f = trouvees[0];\n  verdict = 'panne'; cause_id = f.id; titre = f.titre;\n  const autres = trouvees.slice(1).map(t => `- ${t.titre} (ligne ${t.ligne})`).join('\\n');\n  texte = `${entete}\\n\\nCause : ${f.titre}\\nPreuve, ligne ${f.ligne} du log : ${f.preuve}\\n\\nPourquoi : ${f.cause}\\nCorrectif : ${f.correctif}\\nPour vérifier : ${f.verifier}` +\n    (autres ? `\\n\\nAutres signatures dans le même log :\\n${autres}` : '') + `\\n\\n${fin}`;\n} else if (arret) {\n  verdict = 'arret-normal'; titre = 'arrêt normal sur SIGTERM';\n  texte = `${entete}\\n\\nArrêt normal, ligne ${arret.n} : ${arret.texte.trim().slice(0, 160)}. Rien à corriger.`;\n} else if (!lignes.length) {\n  verdict = 'inconnue'; titre = 'aucune ligne de log';\n  texte = railway\n    ? `${entete}\\n\\nLa panne est annoncée, mais Railway ne rend aucune ligne de log pour ce déploiement. Si la panne a eu lieu pendant le build, ouvre le log de build dans Railway.\\n\\n${fin}`\n    : `${entete}\\n\\nLa requête ne contenait aucune ligne de log : envoie le champ log (texte) ou lines (liste).\\n\\n${fin}`;\n} else {\n  verdict = 'inconnue'; titre = 'cause non reconnue';\n  texte = `${entete}\\n\\nAucune des 8 pannes connues ne correspond, et rien ne montre un arrêt normal. Les ${Math.min(15, lignes.length)} dernières lignes du log :\\n\\n${queue}\\n\\n${fin}`;\n}\nconst sujet = `${railway ? 'Railway' : 'Déploiement'} : panne annoncée sur ${ev.service || 'ton service'}, ${verdict === 'panne' ? 'cause : ' : ''}${titre}`;\n\nreturn [{ json: { verdict, cause_id, titre, sujet, texte, a_alerter: verdict !== 'arret-normal',\n  lignes_lues: lignes.length, signatures: trouvees.map(t => t.id) } }];\n"
+      }
+    },
+    {
+      "id": "cef576cf-f498-4889-89f1-9dde055160e7",
+      "name": "Vraie panne ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1920,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.a_alerter }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "9f553683-94e1-44d1-b792-dd4003f1a0a3",
+      "name": "M'envoyer la cause",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2160,
+        0
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $('Réglages').first().json.mon_adresse }}",
+        "subject": "={{ $json.sujet }}",
+        "emailType": "text",
+        "message": "={{ $json.texte }}",
+        "options": {
+          "appendAttribution": false
+        }
+      }
+    },
+    {
+      "id": "0236c882-0127-438c-b596-f6220bd08fcb",
+      "name": "Arrêt normal, rien à envoyer",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        200
+      ],
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "Railway : statut du déploiement": {
+      "main": [
+        [
+          {
+            "node": "Réglages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hébergeur ou CI : log du déploiement": {
+      "main": [
+        [
+          {
+            "node": "Réglages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Réglages": {
+      "main": [
+        [
+          {
+            "node": "Lire l'entrée",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lire l'entrée": {
+      "main": [
+        [
+          {
+            "node": "À analyser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "À analyser": {
+      "main": [
+        [
+          {
+            "node": "Logs à lire chez Railway ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Logs à lire chez Railway ?": {
+      "main": [
+        [
+          {
+            "node": "Logs du déploiement (Railway)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Nommer la cause",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Logs du déploiement (Railway)": {
+      "main": [
+        [
+          {
+            "node": "Lignes Railway",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lignes Railway": {
+      "main": [
+        [
+          {
+            "node": "Nommer la cause",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nommer la cause": {
+      "main": [
+        [
+          {
+            "node": "Vraie panne ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vraie panne ?": {
+      "main": [
+        [
+          {
+            "node": "M'envoyer la cause",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Arrêt normal, rien à envoyer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

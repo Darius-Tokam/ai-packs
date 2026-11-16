@@ -1,0 +1,20 @@
+| Case | Expected | Named | Evidence | In the code | Result |
+|---|---|---|---|---|---|
+| a1-npm-sigterm | npm-pid1-sigterm | npm-pid1-sigterm | line 8 | Dockerfile:5: CMD ["npm", "run", "dev:http"] | PASS |
+| a2-python-cron | python-not-found | python-not-found | line 2 | railway.toml:3: startCommand = "python manage | PASS |
+| a3-missing-allowed-hosts | missing-env-var | missing-env-var | line 7 | config/settings/production.py:5: ALLOWED_HOST | PASS |
+| a4-debug-page-in-prod | dev-settings-in-prod | dev-settings-in-prod | line 4 | manage.py:5: os.environ.setdefault("DJANGO_SE | PASS |
+| b1-localhost-binding | port-binding | port-binding | line 4 | main.py:5: uvicorn.run(app, host="127.0.0.1", | PASS |
+| b2-node-heap | out-of-memory | out-of-memory | line 3 | - | PASS |
+| b3-relation-missing | migrations-not-applied | migrations-not-applied | line 3 | - | PASS |
+| b4-missing-module | missing-dependency | missing-dependency | line 3 | - | PASS |
+| c1-healthy-gunicorn | CLEAN | CLEAN | - | - | PASS |
+| c2-graceful-node | CLEAN | CLEAN | 2026-07-08T10:27:15Z Received SIGTERM, c | - | PASS |
+| c3-graceful-gunicorn | CLEAN | CLEAN | 2026-11-11T22:10:00Z [INFO] Handling sig | - | PASS |
+
+failed deployments: 8/8 causes named, nothing else named
+healthy deployments: 3/3 reported CLEAN (0 false alarm)
+causes backed by a line of code: 5/5 cases that ship start files
+files with a long or medium dash: none
+
+RESULT: PASS

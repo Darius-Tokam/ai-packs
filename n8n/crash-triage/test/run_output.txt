@@ -1,0 +1,34 @@
+| Cas | Entrée | Attendu | Suivi | Verdict | Cause nommée | Alerte | Résultat |
+|---|---|---|---|---|---|---|---|
+| a1-npm-sigterm | railway | npm-pid1-sigterm | oui | panne | npm-pid1-sigterm | oui | PASS |
+| a2-python-cron | railway | python-not-found | oui | panne | python-not-found | oui | PASS |
+| a3-missing-allowed-hosts | railway | missing-env-var | oui | panne | missing-env-var | oui | PASS |
+| a4-debug-page-in-prod | railway | dev-settings-in-prod | oui | panne | dev-settings-in-prod | oui | PASS |
+| b1-localhost-binding | railway | port-binding | oui | panne | port-binding | oui | PASS |
+| b2-node-heap | railway | out-of-memory | oui | panne | out-of-memory | oui | PASS |
+| b3-relation-missing | railway | migrations-not-applied | oui | panne | migrations-not-applied | oui | PASS |
+| b4-missing-module | railway | missing-dependency | oui | panne | missing-dependency | oui | PASS |
+| c1-healthy-gunicorn | railway | inconnue | oui | inconnue | - | oui | PASS |
+| c2-graceful-node | railway | arret-normal | oui | arret-normal | - | non | PASS |
+| c3-graceful-gunicorn | railway | arret-normal | oui | arret-normal | - | non | PASS |
+| d1-deploy-success | railway | ignoré | non | - | - | non | PASS |
+| d2-project-not-followed | railway | ignoré | non | - | - | non | PASS |
+| d3-empty-log | railway | inconnue | oui | inconnue | - | oui | PASS |
+| d4-token-refused | railway | inconnue | oui | inconnue | - | oui | PASS |
+| e1-docker-npm | direct | npm-pid1-sigterm | oui | panne | npm-pid1-sigterm | oui | PASS |
+| e2-ci-lines-module | direct | missing-dependency | oui | panne | missing-dependency | oui | PASS |
+| e3-ci-graceful | direct | arret-normal | oui | arret-normal | - | non | PASS |
+| e4-unknown-cause | direct | inconnue | oui | inconnue | - | oui | PASS |
+| e5-no-log-field | direct | inconnue | oui | inconnue | - | oui | PASS |
+| e6-project-not-followed | direct | ignoré | non | - | - | non | PASS |
+
+failures in the logs (both entries): 10/10 causes named, with evidence line, fix and check
+clean stops on SIGTERM: 3 silenced, 0 alert
+alerts sent: 15; events ignored: 3 (not a failure, project not followed)
+cases passed by entry: Railway 15/15, generic 6/6
+same cause as deploy-doctor's script: 15/15
+jq command of the guide, replayed on the a1 log: same cause through the generic entry
+credentials or instance ids in workflow.json: none
+files with a long or medium dash: none
+
+RESULT: PASS

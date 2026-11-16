@@ -1,0 +1,15 @@
+{
+  "name": "deploy-doctor",
+  "version": "1.0.0",
+  "description": "One Claude Code skill that reads the logs of a failed deployment, names the cause, cites the line of code behind it, and gives the fix and how to verify it. Never calls a clean SIGTERM shutdown a crash. Just say your deploy crashed.",
+  "author": {
+    "name": "Darius Tokam (Arivex)",
+    "url": "https://tokamdarius.ca"
+  },
+  "repository": "https://github.com/Darius-Tokam/ai-packs",
+  "license": "MIT",
+  "keywords": ["deployment", "railway", "debugging", "logs", "devops", "claude-code"],
+  "skills": [
+    "./skills/deploy-doctor"
+  ]
+}
