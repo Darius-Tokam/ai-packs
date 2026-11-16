@@ -30,7 +30,7 @@ def _font_faces():
 
 
 def template(spec):
-    """grid (terminal + cards, the default), orgchart (orchestrator + columns) or duo (Claude pack + n8n bonus)."""
+    """grid (terminal + cards, the default), orgchart (orchestrator + columns), duo (Claude pack + n8n bonus) or mesure (bars of a measured comparison)."""
     return spec.get("template", "grid")
 
 
@@ -88,6 +88,14 @@ def layout_warnings(page, spec=None):
         return _orgchart_warnings(page)
     if spec is not None and template(spec) == "duo":
         return _duo_warnings(page)
+    if spec is not None and template(spec) == "mesure":
+        warnings = list(page.evaluate("R.warnings"))
+        overflow = page.evaluate("""() => [...document.querySelectorAll('.pill, .card, .row .lb, .stat, .sub, .cta .l, .cta .ft')]
+            .filter(e => e.scrollHeight > e.clientHeight + 1 || e.scrollWidth > e.clientWidth + 1)
+            .map(e => e.textContent.trim().slice(0, 40))""")
+        if overflow:
+            warnings.append(f"overflow in: {overflow}")
+        return warnings
     warnings = []
     overflow = page.evaluate("""() => [...document.querySelectorAll('.card, .window, .hint')]
         .filter(e => e.scrollHeight > e.clientHeight + 1 || e.scrollWidth > e.clientWidth + 1)

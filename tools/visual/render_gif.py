@@ -22,6 +22,10 @@ the orchestrator lights up, then each column lights up in turn (wire,
 "analyse..." then its finding and tag), and the verdict bar comes last.
 The label shown while a column runs is labels.running in the spec.
 
+With "template": "mesure" (a measured comparison): the complete visual, then
+the bars are cleared and grow one after the other with their value; a group
+too small to conclude on shows in colour first, then is greyed with its stamp.
+
 With "template": "duo" (Claude Code pack + n8n bonus): the complete visual,
 then everything resets, the Claude Code agents light up one by one (orange
 while running, then their check), then the n8n workflow runs node by node as
@@ -54,7 +58,8 @@ anim = {"running": "analyse en cours", "queued": "en attente", "status_ready": "
 anim.update(spec.get("anim", {}))
 ORG = template(spec) == "orgchart"
 DUO = template(spec) == "duo"
-if not ORG and not DUO:
+MES = template(spec) == "mesure"
+if not ORG and not DUO and not MES:
     labels = {"running": anim["running"], "queued": anim["queued"]}
     n_cards = len(spec["cards"])
     total = sum(1 for c in spec["cards"] if not c.get("highlight")) or n_cards
@@ -131,12 +136,38 @@ def duo_loop(page):
     shot(page, 2.8)
 
 
-if ORG or DUO:
+def mesure_loop(page):
+    """Mesure: complete, bars cleared, each bar grows in turn with its value; a group too small
+    to conclude on first shows in colour, then is greyed with its stamp; complete again."""
+    n, small = page.evaluate("R.n"), page.evaluate("R.small")
+
+    def rows(states):
+        page.evaluate("s => R.rows(s)", states)
+
+    rows(["done"] * n)
+    shot(page, 1.8)
+    rows(["hidden"] * n)
+    shot(page, 0.5)
+    for i in range(n):
+        before = ["done"] * i
+        after = ["hidden"] * (n - i - 1)
+        rows(before + ["half"] + after)
+        shot(page, 0.12)
+        if small[i]:
+            rows(before + ["raw"] + after)
+            shot(page, 0.7)
+        rows(before + ["done"] + after)
+        shot(page, 0.7 if small[i] else 0.45)
+    rows(["done"] * n)
+    shot(page, 2.8)
+
+
+if ORG or DUO or MES:
     with sync_playwright() as p:
         browser = launch(p)
         page = open_page(browser, spec)
         warnings = layout_warnings(page, spec)
-        (org_loop if ORG else duo_loop)(page)
+        (org_loop if ORG else duo_loop if DUO else mesure_loop)(page)
         browser.close()
 else:
     with sync_playwright() as p:

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<style>
+  /*FONTS*/
+  :root {
+    --bg: #07080a; --panel: #0e1116; --panel-2: #121720; --line: #1d2530; --line-2: #2b3543;
+    --text: #f3f5f7; --muted: #9aa7b4; --dim: #5f6d7b;
+    --red: #ff7676; --amber: #fbc04e; --green: #5be39a; --purple: #b9a6f5; --cyan: #2dd4bf; --coral: #f2a28a;
+    --accent: linear-gradient(100deg, #f2b8b4 0%, #d6aef0 55%, #b9a6f5 100%);
+    --sans: 'Inter', system-ui, sans-serif; --display: 'Inter Display', 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1350px; background: var(--bg); }
+  #canvas { position: relative; width: 1080px; height: 1350px; overflow: hidden; color: var(--text);
+    font-family: var(--sans);
+    background:
+      radial-gradient(560px 420px at 60px 120px, rgba(91,227,154,.08), transparent 70%),
+      radial-gradient(560px 420px at 1020px 80px, rgba(214,174,240,.14), transparent 70%),
+      var(--bg); }
+
+  .pills { position: absolute; left: 0; right: 0; top: 44px; display: flex; justify-content: center; gap: 10px; }
+  .pill { height: 40px; padding: 0 18px; border: 1px solid var(--line-2); border-radius: 20px; background: rgba(14,17,22,.85);
+    display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 600; white-space: nowrap; }
+  .pill i { width: 9px; height: 9px; border-radius: 50%; display: block; }
+  h1 { position: absolute; left: 40px; right: 40px; top: 104px; text-align: center; font-family: var(--display); font-weight: 800;
+    font-size: 60px; line-height: 1.0; letter-spacing: -.035em; }
+  h1 span { display: block; white-space: nowrap; }
+  h1 .a { background: var(--accent); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: 4px; }
+
+  .card { position: absolute; left: 56px; right: 56px; background: rgba(10,12,16,.92); border: 1.5px solid var(--line-2);
+    border-radius: 22px; padding: 22px 26px; }
+
+  /* the command and what it read */
+  .cmd { font-family: var(--mono); font-size: 25px; display: flex; align-items: center; gap: 14px; white-space: nowrap; }
+  .cmd .g { color: var(--coral); font-weight: 700; }
+  .cmd .q { color: var(--text); }
+  .sub { font-family: var(--mono); font-size: 18px; color: var(--muted); margin-top: 10px; white-space: nowrap; overflow: hidden; }
+  .sub b { color: var(--green); font-weight: 700; }
+
+  /* chart */
+  .ch-h { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px; }
+  .rows { padding-bottom: 34px; }
+  .ch-h .t { font-size: 23px; font-weight: 700; }
+  .ch-h .u { font-size: 15px; color: var(--muted); }
+  .rows { position: relative; }
+  .row { display: grid; grid-template-columns: 262px 1fr 196px; align-items: center; gap: 16px; height: 92px; }
+  .row .lb { font-size: 23px; font-weight: 600; line-height: 1.15; }
+  .row .lb small { display: block; font-size: 16px; font-weight: 400; color: var(--muted); margin-top: 3px; }
+  .track { position: relative; height: 44px; }
+  .bar { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 7px; width: 0; }
+  .bar.g { background: linear-gradient(90deg, rgba(91,227,154,.55), var(--green)); }
+  .bar.r { background: linear-gradient(90deg, rgba(255,118,118,.5), var(--red)); }
+  .bar.n { background: linear-gradient(90deg, rgba(185,166,245,.45), var(--purple)); }
+  .bar.small { background: linear-gradient(90deg, rgba(251,192,78,.55), var(--amber)); }
+  .row.dead .bar.small { background: repeating-linear-gradient(135deg, #2a313b 0 8px, #20262f 8px 16px); border: 1.5px dashed #56606c; }
+  .row.dead .lb, .row.dead .vl { opacity: .55; }
+  .stamp { position: absolute; top: 50%; transform: translateY(-50%) rotate(-2deg); left: 14px; padding: 4px 14px; border: 2px solid var(--amber);
+    color: var(--amber); font-family: var(--mono); font-size: 17px; font-weight: 700; border-radius: 6px; background: rgba(7,8,10,.9);
+    white-space: nowrap; visibility: hidden; }
+  .row.dead .stamp { visibility: visible; }
+  .vl { text-align: right; white-space: nowrap; }
+  .vl .v { font-family: var(--display); font-weight: 800; font-size: 38px; letter-spacing: -.02em; }
+  .vl .d { font-family: var(--mono); font-size: 17px; font-weight: 700; margin-left: 6px; }
+  .vl .d.g { color: var(--green); } .vl .d.r { color: var(--red); } .vl .d.a { color: var(--amber); }
+  .ref { position: absolute; top: 4px; bottom: 30px; width: 0; border-left: 2px dashed rgba(243,245,247,.55); }
+  .ref span { position: absolute; bottom: -30px; left: -6px; transform: translateX(-50%); font-family: var(--mono); font-size: 14px;
+    color: var(--text); white-space: nowrap; background: var(--bg); padding: 0 6px; border-radius: 4px; }
+  .row .hide { visibility: hidden; }
+
+  .stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; height: 118px; overflow: hidden; }
+  .stat .v { font-family: var(--display); font-weight: 800; font-size: 44px; letter-spacing: -.02em; line-height: 1.05; }
+  .stat .l { font-size: 17px; line-height: 1.3; color: var(--muted); margin-top: 6px; }
+  .v.g { color: var(--green); } .v.a { color: var(--amber); } .v.p { color: var(--purple); } .v.c { color: var(--cyan); } .v.r { color: var(--red); }
+
+  .cta { position: absolute; left: 0; right: 0; bottom: 0; height: 168px; background: var(--accent); color: #13101b;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+  .cta .l { font-family: var(--display); font-weight: 800; font-size: 44px; letter-spacing: -.02em; display: flex; align-items: center; gap: 16px; white-space: nowrap; }
+  .cta .kw { background: #13101b; color: #f4f0ff; font-family: var(--mono); font-weight: 700; border-radius: 12px; padding: 4px 18px; font-size: 40px; }
+  .cta .ft { font-size: 17px; font-weight: 600; opacity: .8; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="canvas">
+  <div class="pills" id="pills"></div>
+  <h1><span id="t1"></span><span class="a" id="t2"></span></h1>
+  <div class="card" id="k1">
+    <div class="cmd"><span class="g" id="glyph"></span><span class="q" id="cmd"></span></div>
+    <div class="sub" id="sub"></div>
+  </div>
+  <div class="card" id="k2">
+    <div class="ch-h"><div class="t" id="cht"></div><div class="u" id="chu"></div></div>
+    <div class="rows" id="rows"></div>
+  </div>
+  <div class="stats" id="stats" style="position:absolute; left:56px; right:56px;"></div>
+  <div class="cta"><div class="l"><span id="ctaB"></span><span class="kw" id="ctaK"></span><span id="ctaA"></span></div><div class="ft" id="ft"></div></div>
+</div>
+<script>
+const S = window.SPEC;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const WARN = [];
+
+/* mesure: a measured comparison. The command and what it read, then one bar per group
+   (median of the group, number of posts, gap to the reference), a dashed line at the
+   reference, and the groups too small to conclude on drawn greyed with their stamp. */
+const DOTS = { coral: 'var(--coral)', cyan: 'var(--cyan)', purple: 'var(--purple)', green: 'var(--green)', amber: 'var(--amber)', none: '' };
+$('pills').innerHTML = (S.pills || []).map((p, i) => {
+  const o = typeof p === 'string' ? { text: p, dot: ['coral', 'green', 'none'][i] || 'none' } : p;
+  const dot = DOTS[o.dot || 'none'];
+  return `<div class="pill">${dot ? `<i style="background:${dot}"></i>` : ''}${esc(o.text)}</div>`;
+}).join('');
+$('t1').textContent = S.title; $('t2').textContent = S.title2;
+$('glyph').textContent = S.glyph || '›'; $('cmd').textContent = S.command;
+$('sub').innerHTML = S.sub_html || esc(S.sub || '');
+$('cht').textContent = S.chart_title || ''; $('chu').textContent = S.chart_unit || '';
+
+const bars = S.bars || [];
+const max = Math.max(S.reference ? S.reference.value : 0, ...bars.map(b => b.value));
+const fmt = v => String(v).replace('.', ',');
+$('rows').innerHTML = bars.map((b, i) => `
+  <div class="row" data-i="${i}">
+    <div class="lb">${esc(b.label)}<small>${esc(b.n_text || (b.n + ' posts'))}</small></div>
+    <div class="track"><div class="bar ${b.small ? 'small' : (b.tone || 'n')}" data-w="${(100 * b.value / max).toFixed(2)}"></div>
+      ${b.small ? `<div class="stamp">${esc(b.stamp || 'trop petit : jamais conclu')}</div>` : ''}</div>
+    <div class="vl"><span class="v">${esc(b.value_text || fmt(b.value))}</span>${b.delta ? `<span class="d ${b.small ? 'a' : (b.tone === 'r' ? 'r' : 'g')}">${esc(b.delta)}</span>` : ''}</div>
+  </div>`).join('');
+if (S.reference) {
+  const tr = document.querySelector('.track');
+  const rows = $('rows');
+  const left = tr.getBoundingClientRect().left - rows.getBoundingClientRect().left + tr.clientWidth * S.reference.value / max;
+  const ref = document.createElement('div');
+  ref.className = 'ref'; ref.style.left = left + 'px';
+  ref.innerHTML = `<span>${esc(S.reference.label)}</span>`;
+  rows.appendChild(ref);
+}
+$('stats').innerHTML = (S.stats || []).map(s => `<div class="stat"><div class="v ${s.color || 'g'}">${esc(s.value)}</div><div class="l">${esc(s.label)}</div></div>`).join('');
+$('ctaB').textContent = S.cta_before; $('ctaK').textContent = S.cta_keyword; $('ctaA').textContent = S.cta_after;
+$('ft').textContent = S.footer;
+
+/* vertical placement */
+const top1 = S.card1_top || 250;
+$('k1').style.top = top1 + 'px';
+$('k2').style.top = (top1 + $('k1').offsetHeight + 18) + 'px';
+$('k2').style.paddingTop = '22px';
+$('stats').style.top = (top1 + $('k1').offsetHeight + 18 + $('k2').offsetHeight + 18) + 'px';
+/* spread the free height between the blocks, so the visual does not end on an empty band */
+{
+  const free = 1350 - 168 - 34 - $('stats').getBoundingClientRect().bottom;
+  if (free > 0) {
+    const g = Math.min(36, free / 3);
+    $('k1').style.top = (top1 + g) + 'px';
+    $('k2').style.top = (top1 + g + $('k1').offsetHeight + 18 + g) + 'px';
+    $('stats').style.top = (top1 + 3 * g + $('k1').offsetHeight + 36 + $('k2').offsetHeight) + 'px';
+  }
+}
+const bottom = $('stats').getBoundingClientRect().bottom;
+if (bottom > 1350 - 168 - 12) WARN.push(`stats bottom ${Math.round(bottom)}px overlaps the CTA band`);
+
+/* states: hidden (no bar, no value), half (bar half grown), raw (small group shown in colour,
+   before it is set aside), done (complete; a small group is greyed with its stamp) */
+const rowEls = [...document.querySelectorAll('.row')];
+const R = {
+  warnings: WARN, n: rowEls.length, small: bars.map(b => !!b.small),
+  rows(states) {
+    rowEls.forEach((el, i) => {
+      const s = states[i] || 'done', bar = el.querySelector('.bar'), w = +bar.dataset.w;
+      bar.style.width = (s === 'hidden' ? 0 : s === 'half' ? w / 2 : w) + '%';
+      el.classList.toggle('dead', s === 'done' && !!bars[i].small);
+      el.querySelector('.vl').classList.toggle('hide', s === 'hidden' || s === 'half');
+    });
+    const ref = document.querySelector('.ref');
+    if (ref) ref.style.visibility = states.every(s => s === 'hidden') ? 'hidden' : 'visible';
+  },
+};
+R.rows(bars.map(() => 'done'));
+</script>
+</body>
+</html>

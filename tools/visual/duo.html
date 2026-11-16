@@ -166,15 +166,26 @@ if (!rows) {
   rows = [];
   for (let i = 0; i < order.length; i += per) rows.push(order.slice(i, i + per));
 }
-if (rows.length > 3) WARN.push(`${rows.length} rows of nodes: 3 at most stay readable on a phone`);
-const perRow = Math.max(...rows.map(r => r.length));
+if (!N.grid && rows.length > 3) WARN.push(`${rows.length} rows of nodes: 3 at most stay readable on a phone`);
+/* N.grid = {cols, units, at: {node name: [column, unit]}} places each node by hand, on a grid of
+   `cols` columns and `units` + 1 horizontal lines (fractions allowed): for a workflow whose
+   branches do not fold into rows of the same length. Otherwise the rows above. */
+const GRID = N.grid;
+const perRow = GRID ? GRID.cols : Math.max(...rows.map(r => r.length));
 const MX = 22, pitch = (CV_W - 2 * MX) / perRow;
 const SZ = Math.round(Math.min(N.node_size || 92, pitch * 0.42));
 const LABEL_H = 46;
-const rowY = r => rows.length === 1 ? CV_H / 2 - 16
-  : 16 + SZ / 2 + r * ((CV_H - (16 + SZ / 2) - (SZ / 2 + LABEL_H + 14)) / (rows.length - 1));
+const nLines = GRID ? GRID.units + 1 : rows.length;
+const rowY = r => nLines === 1 ? CV_H / 2 - 16
+  : 16 + SZ / 2 + r * ((CV_H - (16 + SZ / 2) - (SZ / 2 + LABEL_H + 14)) / (nLines - 1));
 const P = {};
-rows.forEach((row, r) => row.forEach((nm, i) => {
+if (GRID) {
+  for (const [nm, [c, u]] of Object.entries(GRID.at)) {
+    if (!byName[nm]) { WARN.push(`grid: unknown node "${nm}"`); continue; }
+    P[nm] = { x: MX + pitch * (c + 0.5), y: rowY(u), row: u, col: c };
+  }
+  nodes.forEach(n => { if (!P[n.name]) WARN.push(`grid: node not placed "${n.name}"`); });
+} else rows.forEach((row, r) => row.forEach((nm, i) => {
   const x0 = (CV_W - row.length * pitch) / 2;
   P[nm] = { x: x0 + pitch * (i + 0.5), y: rowY(r), row: r };
 }));
@@ -249,7 +260,7 @@ edges.forEach((e, i) => {
     if (Math.abs(y1 - y2) < 1) d = `M${x1} ${y1}H${x2}`;
     else { const mx = (x1 + x2) / 2; d = `M${x1} ${y1}C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}`; }
     lx = (x1 + x2) / 2; ly = Math.min(y1, y2) - 22;
-  } else if (b.row > a.row) {
+  } else if (b.row > a.row && (!GRID || b.x <= a.x)) {
     const xr = Math.min(CV_W - 12, x1 + 34), xl = Math.max(12, x2 - 46), r = 12;
     const ym = (a.y + H + LABEL_H + b.y - H) / 2;
     d = `M${x1} ${y1}H${xr - r}Q${xr} ${y1} ${xr} ${y1 + r}V${ym - r}Q${xr} ${ym} ${xr - r} ${ym}H${xl + r}Q${xl} ${ym} ${xl} ${ym + r}V${y2 - r}Q${xl} ${y2} ${xl + r} ${y2}H${x2}`;
