@@ -1,0 +1,50 @@
+$ python build_cases.py leak-cases
+app.log: 2021 lines, 10 leaks on 178 lines, 102 trap lines
+clean.log: 500 lines, 0 leak, 68 trap lines
+formats.log: 52 lines, 17 leaking, 35 not
+truth.json written to leak-cases
+
+$ python run_checks.py leak-cases
+leak-scan : test sur un log de production reconstitué de 2 021 lignes (graine 20260827), un log propre de 500 lignes et 52 lignes d'autres formats
+
+| Contrôle | Attendu | Mesuré | Résultat |
+|---|---|---|---|
+| fuites distinctes trouvées | 10/10, chacune une seule fois | 10/10 | PASS |
+| lignes signalées pour chaque fuite | 10/10 identiques à la vérité | 10/10 | PASS |
+| forme de chaque fuite | 10/10 | 10/10 | PASS |
+| boucle de 429 : clé Gemini | 1 fuite, 150 lignes, l. 228 à 2016 | 1 fuite, 150 lignes, l. 228 à 2016 | PASS |
+| clé coupée par la troncature | 1 fuite partielle (« fuite partielle »), 3 lignes, aucune autre partielle | partielle : oui, 3 lignes, 17 à 24 car. visibles sur 39, autres partielles : 0 | PASS |
+| URL présignées regroupées par signataire | S3 : 1 fuite, 5 signatures ; GCS : 1 fuite, 4 signatures | S3 : 5 signatures ; GCS : 4 signatures | PASS |
+| fuites en trop (faux positifs) | 0 | 0 | PASS |
+| pièges signalés | 0 sur 102 lignes pièges (19 sortes) | 0 ligne(s) | PASS |
+| cause, correctif et rotation pour chaque fuite | 10/10 | 10/10 | PASS |
+| code de sortie, log qui fuit | 1 | 1 | PASS |
+| log propre | 0 fuite, code 0 (500 lignes, 68 lignes pièges) | 0 fuite, code 0 | PASS |
+| autres formats (nginx, curl, Stripe, Sentry, Kubernetes, CI, systemd) | 17/17 lignes qui fuient signalées, 0/35 autres | 17/17 signalées, 0/35 autres | PASS |
+| aucun secret complet dans le rapport Markdown | 0 sur 25 valeurs plantées | 0 | PASS |
+| aucun secret complet dans le rapport JSON | 0 sur 25 valeurs plantées | 0 | PASS |
+| --redact puis nouveau scan | 0 fuite, code 0 | 0 fuite, code 0 | PASS |
+| --redact : lignes modifiées | exactement les 178 lignes qui fuient, même nombre de lignes | 178 modifiées, 0 hors fuite, 2021 lignes | PASS |
+| --redact : secrets dans la copie | 0 | 0 | PASS |
+| --filter python, chaque ligne passée par logging | 2 021 lignes identiques à --redact | 2 021/2 021 identiques | PASS |
+| --filter python sur logger.exception (la chaîne Gemini) | clé absente de la trace, [REDACTED] présent | clé absente : oui, [REDACTED] : oui | PASS |
+| --filter node (v22.23.4), même log | 2 021 lignes identiques à --redact | 2 021/2 021 identiques | PASS |
+| log lu sur l'entrée standard | même résultat que le fichier | identique | PASS |
+| codes de sortie | fuite 1, propre 0, fichier absent 2, option inconnue 2 | fuite 1, propre 0, fichier absent 2, option inconnue 2 | PASS |
+| temps médian sur 2 021 lignes (7 passages, démarrage de Python compris) | moins de 1 000 ms | 141 ms | PASS |
+| tiret long ou moyen dans le pack | aucun | aucun | PASS |
+
+Python 3.13.18, app.log : 2 021 lignes lues, 10 fuites, 178 lignes signalées.
+   1. url-secret                         clé d'API Google, paramètre key                 150 ligne(s)  fuite complète
+   2. url-secret                         clé d'API Google, paramètre key                   3 ligne(s)  fuite partielle
+   3. presigned-url                      URL présignée S3                                  5 ligne(s)  fuite complète
+   4. presigned-url                      URL signée Google Cloud Storage                   4 ligne(s)  fuite complète
+   5. oauth-callback                     access_token dans une URL OAuth                   3 ligne(s)  fuite complète
+   6. oauth-callback                     client_secret dans une URL OAuth                  2 ligne(s)  fuite complète
+   7. auth-header                        en-tête x-api-key                                 3 ligne(s)  fuite complète
+   8. auth-header                        en-tête Authorization Bearer                      4 ligne(s)  fuite complète
+   9. email                              adresse e-mail                                    2 ligne(s)  fuite complète
+  10. email                              adresse e-mail                                    2 ligne(s)  fuite complète
+
+RESULT: PASS
+(exit code 0)

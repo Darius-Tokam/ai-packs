@@ -1,0 +1,609 @@
+[
+  {
+    "execution": "101",
+    "cas": "Premier contrôle avant renforcement du garde",
+    "statutExecution": "success",
+    "dureeMs": 299,
+    "sortiesParNoeud": {
+      "Recevoir les données": [
+        1
+      ],
+      "Vérifier les dépendances": [
+        1
+      ],
+      "Lire le suivi": [
+        1
+      ],
+      "Préparer le contexte": [
+        1
+      ],
+      "Préparer les requêtes": [
+        24
+      ],
+      "Lire les sources publiques": [
+        24
+      ],
+      "Évaluer les faits": [
+        1
+      ],
+      "Un nouveau brouillon est utile": [
+        0,
+        1
+      ],
+      "Préparer l’enregistrement": [
+        1
+      ],
+      "Conserver le brouillon et le suivi": [
+        1
+      ],
+      "Rendre le résultat": [
+        1
+      ]
+    },
+    "statutMetier": "SANS_NOUVELLE_ALERTE",
+    "dependances": 12,
+    "alertes": 0,
+    "nouveauxEvenements": 0,
+    "controle": {
+      "accepted": true,
+      "errors": [],
+      "toolCalls": []
+    },
+    "brouillonsSauves": 0,
+    "elementsBrouillon": 0,
+    "erreur": null
+  },
+  {
+    "execution": "102",
+    "cas": "Quatre alertes, garde initial",
+    "statutExecution": "success",
+    "dureeMs": 14437,
+    "sortiesParNoeud": {
+      "Recevoir les données": [
+        1
+      ],
+      "Vérifier les dépendances": [
+        1
+      ],
+      "Lire le suivi": [
+        1
+      ],
+      "Préparer le contexte": [
+        1
+      ],
+      "Préparer les requêtes": [
+        24
+      ],
+      "Lire les sources publiques": [
+        24
+      ],
+      "Évaluer les faits": [
+        1
+      ],
+      "Un nouveau brouillon est utile": [
+        1,
+        0
+      ],
+      "Modèle à configurer": [],
+      "Consulter_les_preuves": [],
+      "Choisir_une_correction": [],
+      "Agent : Préparer la revue des licences": [
+        1
+      ],
+      "Contrôler le brouillon": [
+        1
+      ],
+      "Préparer l’enregistrement": [
+        2
+      ],
+      "Conserver le brouillon et le suivi": [
+        2
+      ],
+      "Rendre le résultat": [
+        1
+      ]
+    },
+    "statutMetier": "BROUILLON_A_VALIDER",
+    "dependances": 12,
+    "alertes": 4,
+    "nouveauxEvenements": 4,
+    "controle": {
+      "accepted": true,
+      "errors": [],
+      "toolCalls": [
+        "Consulter_les_preuves",
+        "Choisir_une_correction"
+      ]
+    },
+    "brouillonsSauves": 1,
+    "elementsBrouillon": 4,
+    "erreur": null
+  },
+  {
+    "execution": "103",
+    "cas": "État initial final",
+    "statutExecution": "success",
+    "dureeMs": 265,
+    "sortiesParNoeud": {
+      "Recevoir les données": [
+        1
+      ],
+      "Vérifier les dépendances": [
+        1
+      ],
+      "Lire le suivi": [
+        1
+      ],
+      "Préparer le contexte": [
+        1
+      ],
+      "Préparer les requêtes": [
+        24
+      ],
+      "Lire les sources publiques": [
+        24
+      ],
+      "Évaluer les faits": [
+        1
+      ],
+      "Un nouveau brouillon est utile": [
+        0,
+        1
+      ],
+      "Préparer l’enregistrement": [
+        1
+      ],
+      "Conserver le brouillon et le suivi": [
+        1
+      ],
+      "Rendre le résultat": [
+        1
+      ]
+    },
+    "statutMetier": "SANS_NOUVELLE_ALERTE",
+    "dependances": 12,
+    "alertes": 0,
+    "nouveauxEvenements": 0,
+    "controle": {
+      "accepted": true,
+      "errors": [],
+      "toolCalls": []
+    },
+    "brouillonsSauves": 0,
+    "elementsBrouillon": 0,
+    "erreur": null
+  },
+  {
+    "execution": "104",
+    "cas": "Deuxième semaine, quatre anomalies",
+    "statutExecution": "success",
+    "dureeMs": 11260,
+    "sortiesParNoeud": {
+      "Recevoir les données": [
+        1
+      ],
+      "Vérifier les dépendances": [
+        1
+      ],
+      "Lire le suivi": [
+        1
+      ],
+      "Préparer le contexte": [
+        1
+      ],
+      "Préparer les requêtes": [
+        24
+      ],
+      "Lire les sources publiques": [
+        24
+      ],
+      "Évaluer les faits": [
+        1
+      ],
+      "Un nouveau brouillon est utile": [
+        1,
+        0
+      ],
+      "Modèle à configurer": [],
+      "Consulter_les_preuves": [],
+      "Choisir_une_correction": [],
+      "Agent : Préparer la revue des licences": [
+        1
+      ],
+      "Contrôler le brouillon": [
+        1
+      ],
+      "Préparer l’enregistrement": [
+        2
+      ],
+      "Conserver le brouillon et le suivi": [
+        2
+      ],
+      "Rendre le résultat": [
+        1
+      ]
+    },
+    "statutMetier": "BROUILLON_A_VALIDER",
+    "dependances": 12,
+    "alertes": 4,
+    "nouveauxEvenements": 4,
+    "controle": {
+      "accepted": true,
+      "errors": [],
+      "toolCalls": [
+        "Consulter_les_preuves",
+        "Choisir_une_correction",
+        "Choisir_une_correction"
+      ]
+    },
+    "brouillonsSauves": 1,
+    "elementsBrouillon": 4,
+    "erreur": null
+  },
+  {
+    "execution": "105",
+    "cas": "Même état relu, aucun nouveau brouillon",
+    "statutExecution": "success",
+    "dureeMs": 282,
+    "sortiesParNoeud": {
+      "Recevoir les données": [
+        1
+      ],
+      "Vérifier les dépendances": [
+        1
+      ],
+      "Lire le suivi": [
+        1
+      ],
+      "Préparer le contexte": [
+        1
+      ],
+      "Préparer les requêtes": [
+        24
+      ],
+      "Lire les sources publiques": [
+        24
+      ],
+      "Évaluer les faits": [
+        1
+      ],
+      "Un nouveau brouillon est utile": [
+        0,
+        1
+      ],
+      "Préparer l’enregistrement": [
+        1
+      ],
+      "Conserver le brouillon et le suivi": [
+        1
+      ],
+      "Rendre le résultat": [
+        1
+      ]
+    },
+    "statutMetier": "SANS_NOUVELLE_ALERTE",
+    "dependances": 12,
+    "alertes": 4,
+    "nouveauxEvenements": 0,
+    "controle": {
+      "accepted": true,
+      "errors": [],
+      "toolCalls": []
+    },
+    "brouillonsSauves": 0,
+    "elementsBrouillon": 0,
+    "erreur": null
+  },
+  {
+    "execution": "106",
+    "cas": "requirements.txt brut",
+    "statutExecution": "success",
+    "dureeMs": 292,
+    "sortiesParNoeud": {
+      "Recevoir les données": [
+        1
+      ],
+      "Vérifier les dépendances": [
+        1
+      ],
+      "Lire le suivi": [
+        1
+      ],
+      "Préparer le contexte": [
+        1
+      ],
+      "Préparer les requêtes": [
+        12
+      ],
+      "Lire les sources publiques": [
+        12
+      ],
+      "Évaluer les faits": [
+        1
+      ],
+      "Un nouveau brouillon est utile": [
+        0,
+        1
+      ],
+      "Préparer l’enregistrement": [
+        1
+      ],
+      "Conserver le brouillon et le suivi": [
+        1
+      ],
+      "Rendre le résultat": [
+        1
+      ]
+    },
+    "statutMetier": "SANS_NOUVELLE_ALERTE",
+    "dependances": 6,
+    "alertes": 0,
+    "nouveauxEvenements": 0,
+    "controle": {
+      "accepted": true,
+      "errors": [],
+      "toolCalls": []
+    },
+    "brouillonsSauves": 0,
+    "elementsBrouillon": 0,
+    "erreur": null
+  },
+  {
+    "execution": "107",
+    "cas": "package.json brut avec paquet npm à portée",
+    "statutExecution": "success",
+    "dureeMs": 269,
+    "sortiesParNoeud": {
+      "Recevoir les données": [
+        1
+      ],
+      "Vérifier les dépendances": [
+        1
+      ],
+      "Lire le suivi": [
+        1
+      ],
+      "Préparer le contexte": [
+        1
+      ],
+      "Préparer les requêtes": [
+        12
+      ],
+      "Lire les sources publiques": [
+        12
+      ],
+      "Évaluer les faits": [
+        1
+      ],
+      "Un nouveau brouillon est utile": [
+        0,
+        1
+      ],
+      "Préparer l’enregistrement": [
+        1
+      ],
+      "Conserver le brouillon et le suivi": [
+        1
+      ],
+      "Rendre le résultat": [
+        1
+      ]
+    },
+    "statutMetier": "SANS_NOUVELLE_ALERTE",
+    "dependances": 6,
+    "alertes": 0,
+    "nouveauxEvenements": 0,
+    "controle": {
+      "accepted": true,
+      "errors": [],
+      "toolCalls": []
+    },
+    "brouillonsSauves": 0,
+    "elementsBrouillon": 0,
+    "erreur": null
+  },
+  {
+    "execution": "108",
+    "cas": "Calendrier manuel, liste persistée relue",
+    "statutExecution": "success",
+    "dureeMs": 256,
+    "sortiesParNoeud": {
+      "Contrôler au calendrier": [
+        1
+      ],
+      "Vérifier les dépendances": [
+        1
+      ],
+      "Lire le suivi": [
+        1
+      ],
+      "Préparer le contexte": [
+        1
+      ],
+      "Préparer les requêtes": [
+        12
+      ],
+      "Lire les sources publiques": [
+        12
+      ],
+      "Évaluer les faits": [
+        1
+      ],
+      "Un nouveau brouillon est utile": [
+        0,
+        1
+      ],
+      "Préparer l’enregistrement": [
+        1
+      ],
+      "Conserver le brouillon et le suivi": [
+        1
+      ],
+      "Rendre le résultat": [
+        1
+      ]
+    },
+    "statutMetier": "SANS_NOUVELLE_ALERTE",
+    "dependances": 6,
+    "alertes": 0,
+    "nouveauxEvenements": 0,
+    "controle": {
+      "accepted": true,
+      "errors": [],
+      "toolCalls": []
+    },
+    "brouillonsSauves": 0,
+    "elementsBrouillon": 0,
+    "erreur": null
+  },
+  {
+    "execution": "109",
+    "cas": "Sortie IA invalide épinglée",
+    "statutExecution": "success",
+    "dureeMs": 302,
+    "sortiesParNoeud": {
+      "Recevoir les données": [
+        1
+      ],
+      "Vérifier les dépendances": [
+        1
+      ],
+      "Lire le suivi": [
+        1
+      ],
+      "Préparer le contexte": [
+        1
+      ],
+      "Préparer les requêtes": [
+        24
+      ],
+      "Lire les sources publiques": [
+        24
+      ],
+      "Évaluer les faits": [
+        1
+      ],
+      "Un nouveau brouillon est utile": [
+        1,
+        0
+      ],
+      "Agent : Préparer la revue des licences": [
+        1
+      ],
+      "Contrôler le brouillon": [
+        1
+      ],
+      "Préparer l’enregistrement": [
+        1
+      ],
+      "Conserver le brouillon et le suivi": [
+        1
+      ],
+      "Rendre le résultat": [
+        1
+      ]
+    },
+    "statutMetier": "A_REPRENDRE",
+    "dependances": 12,
+    "alertes": 4,
+    "nouveauxEvenements": 4,
+    "controle": {
+      "accepted": false,
+      "errors": [
+        "Preuves et procédure non consultées",
+        "Preuves non lues",
+        "Structure invalide"
+      ],
+      "toolCalls": []
+    },
+    "brouillonsSauves": 0,
+    "elementsBrouillon": 0,
+    "erreur": null
+  },
+  {
+    "execution": "110",
+    "cas": "Version npm non exacte",
+    "statutExecution": "error",
+    "dureeMs": 43,
+    "sortiesParNoeud": {
+      "Recevoir les données": [
+        1
+      ],
+      "Vérifier les dépendances": []
+    },
+    "statutMetier": "REJET_ENTREE",
+    "dependances": 0,
+    "alertes": 0,
+    "nouveauxEvenements": 0,
+    "controle": null,
+    "brouillonsSauves": 0,
+    "elementsBrouillon": 0,
+    "erreur": "Nom ou version invalide : versions exactes requises, sans ^ ni ~. [line 47]"
+  },
+  {
+    "execution": "111",
+    "cas": "Registre indisponible, HTTP 503",
+    "statutExecution": "success",
+    "dureeMs": 8610,
+    "sortiesParNoeud": {
+      "Recevoir les données": [
+        1
+      ],
+      "Vérifier les dépendances": [
+        1
+      ],
+      "Lire le suivi": [
+        1
+      ],
+      "Préparer le contexte": [
+        1
+      ],
+      "Préparer les requêtes": [
+        2
+      ],
+      "Lire les sources publiques": [
+        2
+      ],
+      "Évaluer les faits": [
+        1
+      ],
+      "Un nouveau brouillon est utile": [
+        1,
+        0
+      ],
+      "Modèle à configurer": [],
+      "Consulter_les_preuves": [],
+      "Choisir_une_correction": [],
+      "Agent : Préparer la revue des licences": [
+        1
+      ],
+      "Contrôler le brouillon": [
+        1
+      ],
+      "Préparer l’enregistrement": [
+        2
+      ],
+      "Conserver le brouillon et le suivi": [
+        2
+      ],
+      "Rendre le résultat": [
+        1
+      ]
+    },
+    "statutMetier": "BROUILLON_A_VALIDER",
+    "dependances": 1,
+    "alertes": 1,
+    "nouveauxEvenements": 1,
+    "controle": {
+      "accepted": true,
+      "errors": [],
+      "toolCalls": [
+        "Consulter_les_preuves",
+        "Choisir_une_correction"
+      ]
+    },
+    "brouillonsSauves": 1,
+    "elementsBrouillon": 1,
+    "erreur": null
+  }
+]

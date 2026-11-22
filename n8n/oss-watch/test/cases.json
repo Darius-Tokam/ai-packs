@@ -1,0 +1,883 @@
+{
+  "entree": {
+    "scope": "test-final",
+    "usage": "saas",
+    "testNow": "2026-11-22T12:00:00Z",
+    "deps": [
+      {
+        "ecosystem": "pypi",
+        "name": "atelier-licence-1",
+        "version": "1.0.0"
+      },
+      {
+        "ecosystem": "pypi",
+        "name": "atelier-licence-2",
+        "version": "1.0.0"
+      },
+      {
+        "ecosystem": "pypi",
+        "name": "atelier-licence-3",
+        "version": "1.0.0"
+      },
+      {
+        "ecosystem": "pypi",
+        "name": "atelier-licence-4",
+        "version": "1.0.0"
+      },
+      {
+        "ecosystem": "pypi",
+        "name": "atelier-licence-5",
+        "version": "1.0.0"
+      },
+      {
+        "ecosystem": "pypi",
+        "name": "atelier-licence-6",
+        "version": "1.0.0"
+      },
+      {
+        "ecosystem": "npm",
+        "name": "atelier-registre-1",
+        "version": "1.0.0"
+      },
+      {
+        "ecosystem": "npm",
+        "name": "atelier-registre-2",
+        "version": "1.0.0"
+      },
+      {
+        "ecosystem": "npm",
+        "name": "atelier-registre-3",
+        "version": "1.0.0"
+      },
+      {
+        "ecosystem": "npm",
+        "name": "atelier-registre-4",
+        "version": "1.0.0"
+      },
+      {
+        "ecosystem": "npm",
+        "name": "atelier-registre-5",
+        "version": "1.0.0"
+      },
+      {
+        "ecosystem": "npm",
+        "name": "@demo/registre-6",
+        "version": "1.0.0"
+      }
+    ]
+  },
+  "semaine1": [
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-1",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-1",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-2",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-2",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-3",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-3",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-4",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-4",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-5",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-5",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-6",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-6",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-1",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-1",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-2",
+          "version": "1.0.0",
+          "license": "Apache-2.0"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-2",
+          "version": "1.0.0",
+          "license": "Apache-2.0"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-3",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-3",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-4",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-4",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-5",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-5",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "@demo/registre-6",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "@demo/registre-6",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    }
+  ],
+  "semaine2": [
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-1",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-1",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-2",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-2",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-3",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-3",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-4",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-4",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-5",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-5",
+            "version": "2.0.0",
+            "license": "BUSL-1.1"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-6",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "info": {
+            "name": "atelier-licence-6",
+            "version": "2.0.0"
+          }
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-1",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-1",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-2",
+          "version": "1.0.0",
+          "license": "Apache-2.0"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-2",
+          "version": "2.0.0",
+          "license": "proprietary"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-3",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-3",
+          "version": "2.0.0",
+          "license": "AGPL-3.0-only"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-4",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-4",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-5",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "atelier-registre-5",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "@demo/registre-6",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    },
+    {
+      "json": {
+        "statusCode": 200,
+        "body": {
+          "name": "@demo/registre-6",
+          "version": "1.0.0",
+          "license": "MIT"
+        }
+      }
+    }
+  ],
+  "requirements": {
+    "body": "atelier-licence-1==1.0.0\natelier-licence-2==1.0.0\natelier-licence-3==1.0.0\natelier-licence-4==1.0.0\natelier-licence-5==1.0.0\natelier-licence-6==1.0.0",
+    "responses": [
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "info": {
+              "name": "atelier-licence-1",
+              "version": "1.0.0",
+              "license": "MIT"
+            }
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "info": {
+              "name": "atelier-licence-1",
+              "version": "1.0.0",
+              "license": "MIT"
+            }
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "info": {
+              "name": "atelier-licence-2",
+              "version": "1.0.0",
+              "license": "MIT"
+            }
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "info": {
+              "name": "atelier-licence-2",
+              "version": "1.0.0",
+              "license": "MIT"
+            }
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "info": {
+              "name": "atelier-licence-3",
+              "version": "1.0.0",
+              "license": "MIT"
+            }
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "info": {
+              "name": "atelier-licence-3",
+              "version": "1.0.0",
+              "license": "MIT"
+            }
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "info": {
+              "name": "atelier-licence-4",
+              "version": "1.0.0",
+              "license": "MIT"
+            }
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "info": {
+              "name": "atelier-licence-4",
+              "version": "1.0.0",
+              "license": "MIT"
+            }
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "info": {
+              "name": "atelier-licence-5",
+              "version": "1.0.0",
+              "license": "MIT"
+            }
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "info": {
+              "name": "atelier-licence-5",
+              "version": "1.0.0",
+              "license": "MIT"
+            }
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "info": {
+              "name": "atelier-licence-6",
+              "version": "1.0.0",
+              "license": "MIT"
+            }
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "info": {
+              "name": "atelier-licence-6",
+              "version": "1.0.0",
+              "license": "MIT"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "packageJson": {
+    "body": {
+      "dependencies": {
+        "atelier-registre-1": "1.0.0",
+        "atelier-registre-2": "1.0.0",
+        "atelier-registre-3": "1.0.0",
+        "atelier-registre-4": "1.0.0",
+        "atelier-registre-5": "1.0.0",
+        "@demo/registre-6": "1.0.0"
+      }
+    },
+    "responses": [
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "name": "atelier-registre-1",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "name": "atelier-registre-1",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "name": "atelier-registre-2",
+            "version": "1.0.0",
+            "license": "Apache-2.0"
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "name": "atelier-registre-2",
+            "version": "1.0.0",
+            "license": "Apache-2.0"
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "name": "atelier-registre-3",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "name": "atelier-registre-3",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "name": "atelier-registre-4",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "name": "atelier-registre-4",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "name": "atelier-registre-5",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "name": "atelier-registre-5",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "name": "@demo/registre-6",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      },
+      {
+        "json": {
+          "statusCode": 200,
+          "body": {
+            "name": "@demo/registre-6",
+            "version": "1.0.0",
+            "license": "MIT"
+          }
+        }
+      }
+    ]
+  }
+}

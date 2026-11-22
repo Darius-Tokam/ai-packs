@@ -89,6 +89,36 @@
         "estimates",
         "pricing"
       ]
+    },
+    {
+      "name": "leak-scan",
+      "source": "./claude/leak-scan",
+      "description": "One Claude Code skill that reads your production logs and finds the API keys, tokens, presigned URLs, OAuth secrets, auth headers and client emails exposed in them, grouped by distinct secret with a masked excerpt, the cause and the fix, then gives a log filter that masks them from now on. Never prints a full secret, never sends your logs anywhere. Just ask if your logs leak a key.",
+      "category": "development",
+      "keywords": [
+        "security",
+        "secrets",
+        "logs",
+        "api-keys",
+        "redaction",
+        "devops",
+        "claude-code"
+      ]
+    },
+    {
+      "name": "oss-check",
+      "source": "./claude/oss-check",
+      "description": "2 Claude Code agents that check an open source tool before you install it: what its licence allows for your usage (personal, internal, SaaS, redistribution) with the exact sentence and its file, carve-outs and dual licences included; how many packages and megabytes the install pulls in, extras included; and the network calls the code makes at first launch or keeps dormant, with the setting that cuts them. Run /oss-check:check, or just ask whether you can use a library at work.",
+      "category": "development",
+      "keywords": [
+        "open-source",
+        "license",
+        "dependencies",
+        "supply-chain",
+        "offline",
+        "developer-tools",
+        "claude-code"
+      ]
     }
   ]
 }

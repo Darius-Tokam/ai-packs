@@ -1,0 +1,174 @@
+## Verdicts par cas et par usage
+
+| Cas | Type | Usage | Attendu | Mesuré | Ligne finale | Résultat |
+|---|---|---|---|---|---|---|
+| darius-1-markitdown/repo | réel | perso | OK | OK | `OSS-CHECK: OK pour perso : licence MIT, 56 paquets, 319,7 Mo, 0 appels réseau au démarrage` | PASS |
+| darius-1-markitdown/repo | réel | interne | OK | OK | `OSS-CHECK: OK pour interne : licence MIT, 56 paquets, 319,7 Mo, 0 appels réseau au démarrage` | PASS |
+| darius-1-markitdown/repo | réel | saas | OK | OK | `OSS-CHECK: OK pour saas : licence MIT, 56 paquets, 319,7 Mo, 0 appels réseau au démarrage` | PASS |
+| darius-1-markitdown/repo | réel | redistribution | OK | OK | `OSS-CHECK: OK pour redistribution : licence MIT, 56 paquets, 319,7 Mo, 0 appels réseau au démarrage` | PASS |
+| darius-2-open-webui | réel | perso | ATTENTION | ATTENTION | `OSS-CHECK: ATTENTION pour perso : licence BSD-3-Clause, 5 paquets, taille non mesurée, 2 appels réseau au démarrage` | PASS |
+| darius-2-open-webui | réel | interne | ATTENTION | ATTENTION | `OSS-CHECK: ATTENTION pour interne : licence BSD-3-Clause, 5 paquets, taille non mesurée, 2 appels réseau au démarrage` | PASS |
+| darius-2-open-webui | réel | saas | ATTENTION | ATTENTION | `OSS-CHECK: ATTENTION pour saas : licence BSD-3-Clause, 5 paquets, taille non mesurée, 2 appels réseau au démarrage` | PASS |
+| darius-2-open-webui | réel | redistribution | ATTENTION | ATTENTION | `OSS-CHECK: ATTENTION pour redistribution : licence BSD-3-Clause, 5 paquets, taille non mesurée, 2 appels réseau au démarrage` | PASS |
+| darius-3-stirling-pdf | réel | perso | OK | OK | `OSS-CHECK: OK pour perso : licence MIT avec découpage (6 répertoires, 2 non libres), ? paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| darius-3-stirling-pdf | réel | interne | ATTENTION | ATTENTION | `OSS-CHECK: ATTENTION pour interne : licence MIT avec découpage (6 répertoires, 2 non libres), ? paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| darius-3-stirling-pdf | réel | saas | ATTENTION | ATTENTION | `OSS-CHECK: ATTENTION pour saas : licence MIT avec découpage (6 répertoires, 2 non libres), ? paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| darius-3-stirling-pdf | réel | redistribution | ATTENTION | ATTENTION | `OSS-CHECK: ATTENTION pour redistribution : licence MIT avec découpage (6 répertoires, 2 non libres), ? paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| piege-double-licence | piège | perso | OK | OK | `OSS-CHECK: OK pour perso : licence AGPL-3.0 ou commerciale, 4 paquets, 4,5 Mo, 0 appels réseau au démarrage` | PASS |
+| piege-double-licence | piège | interne | OK | OK | `OSS-CHECK: OK pour interne : licence AGPL-3.0 ou commerciale, 4 paquets, 4,5 Mo, 0 appels réseau au démarrage` | PASS |
+| piege-double-licence | piège | saas | ATTENTION | ATTENTION | `OSS-CHECK: ATTENTION pour saas : licence AGPL-3.0 ou commerciale, 4 paquets, 4,5 Mo, 0 appels réseau au démarrage` | PASS |
+| piege-double-licence | piège | redistribution | ATTENTION | ATTENTION | `OSS-CHECK: ATTENTION pour redistribution : licence AGPL-3.0 ou commerciale, 4 paquets, 4,5 Mo, 0 appels réseau au démarrage` | PASS |
+| piege-extra-lourd | piège | perso | OK | OK | `OSS-CHECK: OK pour perso : licence MIT, 2 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| piege-extra-lourd | piège | interne | OK | OK | `OSS-CHECK: OK pour interne : licence MIT, 2 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| piege-extra-lourd | piège | saas | OK | OK | `OSS-CHECK: OK pour saas : licence MIT, 2 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| piege-extra-lourd | piège | redistribution | OK | OK | `OSS-CHECK: OK pour redistribution : licence MIT, 2 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| propre-mit | propre | perso | OK | OK | `OSS-CHECK: OK pour perso : licence MIT, 0 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| propre-mit | propre | interne | OK | OK | `OSS-CHECK: OK pour interne : licence MIT, 0 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| propre-mit | propre | saas | OK | OK | `OSS-CHECK: OK pour saas : licence MIT, 0 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| propre-mit | propre | redistribution | OK | OK | `OSS-CHECK: OK pour redistribution : licence MIT, 0 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| propre-apache | propre | perso | OK | OK | `OSS-CHECK: OK pour perso : licence Apache-2.0, 1 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| propre-apache | propre | interne | OK | OK | `OSS-CHECK: OK pour interne : licence Apache-2.0, 1 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| propre-apache | propre | saas | OK | OK | `OSS-CHECK: OK pour saas : licence Apache-2.0, 1 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| propre-apache | propre | redistribution | OK | OK | `OSS-CHECK: OK pour redistribution : licence Apache-2.0, 1 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| propre-bsd | propre | perso | OK | OK | `OSS-CHECK: OK pour perso : licence BSD-3-Clause, 1 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| propre-bsd | propre | interne | OK | OK | `OSS-CHECK: OK pour interne : licence BSD-3-Clause, 1 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| propre-bsd | propre | saas | OK | OK | `OSS-CHECK: OK pour saas : licence BSD-3-Clause, 1 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| propre-bsd | propre | redistribution | OK | OK | `OSS-CHECK: OK pour redistribution : licence BSD-3-Clause, 1 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| controle-busl | contrôle | perso | OK | OK | `OSS-CHECK: OK pour perso : licence BUSL-1.1, 1 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| controle-busl | contrôle | interne | STOP | STOP | `OSS-CHECK: STOP pour interne : licence BUSL-1.1, 1 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| controle-busl | contrôle | saas | STOP | STOP | `OSS-CHECK: STOP pour saas : licence BUSL-1.1, 1 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+| controle-busl | contrôle | redistribution | STOP | STOP | `OSS-CHECK: STOP pour redistribution : licence BUSL-1.1, 1 paquets, taille non mesurée, 0 appels réseau au démarrage` | PASS |
+
+| Cas | Type | perso | interne | saas | redistribution |
+|---|---|---|---|---|---|
+| darius-1-markitdown/repo | réel | OK | OK | OK | OK |
+| darius-2-open-webui | réel | ATTENTION | ATTENTION | ATTENTION | ATTENTION |
+| darius-3-stirling-pdf | réel | OK | ATTENTION | ATTENTION | ATTENTION |
+| piege-double-licence | piège | OK | OK | ATTENTION | ATTENTION |
+| piege-extra-lourd | piège | OK | OK | OK | OK |
+| propre-mit | propre | OK | OK | OK | OK |
+| propre-apache | propre | OK | OK | OK | OK |
+| propre-bsd | propre | OK | OK | OK | OK |
+| controle-busl | contrôle | OK | STOP | STOP | STOP |
+
+## Chiffres publiés par l'auteur face au script (cas 1)
+
+| Environnement | Publié | Mesuré par le script | Écart | Résultat |
+|---|---|---|---|---|
+| a-la-carte | 13 paquets, 39,5 Mo | 13 paquets, 39,5 Mo | +0 paquet, 0,00 Mo | PASS |
+| markitdown | 25 paquets, 147,7 Mo | 25 paquets, 147,7 Mo | +0 paquet, 0,00 Mo | PASS |
+| markitdown-all | 56 paquets, 319,7 Mo | 56 paquets, 319,7 Mo | +0 paquet, 0,00 Mo | PASS |
+
+| Rang | Publié | Mesuré | Écart |
+|---|---|---|---|
+| 1 | pandas 52,6 Mo | pandas 52,6 Mo | 0,00 Mo |
+| 2 | sympy 48,6 Mo | sympy 48,6 Mo | 0,04 Mo |
+| 3 | numpy 48,6 Mo | numpy 48,6 Mo | -0,04 Mo |
+| 4 | speech_recognition 42,7 Mo | SpeechRecognition 42,7 Mo | 0,00 Mo |
+| 5 | onnxruntime 33,7 Mo | onnxruntime 33,7 Mo | 0,00 Mo |
+
+## Appels réseau trouvés
+
+| Cas | Premier lancement (attendu / trouvé) | Dormants (attendu / trouvé) | Détail | Résultat |
+|---|---|---|---|---|
+| darius-1-markitdown/repo | 0 / 0 | 0 / 0 | aucun | PASS |
+| darius-2-open-webui | 2 / 2 | 1 / 1 | huggingface.co utils.py:15, sans garde; huggingface.co utils.py:20, sans garde; posthog telemetry.py:12, derrière l'option ENABLE_POSTHOG (défaut : false) | PASS |
+| darius-3-stirling-pdf | 0 / 0 | 2 / 2 | api.keygen.sh KeygenLicenseVerifier.java:28, derrière une clé (licence ou API); api.keygen.sh KeygenLicenseVerifier.java:38, derrière une clé (licence ou API) | PASS |
+| piege-double-licence | 0 / 0 | 0 / 0 | aucun | PASS |
+| piege-extra-lourd | 0 / 0 | 1 / 1 | huggingface.co extract.py:12, derrière l'option use_ocr (défaut : false) | PASS |
+| propre-mit | 0 / 0 | 0 / 0 | aucun | PASS |
+| propre-apache | 0 / 0 | 0 / 0 | aucun | PASS |
+| propre-bsd | 0 / 0 | 0 / 0 | aucun | PASS |
+| controle-busl | 0 / 0 | 0 / 0 | aucun | PASS |
+
+## Fausses alertes
+
+| Cas | Type | Alertes attendues | Alertes trouvées | Fausses | Manquées |
+|---|---|---|---|---|---|
+| darius-1-markitdown/repo | réel | 0 | 0 | 0 | 0 |
+| darius-2-open-webui | réel | 7 | 7 | 0 | 0 |
+| darius-3-stirling-pdf | réel | 11 | 11 | 0 | 0 |
+| piege-double-licence | piège | 2 | 2 | 0 | 0 |
+| piege-extra-lourd | piège | 1 | 1 | 0 | 0 |
+| propre-mit | propre | 0 | 0 | 0 | 0 |
+| propre-apache | propre | 0 | 0 | 0 | 0 |
+| propre-bsd | propre | 0 | 0 | 0 | 0 |
+| controle-busl | contrôle | 3 | 3 | 0 | 0 |
+
+## Copies cassées du script
+
+copie cassée « témoin non soustrait » : rejetée (4 contrôles en échec, dont : a-la-carte : paquets et Mo (tolérance 0,1 Mo), texte = JSON)
+copie cassée « Mo comptés en Mio » : rejetée (4 contrôles en échec, dont : a-la-carte : paquets et Mo (tolérance 0,1 Mo), texte = JSON)
+copie cassée « découpage du LICENSE ignoré » : rejetée (3 contrôles en échec, dont : darius-3-stirling-pdf : étiquette)
+copie cassée « découpage jugé comme la licence du projet » : rejetée (1 contrôle en échec, dont : verdicts justes (cas x usage))
+copie cassée « double licence lue comme un cumul » : rejetée (3 contrôles en échec, dont : verdicts justes (cas x usage))
+copie cassée « commentaires lus comme du code » : rejetée (1 contrôle en échec, dont : URL huggingface.co en commentaire, docs/ et tests/ (cas 2))
+copie cassée « tests et doc lus comme du code » : rejetée (4 contrôles en échec, dont : verdicts justes (cas x usage))
+copie cassée « garde par clé ignorée » : rejetée (2 contrôles en échec, dont : verdicts justes (cas x usage))
+copie cassée « promesse du README ignorée » : rejetée (1 contrôle en échec, dont : verdicts justes (cas x usage))
+copie cassée « extras comptés dans la base » : rejetée (1 contrôle en échec, dont : extra : lourds dans la base)
+
+## Contrôles
+
+| Section | Contrôle | Attendu | Mesuré | Résultat |
+|---|---|---|---|---|
+| verdict | verdicts justes (cas x usage) | 36/36 | 36/36 | PASS |
+| sortie | ligne finale du texte identique au JSON | 36/36 | 36/36 | PASS |
+| sortie | code de sortie = verdict (0 OK, 1 ATTENTION, 2 STOP) | 36/36 | 36/36 | PASS |
+| sortie | ligne finale au format OSS-CHECK exact | 36/36 | 36/36 | PASS |
+| poids | a-la-carte : paquets et Mo (tolérance 0,1 Mo), texte = JSON | 13, 39,5 Mo | 13, 39,5 Mo | PASS |
+| poids | markitdown : paquets et Mo (tolérance 0,1 Mo), texte = JSON | 25, 147,7 Mo | 25, 147,7 Mo | PASS |
+| poids | markitdown-all : paquets et Mo (tolérance 0,1 Mo), texte = JSON | 56, 319,7 Mo | 56, 319,7 Mo | PASS |
+| poids | les 5 plus lourds de markitdown[all], noms et Mo | 5/5 | 5/5 | PASS |
+| poids | lourds connus signalés dans markitdown[all] | les 5 publiés | les 5 publiés | PASS |
+| poids | part des lourds connus dans markitdown[all] | mesurée | 226,2 Mo (70,8 %) | PASS |
+| poids | lourds connus dans markitdown seul | mesurés | sympy, numpy, onnxruntime = 130,9 Mo (88,6 %) | PASS |
+| poids | pile à la carte contenue dans markitdown[all] | 11 des 13 | 11 des 13 | PASS |
+| poids | les 2 absents de markitdown[all] | pypdf, typing-extensions | pypdf, typing-extensions | PASS |
+| poids | paquets de markitdown[all] absents de la pile à la carte | 56 - 11 = 45 | 56 - 11 = 45 | PASS |
+| poids | témoin soustrait | pip, setuptools | pip, setuptools | PASS |
+| poids | Node : node_modules (dont 1 paquet à portée @ et 1 imbriqué) | 4 paquets, 4,5 Mo | 4 paquets, 4,5 Mo | PASS |
+| licence | darius-1-markitdown/repo : étiquette | MIT | MIT | PASS |
+| licence | darius-2-open-webui : étiquette | BSD-3-Clause | BSD-3-Clause | PASS |
+| licence | darius-3-stirling-pdf : étiquette | MIT avec découpage (6 répertoires, 2 non libres) | MIT avec découpage (6 répertoires, 2 non libres) | PASS |
+| licence | piege-double-licence : étiquette | AGPL-3.0 ou commerciale | AGPL-3.0 ou commerciale | PASS |
+| licence | piege-extra-lourd : étiquette | MIT | MIT | PASS |
+| licence | propre-mit : étiquette | MIT | MIT | PASS |
+| licence | propre-apache : étiquette | Apache-2.0 | Apache-2.0 | PASS |
+| licence | propre-bsd : étiquette | BSD-3-Clause | BSD-3-Clause | PASS |
+| licence | controle-busl : étiquette | BUSL-1.1 | BUSL-1.1 | PASS |
+| licence | cas 3 : répertoires découpés trouvés | 6 | 6 | PASS |
+| licence | cas 3 : dont non libres (proprietary) | 2 | 2 | PASS |
+| licence | cas 3 : identifiant global (GitHub affiche NOASSERTION) | NOASSERTION | NOASSERTION | PASS |
+| licence | cas 3 : clause citée | 2 x « Production use ... » | 2 x « Production use ... » | PASS |
+| licence | double licence : options trouvées | AGPL-3.0, commerciale | AGPL-3.0, commerciale | PASS |
+| licence | Apache-2.0 : NOTICE et en-têtes SPDX | NOTICE ; Apache-2.0 x 3 | NOTICE ; Apache-2.0 x 3 | PASS |
+| poids | extra : dépendances de base | pypdf, requests | pypdf, requests | PASS |
+| poids | extra : lourds cachés derrière [ocr] et [all] | ocr : torch, transformers ; all : pandas, torch, transformers | ocr : torch, transformers ; all : pandas, torch, transformers | PASS |
+| poids | extra : lourds dans la base | aucun | aucun | PASS |
+| réseau | cas 2 : réglages qui coupent trouvés dans le code | HF_HUB_OFFLINE, OFFLINE_MODE | HF_HUB_OFFLINE, OFFLINE_MODE | PASS |
+| réseau | cas 2 : promesse du README contredite | oui | oui | PASS |
+| réseau | cas 2 : télémétrie derrière une option désactivée par défaut | ENABLE_POSTHOG | ENABLE_POSTHOG | PASS |
+| réseau | cas 3 : service de clés, dormant derrière la clé | api.keygen.sh x 2 | api.keygen.sh x 2 | PASS |
+| réseau | cas 3 : promesse du README non contredite | non contredite | non contredite | PASS |
+| fausses alertes | sur les 3 propres et les 2 pièges | 0 | 0 | PASS |
+| fausses alertes | alertes manquées sur les pièges | 0 | 0 | PASS |
+| piège | « proprietary » dans un commentaire et une chaîne (propre-mit) | aucune licence proprietary | aucune licence proprietary | PASS |
+| piège | huggingface.co dans docs/ et tests/ (propre-apache) | 0 appel, 3 lignes ignorées | 0 appel, 3 lignes ignorées | PASS |
+| piège | GPL-3.0 cité dans le CHANGELOG (propre-bsd) | BSD-3-Clause seule | BSD-3-Clause seule | PASS |
+| piège | check_for_updates() dans une docstring (propre-bsd) | 0 appel, 1 ignoré | 0 appel, 1 ignoré | PASS |
+| piège | URL huggingface.co en commentaire, docs/ et tests/ (cas 2) | 1 commentaire, 2 doc ou test ignorés | 1 commentaire, 2 doc ou test ignorés | PASS |
+| citation | citations de 15 mots au plus, copiées du fichier | 60/60 | 60/60 | PASS |
+| sortie | network et license : chiffres du texte = JSON | 18/18 | 18/18 | PASS |
+| sortie | deux lancements identiques | identiques | identiques | PASS |
+| sortie | dossier absent : code 3 | 3 | 3 | PASS |
+| sortie | usage inconnu : code 3 | 3 | 3 | PASS |
+| copies cassées | copies du script avec un bug, rejetées par le test | 10/10 | 10/10 | PASS |
+| temps | médiane de 5 lancements : report cas 1 avec markitdown[all] (56 paquets) | mesuré | 70 ms | PASS |
+| temps | médiane de 5 lancements : report cas 3 (Stirling PDF reconstitué) | mesuré | 70 ms | PASS |
+| hygiène | fichiers avec un tiret long ou moyen | aucun | aucun | PASS |
+| hygiène | fichiers avec l'ancien nom du compte | aucun | aucun | PASS |
+
+contrôles : 56/56 PASS ; verdicts : 36/36
+
+RESULT: PASS

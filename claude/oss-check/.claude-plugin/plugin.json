@@ -1,0 +1,17 @@
+{
+  "name": "oss-check",
+  "version": "1.0.0",
+  "description": "2 Claude Code agents that check an open source tool before you install it: what its licence allows for your usage (personal, internal, SaaS, redistribution) with the exact sentence and its file, carve-outs and dual licences included; how many packages and megabytes the install pulls in, extras included; and the network calls the code makes at first launch or keeps dormant, with the setting that cuts them. Run /oss-check:check, or just ask whether you can use a library at work.",
+  "author": {
+    "name": "Darius Tokam (Arivex)",
+    "url": "https://tokamdarius.ca"
+  },
+  "repository": "https://github.com/Darius-Tokam/ai-packs",
+  "license": "MIT",
+  "keywords": ["open-source", "license", "dependencies", "supply-chain", "offline", "developer-tools", "claude-code"],
+  "skills": [
+    "./skills/license-reader",
+    "./skills/install-weigher",
+    "./skills/check-before-install"
+  ]
+}

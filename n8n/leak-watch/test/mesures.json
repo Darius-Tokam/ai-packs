@@ -1,0 +1,375 @@
+{
+  "89": {
+    "status": "success",
+    "mode": "manual",
+    "durationMs": 12894,
+    "result": {
+      "statut": "BROUILLON_A_VALIDER",
+      "mesures": {
+        "lignes": 3,
+        "fuitesDistinctes": 2,
+        "occurrences": 2
+      },
+      "nouveauxEvenements": 2,
+      "controle": {
+        "accepted": true,
+        "errors": [],
+        "toolCalls": [
+          "Consulter_les_preuves",
+          "Choisir_une_correction"
+        ]
+      },
+      "brouillon": {
+        "statut": "BROUILLON",
+        "elements": [
+          {
+            "reference": "fbd4c0e9d42e3a60",
+            "constat": "Une clé API apparaît dans un paramètre d’URL (extrait: \"GET /v1?api_key=[REDACTED]\").",
+            "proposition": "Révoquer la clé exposée, la renouveler chez le fournisseur, arrêter l’envoi de clés dans la query string et n’utiliser que des en-têtes ou un coffre de secrets.",
+            "action": "révoquer"
+          },
+          {
+            "reference": "43b452af61cef53d",
+            "constat": "Un jeton d’authentification apparaît dans un en-tête Authorization (extrait: \"Authorization: Bearer [REDACTED]\").",
+            "proposition": "Révoquer le jeton exposé, en émettre un nouveau si nécessaire, et empêcher la journalisation des en-têtes Authorization en clair (masquage côté logging).",
+            "action": "révoquer"
+          }
+        ]
+      }
+    },
+    "nodeMetrics": {
+      "Rendre le résultat": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 7
+      },
+      "Contrôler le brouillon": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 14
+      },
+      "Agent : Expliquer les fuites et proposer le correctif": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 4720
+      },
+      "Évaluer les faits": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 15
+      }
+    }
+  },
+  "90": {
+    "status": "success",
+    "mode": "manual",
+    "durationMs": 11409,
+    "result": {
+      "statut": "BROUILLON_A_VALIDER",
+      "mesures": {
+        "lignes": 150,
+        "fuitesDistinctes": 1,
+        "occurrences": 150
+      },
+      "nouveauxEvenements": 1,
+      "controle": {
+        "accepted": true,
+        "errors": [],
+        "toolCalls": [
+          "Consulter_les_preuves",
+          "Choisir_une_correction"
+        ]
+      },
+      "brouillon": {
+        "statut": "BROUILLON",
+        "elements": [
+          {
+            "reference": "50d1d930580b046e",
+            "constat": "Entrée de journal observée: \"HTTP 429 GET /v1?api_key=[REDACTED]\" (source: \"boucle fictive\"), 150 occurrences.",
+            "proposition": "Vérifier l'origine du journal \"boucle fictive\", confirmer si la valeur masquée correspond à une clé API ou une donnée personnelle, et retirer immédiatement des journaux toute donnée identifiée comme sensible.",
+            "action": "vérifier"
+          }
+        ]
+      }
+    },
+    "nodeMetrics": {
+      "Recevoir les données": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 0
+      },
+      "Masquer avant toute analyse": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 22
+      },
+      "Lire le suivi": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 60
+      },
+      "Préparer le contexte": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 10
+      },
+      "Évaluer les faits": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 8
+      },
+      "Un nouveau brouillon est utile": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1,
+          0
+        ],
+        "executionMs": 2
+      },
+      "Modèle à configurer": {
+        "passages": 3,
+        "successful": 3,
+        "itemsDernierPassage": [],
+        "executionMs": 11045
+      },
+      "Consulter_les_preuves": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [],
+        "executionMs": 6
+      },
+      "Choisir_une_correction": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [],
+        "executionMs": 6
+      },
+      "Agent : Expliquer les fuites et proposer le correctif": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 5583
+      },
+      "Contrôler le brouillon": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 10
+      },
+      "Préparer l’enregistrement": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 8
+      },
+      "Conserver le brouillon et le suivi": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 154
+      },
+      "Rendre le résultat": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 6
+      }
+    }
+  },
+  "91": {
+    "status": "success",
+    "mode": "manual",
+    "durationMs": 208,
+    "result": {
+      "statut": "SANS_NOUVELLE_ALERTE",
+      "mesures": {
+        "lignes": 150,
+        "fuitesDistinctes": 1,
+        "occurrences": 150
+      },
+      "nouveauxEvenements": 0,
+      "controle": {
+        "accepted": true,
+        "errors": [],
+        "toolCalls": []
+      },
+      "brouillon": null
+    },
+    "nodeMetrics": {
+      "Recevoir les données": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 1
+      },
+      "Masquer avant toute analyse": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 19
+      },
+      "Lire le suivi": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 62
+      },
+      "Préparer le contexte": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 9
+      },
+      "Évaluer les faits": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 8
+      },
+      "Un nouveau brouillon est utile": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          0,
+          1
+        ],
+        "executionMs": 2
+      },
+      "Préparer l’enregistrement": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 7
+      },
+      "Conserver le brouillon et le suivi": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 71
+      },
+      "Rendre le résultat": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 7
+      }
+    }
+  },
+  "92": {
+    "status": "success",
+    "mode": "manual",
+    "durationMs": 257,
+    "result": {
+      "statut": "SANS_NOUVELLE_ALERTE",
+      "mesures": {
+        "lignes": 12,
+        "fuitesDistinctes": 0,
+        "occurrences": 0
+      },
+      "nouveauxEvenements": 0,
+      "controle": {
+        "accepted": true,
+        "errors": [],
+        "toolCalls": []
+      },
+      "brouillon": null
+    },
+    "nodeMetrics": {
+      "Rendre le résultat": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 7
+      }
+    }
+  },
+  "93": {
+    "status": "success",
+    "mode": "manual",
+    "durationMs": 237,
+    "result": {
+      "statut": "A_REPRENDRE",
+      "mesures": {
+        "lignes": 3,
+        "fuitesDistinctes": 2,
+        "occurrences": 2
+      },
+      "nouveauxEvenements": 2,
+      "controle": {
+        "accepted": false,
+        "errors": [
+          "Preuves et procédure non consultées",
+          "Structure invalide"
+        ],
+        "toolCalls": []
+      },
+      "brouillon": null
+    },
+    "nodeMetrics": {
+      "Rendre le résultat": {
+        "passages": 1,
+        "successful": 1,
+        "itemsDernierPassage": [
+          1
+        ],
+        "executionMs": 6
+      }
+    }
+  }
+}

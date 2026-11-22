@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "atelier-registre-1": "1.0.0",
+    "atelier-registre-2": "1.0.0",
+    "atelier-registre-3": "1.0.0",
+    "atelier-registre-4": "1.0.0",
+    "atelier-registre-5": "1.0.0",
+    "@demo/registre-6": "1.0.0"
+  }
+}

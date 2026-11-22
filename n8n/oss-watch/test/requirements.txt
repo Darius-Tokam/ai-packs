@@ -1,0 +1,6 @@
+atelier-licence-1==1.0.0
+atelier-licence-2==1.0.0
+atelier-licence-3==1.0.0
+atelier-licence-4==1.0.0
+atelier-licence-5==1.0.0
+atelier-licence-6==1.0.0
